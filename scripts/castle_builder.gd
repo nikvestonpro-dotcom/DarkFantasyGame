@@ -646,7 +646,7 @@ func _spawn_castle_enemies() -> void:
 	var spots := [
 		["cave", Vector3(-8.0, 0, 6.0)],
 		["cave", Vector3(9.0, 0, 2.0)],
-		["brute", Vector3(11.5, 0, -10.0)],
+			["crypt_lord", Vector3(11.5, 0, -10.0)],
 	]
 	for i in spots.size():
 		var e := EnemyScript.new()
@@ -660,7 +660,7 @@ func _spawn_castle_enemies() -> void:
 			lbl.font_size = 38
 			lbl.pixel_size = 0.004
 			lbl.billboard = BaseMaterial3D.BILLBOARD_ENABLED
-			lbl.modulate = Color(0.8, 0.55, 1.0)
+				lbl.modulate = Color(0.55, 0.75, 1.0)
 			lbl.outline_size = 8
 			lbl.position.y = 3.4
 			e.add_child(lbl)
@@ -670,7 +670,7 @@ func _spawn_ghost() -> void:
 	var npc := NpcScript.new()
 	npc.setup("Страж-призрак", [
 		"Кто вы? Я стою на посту триста лет... Замок пал в ночь Кровавой Луны.",
-		"В крипте под часовней бродит нечто крупное и зелёное. Меч вам пригодится.",
+		"В крипте под часовней бродит Костяной владыка и его свита. Меч пригодится.",
 		"Нажмите F — и вы взлетите. Так лестниц в замке можно не искать.",
 		"Сокровища донжона прокляты. Впрочем, мёртвым это не грозит... как и мне.",
 	], 4242, M_GHOST, ["Spellbook", "Spellbook_open", "1H_Wand"], Color(0.72, 0.82, 1.35))

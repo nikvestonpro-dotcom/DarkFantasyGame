@@ -1,14 +1,17 @@
 extends Node3D
-## Атмосфера: HDR-небо Poly Haven (лунная ночь со звёздами и Млечным Путём),
-## лунный свет точно по диску луны на панораме, объёмный туман, свечение,
-## светлячки. Яркость выверена, чтобы ночь читалась, но оставалась ночью.
+## Атмосфера v6.0 «Тёмное фэнтези»: процедурное небо с багрово-оранжевым
+## заревом за горами и глубоким сине-фиолетовым зенитом со звёздами и
+## тёмными облаками (шейдер sky_dark). ACES-тонмаппинг, SSAO, плотный
+## объёмный туман, стелющийся по земле, SSR для металла и воды,
+## лунный свет + тёплая подсветка от зарева. Стиль — Valheim / Dark Souls.
 
-const HDR_PATH := "res://assets/hdr/rogland_moonlit_night_4k.hdr"
+const SkyShader := preload("res://shaders/sky_dark.gdshader")
 
 
 func _ready() -> void:
 	_build_environment()
 	_build_moonlight()
+	_build_glow_fill()
 	_build_fireflies(Vector3(0, GameWorld.VILLAGE_HEIGHT, 30), 55.0)
 	_build_fireflies(Vector3(GameWorld.LAKE_CENTER.x, GameWorld.WATER_LEVEL, GameWorld.LAKE_CENTER.y), 45.0)
 
@@ -17,47 +20,65 @@ func _build_environment() -> void:
 	var we := WorldEnvironment.new()
 	var env := Environment.new()
 
-	# Небо — реальная HDR-панорама CC0 (Rogland Moonlit Night, Poly Haven)
-	var sky_mat := PanoramaSkyMaterial.new()
-	sky_mat.panorama = load(HDR_PATH)
+	# --- НЕБО: процедурный шейдер (зарево + звёзды + облака + луна) ---
+	var sky_mat := ShaderMaterial.new()
+	sky_mat.shader = SkyShader
+	sky_mat.set_shader_parameter("glow_dir", GameWorld.GLOW_DIR)
+	sky_mat.set_shader_parameter("moon_dir", GameWorld.MOON_DIR)
 	var sky := Sky.new()
 	sky.sky_material = sky_mat
 	sky.radiance_size = Sky.RADIANCE_SIZE_256
 	env.background_mode = Environment.BG_SKY
 	env.sky = sky
 
-	# Рассеянный свет ночного неба (цвет — предсказуемо на любом рендерере;
-	# AMBIENT_SOURCE_SKY на HDR-панораме с крошечной сверхъяркой луной
-	# на некоторых системах давал пересвет всей сцены)
+	# --- Рассеянный свет ночи: холодный сине-фиолетовый (предсказуемо
+	# на любом рендерере; от шейдерного неба с яркой луной ambient
+	# может пересвечивать сцену) ---
 	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
-	env.ambient_light_color = Color(0.40, 0.46, 0.64)
-	env.ambient_light_energy = 1.7
+	env.ambient_light_color = Color(0.23, 0.21, 0.33)
+	env.ambient_light_energy = 1.25
 
-	env.tonemap_mode = Environment.TONE_MAPPER_FILMIC
-	env.tonemap_exposure = 0.8
+	# --- ACES + экспозиция: кинематографичный контраст, мягкие света ---
+	env.tonemap_mode = Environment.TONE_MAPPER_ACES
+	env.tonemap_exposure = 1.12
+	env.tonemap_white = 6.5
+
+	# --- Свечение (bloom): зарево, луна, кристаллы, ведьмин огонь ---
 	env.glow_enabled = true
-	env.glow_intensity = 0.7
-	env.glow_bloom = 0.12
-	env.glow_hdr_threshold = 1.05
+	env.glow_intensity = 0.9
+	env.glow_bloom = 0.14
+	env.glow_hdr_threshold = 1.08
 	env.glow_blend_mode = Environment.GLOW_BLEND_MODE_SOFTLIGHT
 
+	# --- SSAO: глубокие контактные тени у домов, деревьев, стен ---
 	env.ssao_enabled = true
-	env.ssao_intensity = 2.0
+	env.ssao_intensity = 2.6
 	env.ssao_radius = 2.0
+	env.ssao_power = 1.5
+	env.ssao_detail = 0.5
+	env.ssao_light_affect = 0.12
 
-	# Объёмный туман
+	# --- SSR: отражения на броне рыцаря и в воде ---
+	env.ssr_enabled = true
+	env.ssr_max_steps = 48
+	env.ssr_fade_in = 0.15
+	env.ssr_fade_out = 1.8
+	env.ssr_depth_tolerance = 0.35
+
+	# --- Объёмный туман: стелется по земле, подсвечивается луной
+	# и заревом (анизотропия), даёт мистические лучи между деревьями ---
 	env.volumetric_fog_enabled = true
-	env.volumetric_fog_density = 0.0085
-	env.volumetric_fog_albedo = Color(0.52, 0.58, 0.74)
-	env.volumetric_fog_anisotropy = 0.7
-	env.volumetric_fog_length = 180.0
-	env.volumetric_fog_ambient_inject = 0.8
+	env.volumetric_fog_density = 0.016
+	env.volumetric_fog_albedo = Color(0.40, 0.43, 0.56)
+	env.volumetric_fog_anisotropy = 0.72
+	env.volumetric_fog_length = 190.0
+	env.volumetric_fog_ambient_inject = 0.85
 	env.volumetric_fog_gi_inject = 0.0
 
-	# Лёгкая дымка для дали (горы читаются силуэтом, но не сливаются)
+	# --- Дымка глубины: горы читаются силуэтами на зареве ---
 	env.fog_enabled = true
-	env.fog_light_color = Color(0.34, 0.40, 0.56)
-	env.fog_density = 0.0022
+	env.fog_light_color = Color(0.27, 0.21, 0.29)
+	env.fog_density = 0.0030
 	env.fog_sky_affect = 0.0
 
 	we.environment = env
@@ -67,14 +88,28 @@ func _build_environment() -> void:
 func _build_moonlight() -> void:
 	var light := DirectionalLight3D.new()
 	light.name = "Moonlight"
-	# Светим ровно оттуда, где на HDR-панораме стоит луна
 	light.basis = Basis.looking_at(-GameWorld.MOON_DIR, Vector3.UP)
-	light.light_color = Color(0.74, 0.80, 0.98)
-	light.light_energy = 2.4
+	light.light_color = Color(0.62, 0.68, 0.94)
+	light.light_energy = 2.3
 	light.light_angular_distance = 1.2
 	light.shadow_enabled = true
-	light.shadow_blur = 1.3
+	light.shadow_blur = 1.2
 	light.directional_shadow_mode = DirectionalLight3D.SHADOW_PARALLEL_4_SPLITS
+	add_child(light)
+
+
+## Тёплая боковая подсветка от зарева: риммейк на западных склонах гор,
+## стенах замка и кирасе рыцаря — контраст к холодной луне.
+func _build_glow_fill() -> void:
+	var light := DirectionalLight3D.new()
+	light.name = "GlowFill"
+	# Свет идёт ОТ зарева (горизонт, без теней — это рассеянное послесвечение)
+	light.basis = Basis.looking_at(-Vector3(GameWorld.GLOW_DIR.x, 0.18,
+			GameWorld.GLOW_DIR.z).normalized(), Vector3.UP)
+	light.light_color = Color(0.95, 0.33, 0.10)
+	light.light_energy = 0.28
+	light.light_angular_distance = 6.0
+	light.shadow_enabled = false
 	add_child(light)
 
 

@@ -58,7 +58,7 @@ func _build_hud() -> void:
 	add_child(hint)
 
 	# Счётчик слизней
-	kills_label = _label("Слизни: 0", 18, Color(0.8, 1.0, 0.75))
+	kills_label = _label("Нежить: 0", 18, Color(0.95, 0.75, 0.6))
 	kills_label.anchor_left = 1.0
 	kills_label.anchor_right = 1.0
 	kills_label.offset_left = -240
@@ -69,7 +69,7 @@ func _build_hud() -> void:
 
 	# Маркер версии сборки — видно, что запущена именно новая версия.
 	# v4.0: если в углу НЕ v4.0 — запущена старая распаковка.
-	var ver := _label("Тёмные земли · v5.0", 15, Color(0.95, 0.85, 0.45, 0.95))
+	var ver := _label("Тёмные земли · v6.0", 15, Color(0.95, 0.7, 0.45, 0.95))
 	ver.anchor_left = 0.0
 	ver.anchor_right = 0.0
 	ver.anchor_top = 1.0
@@ -148,7 +148,7 @@ func update(player, npcs: Array) -> void:
 		return
 	hp_fill.size.x = 216.0 * clampf(player.hp / player.MAX_HP, 0.0, 1.0)
 	hp_label.text = "HP %d/%d" % [int(player.hp), int(player.MAX_HP)]
-	kills_label.text = "Слизни: %d" % player.kills
+	kills_label.text = "Нежить: %d" % player.kills
 	var best = null
 	var best_d := 3.6
 	for n in npcs:

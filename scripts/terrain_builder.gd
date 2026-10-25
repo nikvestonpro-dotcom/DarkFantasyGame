@@ -95,10 +95,10 @@ func _build_terrain() -> void:
 	mat.set_shader_parameter("sand_nor", _tex(TEX + "forrest_sand_01/forrest_sand_01_nor_2k.jpg"))
 	mat.set_shader_parameter("rock_diff", _tex(TEX + "rock_wall_02/rock_wall_02_diff_2k.jpg"))
 	mat.set_shader_parameter("rock_nor", _tex(TEX + "rock_wall_02/rock_wall_02_nor_2k.jpg"))
-	mat.set_shader_parameter("grass_tint", Vector3(0.88, 1.0, 0.85))
-	mat.set_shader_parameter("forest_tint", Vector3(0.95, 0.92, 1.0))
-	mat.set_shader_parameter("sand_tint", Vector3(0.9, 0.92, 1.0))
-	mat.set_shader_parameter("rock_tint", Vector3(0.85, 0.9, 1.05))
+	mat.set_shader_parameter("grass_tint", Vector3(0.68, 0.80, 0.70))
+	mat.set_shader_parameter("forest_tint", Vector3(0.80, 0.78, 0.86))
+	mat.set_shader_parameter("sand_tint", Vector3(0.78, 0.78, 0.86))
+	mat.set_shader_parameter("rock_tint", Vector3(0.80, 0.82, 0.94))
 	mi.material_override = mat
 	add_child(mi)
 	_build_heightmap_collision()
@@ -245,6 +245,7 @@ func _build_water() -> void:
 	tex.as_normal_map = true
 	mat.set_shader_parameter("ripple_nor", tex)
 	mat.set_shader_parameter("moon_dir", GameWorld.MOON_DIR)
+	mat.set_shader_parameter("glow_dir", GameWorld.GLOW_DIR)
 	mi.material_override = mat
 	mi.position = Vector3(GameWorld.LAKE_CENTER.x, GameWorld.WATER_LEVEL, GameWorld.LAKE_CENTER.y)
 	add_child(mi)
@@ -295,6 +296,11 @@ func _build_grass() -> void:
 	mm.instance_count = 32000
 	var mat := ShaderMaterial.new()
 	mat.shader = GrassShader
+	# v6.0: приглушённая холодная трава под палитру тёмного фэнтези
+	mat.set_shader_parameter("base_color", Vector3(0.030, 0.066, 0.034))
+	mat.set_shader_parameter("tip_color", Vector3(0.095, 0.20, 0.085))
+	mat.set_shader_parameter("dry_color", Vector3(0.22, 0.185, 0.085))
+	mat.set_shader_parameter("dryness", 0.38)
 	var placed := 0
 	var guard := 0
 	while placed < 32000 and guard < 170000:

@@ -1,7 +1,9 @@
 extends CharacterBody3D
-## Игрок от третьего лица: рыцарь из набора KayKit Adventurers (CC0,
-## анимации Idle/Run/Attack/Death/Jump встроены в модель), камера на
-## пружине, здоровье, смерть и возрождение.
+## Игрок от третьего лица: РЕАЛИСТИЧНЫЙ РЫЦАРЬ В ЛАТАХ (Quaternius
+## "Knight Character Animated", CC0; анимации Idle/Walking/Run/Jump/Roll/
+## Death/swordAttack встроены в модель). Кираса — чистый металл PBR
+## (Metallic 1.0, Roughness 0.25), в руке — тёмный клинок. Камера на
+## пружине, здоровье, полёт, смерть и возрождение.
 ##
 ## Движение читается ФИЗИЧЕСКИМИ клавишами (is_physical_key_pressed),
 ## поэтому WASD работает при любой раскладке, включая русскую.
@@ -20,14 +22,18 @@ const FLY_SPEED := 13.0
 const FLY_VERT := 7.5
 const FLY_CEILING := 110.0
 
-const KNIGHT := preload("res://assets/models/kay_Knight.glb")
+# v6.0: рыцарь в латах вместо мультяшного персонажа (Quaternius, CC0)
+const KNIGHT := preload("res://assets/models/quat_Knight.fbx")
 
-# Рост рыцаря в метрах (модель KayKit подгоняется к нему).
-# v4.0: уменьшен с 1.85 до 1.50 — рыцарь не должен быть больше жителей
-# и смотреться великаном на фоне домов.
-const MODEL_HEIGHT := 1.50
-# Модель KayKit смотрит вдоль +Z, а «вперёд» в Godot — это -Z
+# Рост рыцаря в метрах (модель подгоняется к нему автоматически
+# по костям скелета — работает с любым масштабом исходника).
+const MODEL_HEIGHT := 1.55
+# Модель смотрит вдоль +Z, а «вперёд» в Godot — это -Z
 const FACING_FIX := PI
+
+# Подгонка меча в правой руке (если клинок смотрит не туда — крутить тут)
+const SWORD_ROT := Vector3(-100.0, 0.0, 0.0)
+const SWORD_POS := Vector3(0.0, 0.0, 0.0)
 
 var hp := MAX_HP
 var kills := 0
@@ -47,6 +53,14 @@ var _hurt_t := 0.0
 var flying := false
 var _fly_key_cd := 0.0
 var _fly_air_t := 0.0
+
+# Разрешённые имена анимаций (FBX может давать «HumanArmature|Idle»)
+var a_idle := ""
+var a_walk := ""
+var a_run := ""
+var a_jump := ""
+var a_attack := ""
+var a_death := ""
 
 var pitch_node: Node3D
 var spring_arm: SpringArm3D
@@ -72,7 +86,7 @@ func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 
-# ---------- ТЕЛО (рыцарь KayKit) ----------
+# ---------- ТЕЛО (рыцарь в латах) ----------
 
 func _build_body() -> void:
 	visual_root = Node3D.new()
@@ -80,26 +94,29 @@ func _build_body() -> void:
 	add_child(visual_root)
 
 	var knight := KNIGHT.instantiate()
-	# Скрываем варианты оружия/щитов: рыцарь берёт одноручный меч
-	for wname in ["1H_Sword_Offhand", "2H_Sword", "Badge_Shield",
-			"Rectangle_Shield", "Round_Shield", "Spike_Shield"]:
-		for node in knight.find_children("*", "Node", true, false):
-			if node.name == wname and node is Node3D:
-				node.visible = false
-	# Анимации: смерть не должна зацикливаться
-	anim = knight.get_node_or_null(^"AnimationPlayer") as AnimationPlayer
-	if anim != null:
-		anim.playback_default_blend_time = 0.15
-		for a in ["Death_A", "Death_B", "Hit_A", "Hit_B",
-				"1H_Melee_Attack_Chop", "1H_Melee_Attack_Slice_Diagonal",
-				"Jump_Full_Short", "Jump_Idle", "PickUp", "Use_Item"]:
-			if anim.has_animation(a):
-				anim.get_animation(a).loop_mode = Animation.LOOP_NONE
-
-	# Подгоняем рост и ставим на землю. У скелетных мешей AABB пуст,
-	# поэтому меряем по костям (bind-поза = стойка с руками в стороны).
 	add_child(knight)
 	knight.rotation.y = FACING_FIX
+
+	anim = knight.get_node_or_null(^"AnimationPlayer") as AnimationPlayer
+	if anim == null:
+		anim = knight.find_child("AnimationPlayer", true, false) as AnimationPlayer
+	if anim != null:
+		anim.playback_default_blend_time = 0.15
+		# Разрешаем имена анимаций (FBX-тейки могут зваться «HumanArmature|Idle»)
+		a_idle = _pick_anim(["Idle_swordRight", "Idle_swordLeft", "Idle"])
+		a_walk = _pick_anim(["Walking", "Walking_A"])
+		a_run = _pick_anim(["Run_swordRight", "Run", "Running_A"])
+		a_jump = _pick_anim(["Jump", "Jump_Full_Short"])
+		a_attack = _pick_anim(["swordAttackJump", "Run_swordAttack",
+				"1H_Melee_Attack_Chop"])
+		a_death = _pick_anim(["Death", "Death_A"])
+		# Смерть и прыжок не должны зацикливаться
+		for a in [a_death, a_jump, a_attack]:
+			if a != "" and anim.has_animation(a):
+				anim.get_animation(a).loop_mode = Animation.LOOP_NONE
+
+	# Подгоняем рост и ставим на землю по костям скелета
+	# (у скелетных мешей AABB пуст — меряем по bind-позе).
 	var skel := knight.find_child("Skeleton3D", true, false) as Skeleton3D
 	var s := 1.0
 	var feet := 0.0
@@ -109,7 +126,7 @@ func _build_body() -> void:
 		var inv: Transform3D = knight.global_transform.affine_inverse()
 		for i in skel.get_bone_count():
 			var gp: Vector3 = (inv * skel.global_transform
-				* skel.get_bone_global_pose(i)).origin
+					* skel.get_bone_global_pose(i)).origin
 			if "IK" in skel.get_bone_name(i) or "control" in skel.get_bone_name(i):
 				continue
 			miny = minf(miny, gp.y)
@@ -124,22 +141,151 @@ func _build_body() -> void:
 	knight.scale = Vector3(s, s, s)
 	knight.position = Vector3(0.0, -feet * s, 0.0)
 
-	# Собираем материалы для вспышки урона (копии — модель только наша)
+	# Материалы брони: кираса — металл (Metallic 1.0 / Roughness 0.25),
+	# сапоги — кожа, лицо — бледная кожа. Плюс вспышка урона.
 	for mi in knight.find_children("*", "MeshInstance3D", true, false):
 		var mesh: Mesh = (mi as MeshInstance3D).mesh
 		if mesh is ArrayMesh:
 			for i in mesh.get_surface_count():
 				var m := mesh.surface_get_material(i)
 				if m is StandardMaterial3D:
-					var dup := m.duplicate() as StandardMaterial3D
-					dup.emission_enabled = true
-					dup.emission = Color(1.0, 0.1, 0.05)
-					dup.emission_energy_multiplier = 0.0
+					var dup := (m as StandardMaterial3D).duplicate() as StandardMaterial3D
+					_apply_armor_material(dup)
 					mesh.surface_set_material(i, dup)
 					_mats.append(dup)
 
-	if anim != null and anim.has_animation("Idle"):
-		anim.play("Idle")
+	# Тёмный клинок в правую руку
+	if skel != null:
+		_attach_sword(skel)
+
+	if anim != null and a_idle != "":
+		anim.play(a_idle)
+
+
+## Выбор анимации: сперва точное совпадение по списку приоритета,
+## затем подстрока (FBX-тейки вида «HumanArmature|Idle»).
+func _pick_anim(candidates: Array) -> String:
+	if anim == null:
+		return ""
+	var list := PackedStringArray(anim.get_animation_list())
+	for c in candidates:
+		if c in list:
+			return c
+	for c in candidates:
+		for a in list:
+			if c.to_lower() in a.to_lower():
+				return a
+	return ""
+
+
+## PBR-материалы рыцаря: латная кираса с рим-светом, кожа сапог, кожа лица.
+func _apply_armor_material(m: StandardMaterial3D) -> void:
+	var nm: String = (m.resource_name if m.resource_name != "" else "").to_lower()
+	if "armor" in nm or "plate" in nm or "metal" in nm:
+		m.albedo_color = Color(0.50, 0.53, 0.60)
+		m.metallic = 1.0
+		m.roughness = 0.25
+		m.rim_enabled = true
+		m.rim = Color(0.32, 0.38, 0.55)
+	elif "boot" in nm or "leather" in nm:
+		m.albedo_color = Color(0.15, 0.11, 0.08)
+		m.metallic = 0.0
+		m.roughness = 0.75
+	elif "skin" in nm or "face" in nm:
+		m.albedo_color = Color(0.72, 0.60, 0.52)
+		m.metallic = 0.0
+		m.roughness = 0.65
+	else:
+		m.albedo_color = Color(0.34, 0.33, 0.36)
+		m.metallic = 0.1
+		m.roughness = 0.6
+	# Вспышка урона (энергия разгоняется в take_damage)
+	m.emission_enabled = true
+	m.emission = Color(1.0, 0.1, 0.05)
+	m.emission_energy_multiplier = 0.0
+
+
+## Тёмный клинок: рукоять, навершие, гарда и гранёное лезвие.
+## Крепится BoneAttachment3D к кости правой кисти.
+func _attach_sword(skel: Skeleton3D) -> void:
+	var bone_idx := -1
+	for cand in ["Hand.R", "Hand_R", "RightHand", "Fingers.R", "LowerArm.R"]:
+		bone_idx = skel.find_bone(cand)
+		if bone_idx >= 0:
+			break
+	if bone_idx < 0:
+		return
+	var ba := BoneAttachment3D.new()
+	ba.name = "SwordAttachment"
+	ba.bone_name = skel.get_bone_name(bone_idx)
+	skel.add_child(ba)
+
+	var sword := Node3D.new()
+	sword.name = "DarkSword"
+
+	var steel := StandardMaterial3D.new()
+	steel.albedo_color = Color(0.52, 0.55, 0.62)
+	steel.metallic = 1.0
+	steel.roughness = 0.22
+	steel.rim_enabled = true
+	steel.rim = Color(0.4, 0.45, 0.6)
+	var dark_iron := StandardMaterial3D.new()
+	dark_iron.albedo_color = Color(0.16, 0.15, 0.17)
+	dark_iron.metallic = 0.9
+	dark_iron.roughness = 0.45
+	var leather := StandardMaterial3D.new()
+	leather.albedo_color = Color(0.13, 0.09, 0.06)
+	leather.roughness = 0.85
+
+	# Лезвие: гранёный конус (4 грани, острие вверх по +Y)
+	var blade := MeshInstance3D.new()
+	var bm := CylinderMesh.new()
+	bm.top_radius = 0.004
+	bm.bottom_radius = 0.034
+	bm.height = 0.78
+	bm.radial_segments = 4
+	blade.mesh = bm
+	blade.material_override = steel
+	blade.position = Vector3(0, 0.52, 0)
+	blade.rotation.y = PI * 0.25
+	sword.add_child(blade)
+
+	# Гарда
+	var guard := MeshInstance3D.new()
+	var gm := BoxMesh.new()
+	gm.size = Vector3(0.20, 0.026, 0.038)
+	guard.mesh = gm
+	guard.material_override = dark_iron
+	guard.position = Vector3(0, 0.125, 0)
+	sword.add_child(guard)
+
+	# Рукоять
+	var grip := MeshInstance3D.new()
+	var grm := CylinderMesh.new()
+	grm.top_radius = 0.017
+	grm.bottom_radius = 0.020
+	grm.height = 0.14
+	grm.radial_segments = 8
+	grip.mesh = grm
+	grip.material_override = leather
+	grip.position = Vector3(0, 0.045, 0)
+	sword.add_child(grip)
+
+	# Навершие
+	var pommel := MeshInstance3D.new()
+	var pm := SphereMesh.new()
+	pm.radius = 0.026
+	pm.height = 0.052
+	pm.radial_segments = 10
+	pm.rings = 6
+	pommel.mesh = pm
+	pommel.material_override = dark_iron
+	pommel.position = Vector3(0, -0.035, 0)
+	sword.add_child(pommel)
+
+	sword.rotation_degrees = SWORD_ROT
+	sword.position = SWORD_POS
+	ba.add_child(sword)
 
 
 static func _subtree_aabb(root: Node3D) -> AABB:
@@ -300,7 +446,7 @@ func _physics_process(dt: float) -> void:
 	for m in _mats:
 		if m.emission_energy_multiplier > 0.01:
 			m.emission_energy_multiplier = maxf(0.0,
-				m.emission_energy_multiplier - 2.5 * dt)
+					m.emission_energy_multiplier - 2.5 * dt)
 	if global_position.y < -30.0:
 		hp = 0.0
 		_die()
@@ -309,7 +455,7 @@ func _physics_process(dt: float) -> void:
 # ---------- АНИМАЦИИ ----------
 
 func _set_anim(name: String, blend := 0.2) -> void:
-	if anim == null or not anim.has_animation(name):
+	if anim == null or name == "" or not anim.has_animation(name):
 		return
 	if _cur_anim == name and anim.is_playing():
 		return
@@ -339,24 +485,27 @@ func _update_anim(_dt: float, _jumped: bool) -> void:
 		return
 	if flying:
 		if Vector2(velocity.x, velocity.z).length() > 0.6:
-			_set_anim("Running_A", 0.2)
+			_set_anim(a_run, 0.2)
 		else:
-			_set_anim("Jump_Idle", 0.2)
+			_set_anim(a_idle, 0.2)
 		anim.speed_scale = 0.8
 		return
 	if _jumped:
-		_set_anim("Jump_Full_Short", 0.12)
+		_set_anim(a_jump, 0.12)
 		return
 	if not is_on_floor():
-		_set_anim("Jump_Idle", 0.18)
+		_set_anim(a_jump, 0.18)
 		return
 	var hspeed := Vector2(velocity.x, velocity.z).length()
-	if hspeed > 0.4:
-		_set_anim("Running_A", 0.22)
-		anim.speed_scale = clampf(hspeed / 5.6, 0.72, 1.4)
+	if hspeed > 5.4:
+		_set_anim(a_run, 0.22)
+		anim.speed_scale = clampf(hspeed / 7.0, 0.85, 1.35)
+	elif hspeed > 0.4:
+		_set_anim(a_walk, 0.22)
+		anim.speed_scale = clampf(hspeed / 1.6, 0.8, 1.6)
 	else:
 		anim.speed_scale = 1.0
-		_set_anim("Idle", 0.25)
+		_set_anim(a_idle, 0.25)
 
 
 # ---------- АТАКА ----------
@@ -364,19 +513,19 @@ func _update_anim(_dt: float, _jumped: bool) -> void:
 func _try_attack() -> void:
 	if _attacking or _attack_cd > 0.0 or dead:
 		return
-	if anim == null or not anim.has_animation("1H_Melee_Attack_Chop"):
+	if anim == null or a_attack == "":
 		return
 	_attacking = true
 	_attack_cd = 0.72
 	_attack_t = 0.0
 	_hit_started = false
 	_hit_window = false
-	var raw_len: float = anim.get_animation("1H_Melee_Attack_Chop").length
-	# Длинные демо-анимации KayKit сжимаем до игровых 0.85 с
+	var raw_len: float = anim.get_animation(a_attack).length
+	# Длинные демо-анимации сжимаем до игровых 0.85 с
 	anim.speed_scale = clampf(raw_len / ATTACK_TIME, 1.0, 6.0)
 	_attack_len = ATTACK_TIME
 	_cur_anim = ""
-	_set_anim("1H_Melee_Attack_Chop", 0.06)
+	_set_anim(a_attack, 0.06)
 
 
 # ---------- УРОН И СМЕРТЬ ----------
@@ -391,7 +540,6 @@ func take_damage(amount: int, from_pos: Vector3) -> void:
 		m.emission_energy_multiplier = 1.2
 	_hurt_t = 0.4
 	_cur_anim = ""
-	_set_anim("Hit_A", 0.1)
 	var kb := global_position - from_pos
 	kb.y = 0.0
 	if kb.length() > 0.01:
@@ -410,7 +558,7 @@ func _die() -> void:
 	_hit_window = false
 	hitbox.monitoring = false
 	_cur_anim = ""
-	_set_anim("Death_A", 0.15)
+	_set_anim(a_death, 0.15)
 
 
 func add_kill() -> void:
@@ -433,4 +581,4 @@ func respawn() -> void:
 	velocity = Vector3.ZERO
 	global_position = GameWorld.PLAYER_SPAWN
 	_cur_anim = ""
-	_set_anim("Idle", 0.1)
+	_set_anim(a_idle, 0.1)

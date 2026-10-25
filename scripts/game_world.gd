@@ -34,6 +34,10 @@ const PLAYER_SPAWN := Vector3(0.0, 3.6, 22.0)
 ## маппинг панорамы зеркален по X относительно формулы equirect).
 const MOON_DIR := Vector3(-0.696, 0.498, 0.508)
 
+## v6.0: азимут багрового зарева за горами — над озером, северо-запад.
+## «Ночью над озером странный свет» — теперь у этого света есть источник.
+const GLOW_DIR := Vector3(-0.87, 0.0, -0.49)
+
 static var _base_n: FastNoiseLite
 static var _detail_n: FastNoiseLite
 static var _forest_n: FastNoiseLite

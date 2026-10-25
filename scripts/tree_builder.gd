@@ -86,11 +86,12 @@ func _needles_mat(species: String, tree_h: float) -> ShaderMaterial:
 	m.set_shader_parameter("nor_tex", load(base + "twig_nor_1k.jpg"))
 	m.set_shader_parameter("tree_height", tree_h)
 	if species == "fir":
-		m.set_shader_parameter("tint", Vector3(0.92, 1.0, 0.88))
+		# v6.0: хвоя приглушена под тёмное фэнтези
+		m.set_shader_parameter("tint", Vector3(0.72, 0.83, 0.77))
 		m.set_shader_parameter("wind_strength", 0.42)
 	else:
 		# сосновая хвоя на фото желтоватая — сдвигаем в зелёный
-		m.set_shader_parameter("tint", Vector3(0.78, 1.0, 0.75))
+		m.set_shader_parameter("tint", Vector3(0.62, 0.82, 0.60))
 		m.set_shader_parameter("wind_strength", 0.5)
 	return m
 

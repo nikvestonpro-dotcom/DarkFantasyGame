@@ -496,7 +496,7 @@ func _spawn_cave_enemies() -> void:
 		["cave", Vector3(-4.0, 0, 4.0)],
 		["cave", Vector3(3.5, 0, 9.0)],
 		["cave", Vector3(0.5, 0, 12.0)],
-		["brute", Vector3(0.0, 0, 40.0)],
+			["bone_lord", Vector3(0.0, 0, 40.0)],
 	]
 	for i in spots.size():
 		var e := EnemyScript.new()
@@ -506,11 +506,11 @@ func _spawn_cave_enemies() -> void:
 		add_child(e)
 		if spots[i][0] == "brute":
 			var lbl := Label3D.new()
-			lbl.text = "Матёрый слизень"
+				lbl.text = "Костяной владыка"
 			lbl.font_size = 40
 			lbl.pixel_size = 0.004
 			lbl.billboard = BaseMaterial3D.BILLBOARD_ENABLED
-			lbl.modulate = Color(1.0, 0.5, 0.6)
+				lbl.modulate = Color(1.0, 0.42, 0.3)
 			lbl.outline_size = 8
 			lbl.position.y = 3.4
 			e.add_child(lbl)
