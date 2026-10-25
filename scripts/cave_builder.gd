@@ -30,7 +30,7 @@ func _ready() -> void:
 	floor_y = _flat_floor_y(c, 13.0)
 	# Разворачиваем входом к деревне
 	var to_village: Vector2 = (GameWorld.VILLAGE_CENTER - c).normalized()
-	rotation.y = atan2(to_village.x, to_village.y)
+	rotation.y = atan2(-to_village.x, -to_village.y)
 	position = Vector3(c.x, 0, c.y)
 	_build_exterior()
 	_build_entrance_corridor()
@@ -203,8 +203,8 @@ func _crystal(pos: Vector3, h: float, r: float, col: Color, tilt := 0.0) -> void
 	crystal_mats.append(mat)
 	var l := OmniLight3D.new()
 	l.light_color = col
-	l.light_energy = 1.6
-	l.omni_range = 7.0
+	l.light_energy = 2.3
+	l.omni_range = 9.0
 	l.position = pos + Vector3(0, h * 0.7, 0)
 	add_child(l)
 
@@ -504,13 +504,13 @@ func _spawn_cave_enemies() -> void:
 		var lp: Vector3 = spots[i][1]
 		e.position = Vector3(lp.x, floor_y + 0.7 * lp.y + 0.7, lp.z)
 		add_child(e)
-		if spots[i][0] == "brute":
+		if spots[i][0] == "bone_lord":
 			var lbl := Label3D.new()
-				lbl.text = "Костяной владыка"
+			lbl.text = "Костяной владыка"
 			lbl.font_size = 40
 			lbl.pixel_size = 0.004
 			lbl.billboard = BaseMaterial3D.BILLBOARD_ENABLED
-				lbl.modulate = Color(1.0, 0.42, 0.3)
+			lbl.modulate = Color(1.0, 0.42, 0.3)
 			lbl.outline_size = 8
 			lbl.position.y = 3.4
 			e.add_child(lbl)

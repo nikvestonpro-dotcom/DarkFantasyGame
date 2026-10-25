@@ -654,13 +654,13 @@ func _spawn_castle_enemies() -> void:
 		var lp: Vector3 = spots[i][1]
 		e.position = lp + Vector3(0, 0.7, 0)
 		add_child(e)
-		if spots[i][0] == "brute":
+		if spots[i][0] == "crypt_lord":
 			var lbl := Label3D.new()
 			lbl.text = "Хозяин крипты"
 			lbl.font_size = 38
 			lbl.pixel_size = 0.004
 			lbl.billboard = BaseMaterial3D.BILLBOARD_ENABLED
-				lbl.modulate = Color(0.55, 0.75, 1.0)
+			lbl.modulate = Color(0.55, 0.75, 1.0)
 			lbl.outline_size = 8
 			lbl.position.y = 3.4
 			e.add_child(lbl)

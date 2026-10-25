@@ -3,7 +3,7 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://abxdu1jsy09ub"
+uid="uid://bxdu1jsy1aub"
 path="res://.godot/imported/kay_Skeleton_Mage.glb-c017e0486235eabe21a392f86dde5d3e.scn"
 
 [deps]
@@ -18,7 +18,6 @@ nodes/root_name=""
 nodes/apply_root_scale=true
 nodes/root_scale=1.0
 nodes/import_as_skeleton_bones=false
-nodes/use_node_type_suffixes=true
 meshes/ensure_tangents=true
 meshes/generate_lods=true
 meshes/create_shadow_meshes=true

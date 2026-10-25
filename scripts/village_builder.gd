@@ -180,13 +180,13 @@ func _smoke(parent: Node3D, pos: Vector3) -> void:
 	pm.initial_velocity_min = 0.6
 	pm.initial_velocity_max = 1.1
 	pm.gravity = Vector3(0, 0.35, 0)
-	pm.scale_min = 0.6
-	pm.scale_max = 1.2
+	pm.scale_min = 0.5
+	pm.scale_max = 0.85
 	var g := Gradient.new()
 	g.set_color(0, Color(0.75, 0.75, 0.78, 0.0))
 	g.set_color(1, Color(0.75, 0.75, 0.78, 0.0))
-	g.add_point(0.25, Color(0.75, 0.75, 0.78, 0.32))
-	g.add_point(0.7, Color(0.7, 0.7, 0.74, 0.16))
+	g.add_point(0.25, Color(0.62, 0.62, 0.68, 0.20))
+	g.add_point(0.7, Color(0.58, 0.58, 0.64, 0.10))
 	var gt := GradientTexture1D.new()
 	gt.gradient = g
 	pm.color_ramp = gt
