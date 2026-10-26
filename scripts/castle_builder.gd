@@ -7,7 +7,7 @@ extends Node3D
 
 const EnemyScript := preload("res://scripts/enemy.gd")
 const NpcScript := preload("res://scripts/npc.gd")
-const M_GHOST := preload("res://assets/models/kay_Mage.glb")
+const M_KNIGHT := preload("res://assets/models/characters/knight.fbx")
 const TEX := "res://assets/textures/"
 
 const GY: float = GameWorld.CASTLE_HEIGHT
@@ -46,6 +46,7 @@ func _ready() -> void:
         _build_chapel()
         _build_courtyard()
         _spawn_castle_enemies()
+        _spawn_guards()
         _spawn_ghost()
 
 
@@ -72,12 +73,14 @@ func _make_materials() -> void:
         m_banner_gold.albedo_color = Color(0.85, 0.68, 0.25)
         m_banner_gold.metallic = 0.5
         m_banner_gold.roughness = 0.4
+        # v8.0: мертвенно-зелёное свечение окон (@elder.void-референс «замок
+        # с зелёным светом») — ярче, ловится в Glow
         m_glass_cold = StandardMaterial3D.new()
-        m_glass_cold.albedo_color = Color(0.5, 0.7, 1.0, 0.9)
+        m_glass_cold.albedo_color = Color(0.30, 0.75, 0.45, 0.9)
         m_glass_cold.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
         m_glass_cold.emission_enabled = true
-        m_glass_cold.emission = Color(0.45, 0.65, 1.0)
-        m_glass_cold.emission_energy_multiplier = 1.15
+        m_glass_cold.emission = Color(0.25, 0.90, 0.50)
+        m_glass_cold.emission_energy_multiplier = 2.4
         m_glass_warm = StandardMaterial3D.new()
         m_glass_warm.albedo_color = Color(1.0, 0.72, 0.35, 0.9)
         m_glass_warm.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
@@ -738,10 +741,12 @@ func _build_courtyard() -> void:
 # ---------- ВРАГИ И ПРИЗРАК ----------
 
 func _spawn_castle_enemies() -> void:
+        # v8.0: стража замка — павшие рыцари; в крипте — Багровый рыцарь (босс)
         var spots := [
-                ["cave", Vector3(-8.0, 0, 6.0)],
-                ["cave", Vector3(9.0, 0, 2.0)],
-                        ["crypt_lord", Vector3(11.5, 0, -10.0)],
+                ["fallen", Vector3(-8.0, 0, 6.0)],
+                ["fallen", Vector3(9.0, 0, 2.0)],
+                ["rust", Vector3(6.0, 0, 8.5)],
+                        ["crimson", Vector3(11.5, 0, -10.0)],
         ]
         for i in spots.size():
                 var e := EnemyScript.new()
@@ -749,27 +754,48 @@ func _spawn_castle_enemies() -> void:
                 var lp: Vector3 = spots[i][1]
                 e.position = lp + Vector3(0, 0.7, 0)
                 add_child(e)
-                if spots[i][0] == "crypt_lord":
+                if spots[i][0] == "crimson":
                         var lbl := Label3D.new()
-                        lbl.text = "Хозяин крипты"
+                        lbl.text = "Багровый рыцарь"
                         lbl.font_size = 38
                         lbl.pixel_size = 0.004
                         lbl.billboard = BaseMaterial3D.BILLBOARD_ENABLED
-                        lbl.modulate = Color(0.55, 0.75, 1.0)
+                        lbl.modulate = Color(1.0, 0.45, 0.35)
                         lbl.outline_size = 8
                         lbl.position.y = 3.4
                         e.add_child(lbl)
 
 
+func _spawn_guards() -> void:
+        # v8.0: стража на воротах — рыцари Mixamo, стоят на посту
+        var guard_spots := [Vector3(-4.5, 0, 21.0), Vector3(4.5, 0, 21.0)]
+        for i in guard_spots.size():
+                var npc := NpcScript.new()
+                npc.setup("Стражник" if i == 0 else "Стражник Бран", [
+                        "Стой! ...А, ты не из мёртвых. Проходи, паладин.",
+                        "Замок пал, но пост мы не покинем. Приказ есть приказ.",
+                        "Внутри — призрак и Багровый рыцарь. Крипта — твоя смерть.",
+                ], 5500 + i * 13, M_KNIGHT, [], Color(0.95, 0.95, 1.05))
+                npc.home_center = GameWorld.CASTLE_CENTER + Vector2(guard_spots[i].x, guard_spots[i].z)
+                npc.home_radius = 3.0
+                npc.position = guard_spots[i] + Vector3(0, 0.2, 0)
+                add_child(npc)
+
+
 func _spawn_ghost() -> void:
-        var npc := NpcScript.new()
-        npc.setup("Страж-призрак", [
-                "Кто вы? Я стою на посту триста лет... Замок пал в ночь Кровавой Луны.",
-                "В крипте под часовней бродит Костяной владыка и его свита. Меч пригодится.",
-                "Нажмите F — и вы взлетите. Так лестниц в замке можно не искать.",
-                "Сокровища донжона прокляты. Впрочем, мёртвым это не грозит... как и мне.",
-        ], 4242, M_GHOST, ["Spellbook", "Spellbook_open", "1H_Wand"], Color(0.72, 0.82, 1.35))
-        npc.home_center = GameWorld.CASTLE_CENTER + Vector2(0.0, 2.0)
-        npc.home_radius = 10.0
-        npc.position = Vector3(0, 0.1, -3.0)
-        add_child(npc)
+        # v8.0: настоящий призрак akai_e_espiritu — враждебный страж замка,
+        # парит и кастует магию (см. enemy.gd «ghost»). Дружелюбный страж
+        # больше не нужен — на стенах живая стража-рыцари.
+        var e := EnemyScript.new()
+        e.setup("ghost", 777)
+        e.position = Vector3(0, 0.6, -3.0)
+        add_child(e)
+        var lbl := Label3D.new()
+        lbl.text = "Призрак замка"
+        lbl.font_size = 34
+        lbl.pixel_size = 0.004
+        lbl.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+        lbl.modulate = Color(0.55, 1.0, 0.9)
+        lbl.outline_size = 8
+        lbl.position.y = 2.6
+        e.add_child(lbl)

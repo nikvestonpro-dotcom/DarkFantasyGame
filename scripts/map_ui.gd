@@ -212,6 +212,25 @@ class MapDraw:
                 _label(self, "кладбище", gr + Vector2(0, 18), 12,
                         Color(0.55, 0.48, 0.38))
 
+                # v8.0: заброшенный хутор (полпути к замку)
+                var ham := c + Vector2(GameWorld.HAMLET_CENTER.x,
+                                GameWorld.HAMLET_CENTER.y) * k
+                draw_colored_polygon(PackedVector2Array([
+                        ham + Vector2(-7, -5), ham + Vector2(7, -5), ham + Vector2(7, 5),
+                        ham + Vector2(-7, 5)]), Color(0.45, 0.40, 0.34, 0.9))
+                draw_line(ham + Vector2(-5, -3), ham + Vector2(5, 3),
+                        Color(0.20, 0.16, 0.12), 2.5)
+                _label(self, "хутор", ham + Vector2(0, 20), 13, Color(0.62, 0.55, 0.45))
+
+                # v8.0: открытое поле (штриховка травы)
+                var fld := c + Vector2(GameWorld.FIELD_CENTER.x,
+                                GameWorld.FIELD_CENTER.y) * k
+                for i in 6:
+                        draw_line(fld + Vector2(-30 + i * 12, -8),
+                                        fld + Vector2(-24 + i * 12, 8),
+                                        Color(0.30, 0.42, 0.24, 0.5), 2.0)
+                _label(self, "поле", fld + Vector2(0, 24), 12, Color(0.45, 0.55, 0.38))
+
                 # Компас
                 var comp := Vector2(size.x - 34, 34)
                 draw_circle(comp, 22, Color(0.35, 0.28, 0.16, 0.9))

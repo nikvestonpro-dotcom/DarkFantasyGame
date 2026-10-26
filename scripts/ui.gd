@@ -11,11 +11,22 @@ var kills_label: Label
 var death_overlay: ColorRect
 var death_label: Label
 var death_hint: Label
+var fps_label: Label
 
 
 func _ready() -> void:
         layer = 10
         _build_hud()
+        # v8.0: FPS-счётчик — прикладывайте скрин с цифрой, подкрутим оптимизацию
+        fps_label = _label("FPS 60", 15, Color(0.65, 1.0, 0.85, 0.9))
+        fps_label.anchor_left = 1.0
+        fps_label.anchor_right = 1.0
+        fps_label.offset_left = -90
+        fps_label.offset_right = -14
+        fps_label.offset_top = 10
+        fps_label.offset_bottom = 34
+        fps_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+        add_child(fps_label)
 
 
 func _label(txt: String, size: int, col := Color(0.92, 0.9, 0.85)) -> Label:
@@ -48,7 +59,7 @@ func _build_hud() -> void:
 
         # Подсказка управления сверху
         var hint := _label(
-                "WASD — движение   ·   SHIFT — бег   ·   ПРОБЕЛ — прыжок   ·   ЛКМ — удар   ·   F — полёт (пробел/C — вверх/вниз)   ·   M — карта   ·   ESC — курсор",
+                "WASD — движение   ·   SHIFT — бег   ·   ПРОБЕЛ — прыжок   ·   ЛКМ — комбо ударов   ·   ПКМ — блок   ·   Q — пинок   ·   F — полёт   ·   M — карта   ·   ESC — курсор",
                 15, Color(0.9, 0.88, 0.8, 0.85))
         hint.anchor_left = 0.0
         hint.anchor_right = 1.0
@@ -188,3 +199,8 @@ func _hide_death_labels() -> void:
                 death_label.visible = false
         if death_hint != null:
                 death_hint.visible = false
+
+
+func _process(_dt: float) -> void:
+        if fps_label != null and Time.get_ticks_msec() % 500 < 18:
+                fps_label.text = "FPS %d" % Engine.get_frames_per_second()

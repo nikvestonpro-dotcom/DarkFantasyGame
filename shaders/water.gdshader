@@ -1,20 +1,19 @@
 shader_type spatial;
 render_mode blend_mix, depth_draw_always, cull_back, specular_schlick_ggx;
-// ОЗЕРО v6.0 «Тёмное фэнтези»: почти чёрная вода, зеркалящая сине-фиолетовое
-// небо с багровым заревом (мини-градиент той же палитры, что и sky_dark),
-// плюс screen-space отражение берега (сэмпл экрана со сдвигом по нормали)
-// и лунная дорожка. Пена затемнена.
+// ОЗЕРО v8.0 «Цветная ночь»: чернильная вода, зеркалящая фиолетово-пурпурное
+// небо с огромной луной (палитра согласована со sky_night.gdshader),
+// плюс screen-space отражение берега и широкая тёплая лунная дорожка.
 
-uniform vec4 shallow_color : source_color = vec4(0.035, 0.065, 0.075, 0.55);
-uniform vec4 deep_color : source_color = vec4(0.005, 0.010, 0.020, 0.97);
-uniform vec4 foam_color : source_color = vec4(0.30, 0.32, 0.36, 1.0);
-// Палитра отражённого неба (должна совпадать со sky_dark.gdshader)
-uniform vec3 water_zenith : source_color = vec3(0.030, 0.038, 0.10);
-uniform vec3 water_horizon : source_color = vec3(0.14, 0.055, 0.05);
-uniform vec3 glow_color : source_color = vec3(0.98, 0.30, 0.06);
+uniform vec4 shallow_color : source_color = vec4(0.04, 0.075, 0.08, 0.55);
+uniform vec4 deep_color : source_color = vec4(0.008, 0.012, 0.024, 0.97);
+uniform vec4 foam_color : source_color = vec4(0.30, 0.34, 0.38, 1.0);
+// Палитра отражённого неба (согласована со sky_night.gdshader)
+uniform vec3 water_zenith : source_color = vec3(0.10, 0.045, 0.24);
+uniform vec3 water_horizon : source_color = vec3(0.40, 0.17, 0.36);
+uniform vec3 glow_color : source_color = vec3(0.10, 0.55, 0.40);
 uniform vec3 glow_dir = vec3(-0.87, 0.0, -0.49);
-uniform vec3 moon_dir = vec3(0.6988, 0.5016, 0.5100);
-uniform vec3 moon_tint : source_color = vec3(0.70, 0.78, 1.0);
+uniform vec3 moon_dir = vec3(-0.696, 0.498, 0.508);
+uniform vec3 moon_tint : source_color = vec3(1.0, 0.94, 0.82);
 uniform sampler2D ripple_nor : filter_linear_mipmap, repeat_enable;
 uniform sampler2D depth_tex : hint_depth_texture, filter_linear_mipmap;
 uniform sampler2D screen_tex : hint_screen_texture, filter_linear_mipmap;
@@ -61,7 +60,12 @@ void fragment() {
         if (length(rw.xz) > 1e-4) {
                 az = max(dot(normalize(rw.xz), normalize(glow_dir.xz)), 0.0);
         }
-        skycol += glow_color * pow(az, 2.4) * pow(1.0 - ry, 2.2) * 0.65;
+        skycol += glow_color * pow(az, 2.4) * pow(1.0 - ry, 2.2) * 0.45;
+        // v8.0: отражаем и зелёное сияние неба — едва заметная бирюза сверху
+        skycol += vec3(0.06, 0.20, 0.15) * smoothstep(0.45, 0.9, ry) * 0.35;
+
+        // v8.0: отражаем и зелёное сияние неба — едва заметной бирюзой сверху
+        skycol += vec3(0.06, 0.20, 0.15) * smoothstep(0.45, 0.9, ry) * 0.35;
 
         // --- SCREEN-SPACE REFLECTION: сэмпл экрана со сдвигом по ряби ---
         vec2 suv = SCREEN_UV + vec2(NORMAL.x, -NORMAL.y)
@@ -77,7 +81,7 @@ void fragment() {
 
         // Лунная дорожка (холодная, приглушённая)
         vec3 lview = normalize((VIEW_MATRIX * vec4(moon_dir, 0.0)).xyz);
-        float spec = pow(max(dot(reflect(-lview, NORMAL), vdir), 0.0), 180.0);
+        float spec = pow(max(dot(reflect(-lview, NORMAL), vdir), 0.0), 90.0);
 
         // Багровый отблеск зарева на воде: виден, когда смотришь в сторону зарева
         vec3 cam_world = (INV_VIEW_MATRIX * vec4(0.0, 0.0, 0.0, 1.0)).xyz;
@@ -86,7 +90,7 @@ void fragment() {
         if (length(to_frag) > 1e-3) {
                 gaze = max(dot(normalize(to_frag), normalize(glow_dir.xz)), 0.0);
         }
-        float gspec = pow(gaze, 3.0) * fres * 0.10;
+        float gspec = pow(gaze, 3.0) * fres * 0.18;
 
         // Пена на мелководье
         float n = texture(ripple_nor, wpos.xz * 0.09 + vec2(TIME * 0.02, 0.0)).r;
@@ -94,7 +98,7 @@ void fragment() {
         float foam = foam_mask * smoothstep(0.48, 0.75, n + foam_mask * 0.4);
 
         ALBEDO = mix(base, foam_color.rgb, foam * 0.6);
-        EMISSION = moon_tint * spec * 1.5 + glow_color * gspec
+        EMISSION = moon_tint * spec * 2.6 + glow_color * gspec * 1.6
                         + foam_color.rgb * foam * 0.15;
         ALPHA = clamp(mix(shallow_color.a, deep_color.a, deep_fade) + fres * 0.18 + foam * 0.5, 0.0, 0.97);
         ROUGHNESS = 0.05;

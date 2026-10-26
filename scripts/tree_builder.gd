@@ -272,9 +272,11 @@ func _tree_mesh(species: String, variant: int) -> ArrayMesh:
 func _scatter_forest(cells: Dictionary) -> void:
         var cell_size := 7.0
         # v7.0: процедурных елей меньше — им на смену пришли GLB-деревья
+        # v8.0: прореживание — вместо сплошного леса ПЛЯНЫ: плотные кластеры
+        # по периметру и в теневых зонах, между деревней и замком — открытое поле
         var plans := [
-                ["fir", 0, 140], ["fir", 1, 120], ["fir", 2, 100], ["fir", 3, 80],
-                ["pine", 0, 70], ["pine", 1, 55],
+                ["fir", 0, 95], ["fir", 1, 80], ["fir", 2, 66], ["fir", 3, 52],
+                ["pine", 0, 48], ["pine", 1, 38],
         ]
         for plan in plans:
                 var mesh := _tree_mesh(plan[0], plan[1])
@@ -291,7 +293,13 @@ func _scatter_forest(cells: Dictionary) -> void:
                         var y := GameWorld.terrain_height(p.x, p.y)
                         if y < GameWorld.WATER_LEVEL + 1.0:
                                 continue
-                        if p.distance_to(GameWorld.VILLAGE_CENTER) < GameWorld.VILLAGE_RADIUS * 1.9:
+                        if p.distance_to(GameWorld.VILLAGE_CENTER) < GameWorld.VILLAGE_RADIUS * 2.1:
+                                continue
+                        # v8.0: открытое поле между деревней и замком (жалоба
+                        # «слишком много деревьев, нужна чистая местность»)
+                        if p.distance_to(GameWorld.FIELD_CENTER) < GameWorld.FIELD_RADIUS * 0.95:
+                                continue
+                        if p.distance_to(GameWorld.HAMLET_CENTER) < GameWorld.HAMLET_RADIUS * 1.6:
                                 continue
                         if p.distance_to(GameWorld.LAKE_CENTER) < GameWorld.LAKE_RADIUS * 0.98:
                                 continue
@@ -329,6 +337,9 @@ func _scatter_forest(cells: Dictionary) -> void:
                 var mmi := MultiMeshInstance3D.new()
                 mmi.name = "Forest_%s%d" % [plan[0], plan[1]]
                 mmi.multimesh = mm
+                mmi.visibility_range_end = 260.0
+                mmi.visibility_range_end_margin = 40.0
+                mmi.visibility_range_fade_mode = 1  # FADE_ENABLED
                 add_child(mmi)
 
 
@@ -362,7 +373,7 @@ func _gl_tree_points(want: int, mode: int, cells: Dictionary, cell_size: float,
         while pts.size() < want and guard < want * 60:
                 guard += 1
                 var p := Vector2(rng.randf_range(-1, 1), rng.randf_range(-1, 1)) * GameWorld.TERRAIN_SIZE * 0.46
-                if mode == 1:
+                if mode == 1 or mode == 2:
                         # Опушка и дороги: кольцо вокруг деревни и вдоль троп
                         var a := rng.randf() * TAU
                         var r := rng.randf_range(30.0, 80.0)
@@ -391,6 +402,9 @@ func _gl_tree_points(want: int, mode: int, cells: Dictionary, cell_size: float,
                 if mode == 0 and fk < 0.52:
                         continue
                 if mode == 1 and fk > 0.62:
+                        continue
+                # mode 2: красные клёны — опушки и средняя лесистость
+                if mode == 2 and fk > 0.7:
                         continue
                 var cell := Vector2i(int(p.x / cell_size), int(p.y / cell_size))
                 if cells.has(cell):
@@ -506,15 +520,22 @@ func _gl_tree_instances(path: String, want: int, mode: int, cells: Dictionary,
         if merged.get_surface_count() == 0:
                 return
         var box := merged.get_aabb()
-        # Притемняем листву/кору под мрачный лес
+        # Притемняем листву/кору под мрачный лес; mode 2 — БАГРОВАЯ листва
+        # (тёмно-красные деревья с референсов @elder.void: зелёная ночь + красные кроны)
         for i in merged.get_surface_count():
                 var mm := merged.surface_get_material(i)
                 if mm is StandardMaterial3D:
                         var dup := (mm as StandardMaterial3D).duplicate() as StandardMaterial3D
-                        dup.albedo_color = Color(
-                                        dup.albedo_color.r * dark_k,
-                                        dup.albedo_color.g * dark_k * 1.12,
-                                        dup.albedo_color.b * dark_k * 1.18)
+                        if mode == 2:
+                                dup.albedo_color = Color(
+                                                dup.albedo_color.r * dark_k * 1.85,
+                                                dup.albedo_color.g * dark_k * 0.42,
+                                                dup.albedo_color.b * dark_k * 0.38)
+                        else:
+                                dup.albedo_color = Color(
+                                                dup.albedo_color.r * dark_k,
+                                                dup.albedo_color.g * dark_k * 1.12,
+                                                dup.albedo_color.b * dark_k * 1.18)
                         dup.roughness = maxf(dup.roughness, 0.92)
                         merged.surface_set_material(i, dup)
         # Один MultiMesh на всю модель
@@ -536,6 +557,9 @@ func _gl_tree_instances(path: String, want: int, mode: int, cells: Dictionary,
         var mmi := MultiMeshInstance3D.new()
         mmi.name = "GLTree_" + path.get_file().get_basename()
         mmi.multimesh = mm2
+        mmi.visibility_range_end = 280.0
+        mmi.visibility_range_end_margin = 40.0
+        mmi.visibility_range_fade_mode = 1  # FADE_ENABLED
         add_child(mmi)
 
 
@@ -543,10 +567,13 @@ func _gl_tree_instances(path: String, want: int, mode: int, cells: Dictionary,
 func _scatter_gl_trees(cells: Dictionary) -> void:
         # Сосны — в гущу леса; дубы и клёны — на опушки у деревни и дорог;
         # trees.glb — подлесок everywhere в лесу.
-        _gl_tree_instances(TREES + "pine_tree.glb", 170, 0, cells, 13.0, 19.0, 0.60)
-        _gl_tree_instances(TREES + "oak_tree.glb", 55, 1, cells, 9.0, 13.5, 0.66)
-        _gl_tree_instances(TREES + "maple_tree.glb", 45, 1, cells, 8.5, 12.5, 0.70)
-        _gl_tree_instances(TREES + "trees.glb", 130, 0, cells, 7.0, 12.0, 0.64)
+        # v8.0: плотность ниже (поля!), клёны — в двух видах: обычные тёмные
+        # и КРАСНЫЕ (тёмно-багровая листва — как деревья на референсах)
+        _gl_tree_instances(TREES + "pine_tree.glb", 120, 0, cells, 13.0, 19.0, 0.60)
+        _gl_tree_instances(TREES + "oak_tree.glb", 40, 1, cells, 9.0, 13.5, 0.66)
+        _gl_tree_instances(TREES + "maple_tree.glb", 30, 1, cells, 8.5, 12.5, 0.70)
+        _gl_tree_instances(TREES + "maple_tree.glb", 26, 2, cells, 8.5, 12.5, 0.70)
+        _gl_tree_instances(TREES + "trees.glb", 95, 0, cells, 7.0, 12.0, 0.64)
 
 
 # ---------- СУХИЕ СТВОЛЫ (процедурные) ----------
@@ -591,6 +618,10 @@ func _scatter_snags() -> void:
                         continue
                 if p.distance_to(GameWorld.VILLAGE_CENTER) < GameWorld.VILLAGE_RADIUS * 1.6:
                         continue
+                if p.distance_to(GameWorld.FIELD_CENTER) < GameWorld.FIELD_RADIUS:
+                        continue
+                if p.distance_to(GameWorld.HAMLET_CENTER) < GameWorld.HAMLET_RADIUS * 1.5:
+                        continue
                 if GameWorld.path_distance(p) < 3.0:
                         continue
                 if GameWorld.cave_ridge_distance(p) < 14.0:
@@ -632,6 +663,10 @@ func _scatter_logs() -> void:
                 if y < GameWorld.WATER_LEVEL + 1.0:
                         continue
                 if p.distance_to(GameWorld.VILLAGE_CENTER) < GameWorld.VILLAGE_RADIUS * 1.5:
+                        continue
+                if p.distance_to(GameWorld.FIELD_CENTER) < GameWorld.FIELD_RADIUS:
+                        continue
+                if p.distance_to(GameWorld.HAMLET_CENTER) < GameWorld.HAMLET_RADIUS * 1.5:
                         continue
                 if GameWorld.path_distance(p) < 3.5:
                         continue
@@ -699,7 +734,11 @@ func _scatter_rocks() -> void:
 # ---------- ДЕКОР POLY HAVEN (фотограмметрия) ----------
 
 ## Точки для PH-декора: подбираются рядом с деревней, тропами и берегом.
-func _decor_points(n: int, near_village: bool) -> Array:
+func _decor_points(n: int, near_village: bool, min_village_dist := 7.0,
+                min_path_dist := 2.6) -> Array:
+        # v8.0: запретная зона вокруг деревни теперь ПАРАМЕТР — для больших
+        # сухих стволов (7-12 м длиной) старый радиус 7 м означал «упавшее
+        # дерево прямо на деревне». Мелкий декор (камни, кусты) — как было.
         var pts: Array = []
         var guard := 0
         while pts.size() < n and guard < n * 90:
@@ -714,9 +753,13 @@ func _decor_points(n: int, near_village: bool) -> Array:
                 var y := GameWorld.terrain_height(p.x, p.y)
                 if y < GameWorld.WATER_LEVEL + 0.25:
                         continue
-                if GameWorld.path_distance(p) < 2.6 and not near_village:
+                if GameWorld.path_distance(p) < min_path_dist and not near_village:
                         continue
-                if p.distance_to(GameWorld.VILLAGE_CENTER) < 7.0 and not near_village:
+                if p.distance_to(GameWorld.VILLAGE_CENTER) < min_village_dist and not near_village:
+                        continue
+                if p.distance_to(GameWorld.HAMLET_CENTER) < GameWorld.HAMLET_RADIUS * 1.4:
+                        continue
+                if p.distance_to(GameWorld.FIELD_CENTER) < GameWorld.FIELD_RADIUS:
                         continue
                 if p.distance_to(GameWorld.CAVE_CENTER) < 26.0:
                         continue
@@ -773,6 +816,9 @@ func _ph_instances(path: String, points: Array, fit_y: bool,
                 var mmi := MultiMeshInstance3D.new()
                 mmi.name = "PH_" + path.get_file().get_basename()
                 mmi.multimesh = mm
+                mmi.visibility_range_end = 190.0
+                mmi.visibility_range_end_margin = 25.0
+                mmi.visibility_range_fade_mode = 1  # FADE_ENABLED
                 add_child(mmi)
 
 
@@ -782,8 +828,10 @@ func _scatter_ph_decor() -> void:
         _ph_instances(MDL + "moon_rock_01.glb", _decor_points(9, false), false, 0.7, 1.8, 0.12)
         # Пни
         _ph_instances(MDL + "tree_stump_01.glb", _decor_points(5, false), true, 0.6, 1.15, 0.05)
-        # Сухие стволы (фотореальные) — гуще в мрачном лесу (4 -> 12)
-        _ph_instances(MDL + "dead_tree_trunk.glb", _decor_points(12, false), true, 7.0, 12.0, 0.35)
+        # Сухие стволы (фотореальные): v8.0 ФИКС «упавшее дерево на деревне» —
+        # запретная зона деревни x2.6, от дорог 8 м, стволы живут только в лесу
+        _ph_instances(MDL + "dead_tree_trunk.glb", _decor_points(12, false,
+                        GameWorld.VILLAGE_RADIUS * 2.6, 8.0), true, 7.0, 12.0, 0.35)
         # Кусты у деревни и на опушках
         _ph_instances(MDL + "nettle_plant.glb", _decor_points(4, true), true, 0.55, 0.95, 0.05)
         _ph_instances(MDL + "weed_plant_02.glb", _decor_points(4, true), true, 0.5, 0.85, 0.05)

@@ -40,6 +40,15 @@ func _ready() -> void:
         _build_ruins()
         _build_props()
         _build_imported()
+        # v8.0: деревня больше (жалоба «деревня маленькая»), частокол,
+        # кузница с огородами; хутор на полпути к замку
+        _build_second_ring()
+        _build_palissade()
+        _build_smithy()
+        _build_gardens()
+        _build_hamlet()
+        _build_skulls()
+        _build_rune_stone()
 
 
 # ---------- МАТЕРИАЛЫ ----------
@@ -1182,3 +1191,266 @@ func _place_model(path: String, pos: Vector3, yaw: float, target_h: float,
         holder.rotation.y = yaw
         return holder
 
+# ---------- v8.0: ВТОРОЕ КОЛЬЦО ДОМОВ ----------
+
+## Второе кольцо — деревня из 8 домов больше (6 -> 14): смесь GLB-моделей,
+## фахверков и процедурных домов. Позиции — по окружности r=19-25, все
+## крыльцами к площади.
+func _build_second_ring() -> void:
+        var house_restyle := {
+                "light_ochre": m_plaster_warm, "dark_blue": m_roof_tile,
+                "brown": m_beam, "dark_brown": m_beam,
+                "dark_grey": m_stone, "dark_purple": m_beam,
+        }
+        # [путь, позиция, целевая высота, солома?, процедурный запасной]
+        var defs = [
+                [HOUSES + "medieval_house.glb", Vector2(21, -2), 6.6, false],
+                [HOUSES + "tavern_house_asset.glb", Vector2(-21, -4), 6.2, true],
+                [HOUSES + "tavern_house_5.glb", Vector2(-8, -19), 6.4, false],
+                [HOUSES + "medieval_house.glb", Vector2(8, -20), 6.8, true],
+                [HOUSES + "tavern_house_asset.glb", Vector2(19, 12), 6.0, false],
+                [HOUSES + "tavern_house_5.glb", Vector2(-20, 10), 6.3, true],
+        ]
+        for d in defs:
+                var pos: Vector2 = d[1]
+                var yaw := atan2(-pos.x, -pos.y) + PI
+                var holder := _place_model(d[0],
+                                Vector3(pos.x, GameWorld.terrain_height(pos.x, pos.y), pos.y),
+                                yaw, d[2], 0.25, {})
+                if holder != null:
+                        _darken_model(holder.get_child(0), 0.72)
+                        _collider(holder, Vector3(9.0, 7.0, 9.0), Vector3(0, 3.5, 0))
+                        var pl := OmniLight3D.new()
+                        pl.light_color = Color(1.0, 0.5, 0.2)
+                        pl.light_energy = 1.1
+                        pl.omni_range = 8.0
+                        pl.position = Vector3(0, 2.8, 4.6)
+                        pl.add_to_group("torch_light")
+                        holder.add_child(pl)
+                        _smoke(holder, Vector3(1.8, d[2] * 0.92, -1.6))
+                else:
+                        # Процедурный запасной: чередуем штукатурку и тёмное дерево
+                        var wall_m: StandardMaterial3D = m_plaster if rng.randf() < 0.5 else m_wall
+                        var roof_m: StandardMaterial3D = m_roof_straw if d[3] else m_roof_tile
+                        _build_house(pos, 6.2, 5.2, 2.9, wall_m, roof_m, true, true)
+        # Пара фахверков Quaternius вriskом кольце
+        for hp in [Vector2(17, 19), Vector2(-3, 22)]:
+                var yaw2 := atan2(-hp.x, -hp.y) + PI
+                var holder2 := _place_model(MDL + "quat_medieval_house.fbx",
+                                Vector3(hp.x, GameWorld.terrain_height(hp.x, hp.y), hp.y),
+                                yaw2, 6.2, 0.28, house_restyle)
+                if holder2 != null:
+                        _collider(holder2, Vector3(8.5, 7.0, 8.5), Vector3(0, 3.5, 0))
+                        var pl2 := OmniLight3D.new()
+                        pl2.light_color = Color(1.0, 0.65, 0.3)
+                        pl2.light_energy = 1.8
+                        pl2.omni_range = 9.0
+                        pl2.position = Vector3(0, 3.0, 4.2)
+                        pl2.add_to_group("torch_light")
+                        holder2.add_child(pl2)
+                        _smoke(holder2, Vector3(1.6, 6.4, -1.8))
+                else:
+                        _build_house(hp, 6.0, 6.0, 3.0, m_plaster, m_roof_straw, true, true)
+
+
+# ---------- v8.0: ЧАСТОКОЛ ----------
+
+## Кольцо заострённых брёвен вокруг деревни (r~30): защита от лесной нечисти.
+## Южная сторона — ворота (проход к таверне и дороге на юг).
+func _build_palissade() -> void:
+        var log_m := _pmat("dark_planks", Color(0.42, 0.36, 0.30), 0.6, 0.95, 0.8)
+        var tip_m := _cmap(Color(0.36, 0.31, 0.26), 0.98)
+        var ring_r := 30.0
+        var count := 64
+        for i in count:
+                var ang := TAU * i / count
+                # Южные ворота (юг = +Z, к PLAYER_SPAWN): проход ~14 градусов
+                var deg := rad_to_deg(ang)
+                if deg > 168.0 and deg < 192.0:
+                        continue
+                var px := cos(ang) * ring_r
+                var pz := sin(ang) * ring_r
+                var y := GameWorld.terrain_height(px, pz)
+                if absf(y - GY) > 2.2:
+                        continue
+                var log := _cyl(self, 0.16, 0.19, 2.9, Vector3(px, y + 1.45, pz), log_m, 7)
+                # Остриё
+                var tip := _cyl(log, 0.0, 0.16, 0.4, Vector3(0, 1.65, 0), tip_m, 7)
+                tip.name = "Tip"
+                log.look_at(Vector3(px * 2.0, y, pz * 2.0), Vector3.UP)
+
+
+# ---------- v8.0: КУЗНИЦА ----------
+
+## Двор кузнеца к северо-востоку от площади: навес, горн с углями,
+## наковальня, бочка для закалки, тачка с рудой.
+func _build_smithy() -> void:
+        var cx := 14.5
+        var cz := 18.5
+        var y := GameWorld.terrain_height(cx, cz)
+        var root := Node3D.new()
+        root.position = Vector3(cx, y, cz)
+        add_child(root)
+        # Навес на четырёх столбах
+        var post_m := _pmat("dark_planks", Color(0.40, 0.34, 0.28), 0.5, 0.95)
+        for pp in [Vector3(-1.8, 0, -1.4), Vector3(1.8, 0, -1.4), Vector3(-1.8, 0, 1.6), Vector3(1.8, 0, 1.6)]:
+                _cyl(root, 0.09, 0.11, 2.6, Vector3(pp.x, 1.3, pp.z), post_m, 8)
+        _box(root, Vector3(4.6, 0.18, 3.8), Vector3(0, 2.7, 0), m_roof_wood)
+        # Горн: каменное основание с тлеющими углями
+        _box(root, Vector3(1.6, 1.0, 1.2), Vector3(-1.1, 0.5, -0.4), m_stone)
+        var ember_m := _cmap(Color(0.1, 0.02, 0.0), 1.0)
+        ember_m.emission_enabled = true
+        ember_m.emission = Color(1.0, 0.35, 0.08)
+        ember_m.emission_energy_multiplier = 1.8
+        _box(root, Vector3(1.3, 0.2, 0.9), Vector3(-1.1, 1.05, -0.4), ember_m)
+        var forge_light := OmniLight3D.new()
+        forge_light.light_color = Color(1.0, 0.45, 0.15)
+        forge_light.light_energy = 2.4
+        forge_light.omni_range = 7.0
+        forge_light.position = Vector3(-1.1, 1.5, -0.4)
+        forge_light.add_to_group("campfire_light")
+        root.add_child(forge_light)
+        # Наковальня (процедурная: тело + рог + основание)
+        var iron_m := _cmap(Color(0.14, 0.13, 0.14), 0.35)
+        iron_m.metallic = 0.9
+        _box(root, Vector3(0.55, 0.12, 0.26), Vector3(0.6, 0.92, 0.3), iron_m)
+        _box(root, Vector3(0.3, 0.3, 0.24), Vector3(0.6, 0.72, 0.3), iron_m)
+        _box(root, Vector3(0.44, 0.44, 0.3), Vector3(0.6, 0.22, 0.3), m_beam)
+        # Бочка закалки
+        _cyl(root, 0.34, 0.3, 0.9, Vector3(1.6, 0.45, 1.2), _pmat("dark_planks", Color(0.45, 0.38, 0.3), 0.5), 12)
+        _collider(root, Vector3(4.6, 3.2, 3.8), Vector3(0, 1.6, 0))
+
+
+# ---------- v8.0: ОГОРОДЫ ----------
+
+## Грядки с капустой на восточной окраине: сколько в тумане ни посади —
+## всё одно кто-то вытаптывает.
+func _build_gardens() -> void:
+        var soil_m := _pmat("brown_mud_02", Color(0.5, 0.42, 0.34), 0.8, 1.0, 0.9)
+        var leaf_m := _cmap(Color(0.16, 0.30, 0.14), 0.95)
+        for gi in 4:
+                var gx := 20.0 + (gi % 2) * 4.2
+                var gz := -6.0 + gi * 3.6
+                var y := GameWorld.terrain_height(gx, gz)
+                _box(self, Vector3(3.6, 0.3, 2.4), Vector3(gx, y + 0.14, gz), soil_m)
+                for r in 5:
+                        for c in 3:
+                                var cab := MeshInstance3D.new()
+                                var cm := SphereMesh.new()
+                                cm.radius = 0.28
+                                cm.height = 0.5
+                                cm.radial_segments = 8
+                                cm.rings = 4
+                                cab.mesh = cm
+                                cab.material_override = leaf_m
+                                cab.position = Vector3(gx - 1.4 + c * 1.4, y + 0.42, gz - 0.8 + r * 0.4)
+                                add_child(cab)
+
+
+# ---------- v8.0: ЗАБРОШЕННЫЙ ХУТОР ----------
+
+## Хутор на полпути к замку: покосившиеся дома из модулей MegaKit,
+## обвалившаяся ограда, бандит-павший. Оговорка: модули подгоняются
+## по высше AABB — размер стабилен при любом экспорте.
+func _build_hamlet() -> void:
+        var hc: Vector2 = GameWorld.HAMLET_CENTER
+        var hcy := GameWorld.terrain_height(hc.x, hc.y)
+        var mk := "res://assets/models/packs/Medieval Village MegaKit[Standard]/Medieval Village MegaKit[Standard]/FBX/"
+        # Текстуры MegaKit лежат отдельно от FBX (импортёр их не находит) —
+        # подменяем материалы на наши Poly Haven через restyle
+        var mk_style := {
+                "brick": m_ruin, "plaster": m_plaster, "rock": m_stone,
+                "wood": m_beam, "tile": m_roof_tile, "metal": m_beam,
+                "dark": m_beam, "wooddark": m_beam, "woodlight": m_wall_light,
+        }
+        # Дома-руины: стены MegaKit, мировые позиции = HAMLET_CENTER + смещение
+        var defs = [
+                [mk + "Wall_UnevenBrick_Door_Flat.fbx", Vector2(-4.5, -3.0), 3.4, 0.2],
+                [mk + "Wall_UnevenBrick_Window_Wide_Flat.fbx", Vector2(-4.5, -0.2), 3.4, 0.24],
+                [mk + "Wall_Plaster_Door_Round.fbx", Vector2(4.0, -4.0), 3.6, 0.18],
+                [mk + "Wall_Plaster_Window_Wide_Flat.fbx", Vector2(4.0, -1.0), 3.6, 0.22],
+                [mk + "Wall_UnevenBrick_Straight.fbx", Vector2(0.5, 5.0), 3.2, 0.26],
+                [mk + "Wall_Plaster_Straight.fbx", Vector2(-3.6, 5.0), 3.2, 0.23],
+        ]
+        for d in defs:
+                var wp: Vector2 = hc + d[1]
+                var wy := GameWorld.terrain_height(wp.x, wp.y)
+                var holder := _place_model(d[0], Vector3(wp.x, wy, wp.y),
+                                d[3], d[2], 0.15, mk_style)
+                if holder != null:
+                        _darken_model(holder.get_child(0), 0.66)
+                        _collider(holder, Vector3(3.4, 3.8, 1.2), Vector3(0, 1.9, 0))
+        # Разбитая кладка вокруг (кирпичи MegaKit)
+        for bi in 7:
+                var bx := hc.x + rng.randf_range(-8, 8)
+                var bz := hc.y + rng.randf_range(2, 9)
+                _place_model(mk + "Prop_Brick%d.fbx" % (bi % 4 + 1),
+                                Vector3(bx, GameWorld.terrain_height(bx, bz), bz),
+                                rng.randf() * TAU, 0.4, 0.1, mk_style)
+        # Тусклый ведьмин огонь в руинах
+        var will := OmniLight3D.new()
+        will.light_color = Color(0.35, 0.8, 0.6)
+        will.light_energy = 1.2
+        will.omni_range = 9.0
+        will.position = Vector3(hc.x, hcy + 1.4, hc.y)
+        will.add_to_group("torch_light")
+        add_child(will)
+
+# ---------- v8.0: ЧЕРЕПА НА КЛАДБИЩЕ + РУННЫЙ КАМЕНЬ ----------
+
+## PS1-черепа (Stark Crafts, CC0) у надгробий — «тот самый» жуткий акцент.
+func _build_skulls() -> void:
+        var sk := "res://assets/models/packs/PS1 Dark Fantasy Horror Game Assets (by Stark Crafts)/PS1 Dark Fantasy Horror Game Assets (by Stark Crafts)/PS1_Skull/PS1_Skull.fbx"
+        var c := Vector2(16.5, 17.5)
+        var spots := [Vector2(-2.9, -1.4), Vector2(0.8, -1.2), Vector2(2.2, 0.4), Vector2(1.5, 2.4)]
+        for i in spots.size():
+                var wp: Vector2 = c + spots[i]
+                var holder := _place_model(sk,
+                                Vector3(wp.x, GameWorld.terrain_height(wp.x, wp.y) + 0.02, wp.y),
+                                rng.randf() * TAU, 0.34, 0.02, {})
+                if holder != null:
+                        _darken_model(holder.get_child(0), 0.82)
+
+
+## Рунный камень на тропе к замку: светящиеся бирюзой руны
+## (MagicRunes_Emission из PS1-пака) — ориентир и «маяк нечисти».
+func _build_rune_stone() -> void:
+        # На полпути между деревней и хутором, у дороги
+        var p := Vector2(-42.0, 42.0)
+        var y := GameWorld.terrain_height(p.x, p.y)
+        var stone_m := _pmat("dark_rock", Color(0.42, 0.44, 0.50), 0.5, 0.95)
+        var b := MeshInstance3D.new()
+        var bm := BoxMesh.new()
+        bm.size = Vector3(1.1, 2.6, 0.5)
+        b.mesh = bm
+        b.material_override = stone_m
+        b.position = Vector3(p.x, y + 1.3, p.y)
+        b.rotation.y = 0.7
+        add_child(b)
+        _collider(b, Vector3(1.1, 2.6, 0.5), Vector3(0, 0, 0))
+        # Руны: плоскость с эмиссией
+        var runes := MeshInstance3D.new()
+        var pm := PlaneMesh.new()
+        pm.size = Vector2(0.7, 1.8)
+        var rm := StandardMaterial3D.new()
+        var runes_tex := load("res://assets/models/packs/PS1 Dark Fantasy Horror Game Assets (by Stark Crafts)/PS1 Dark Fantasy Horror Game Assets (by Stark Crafts)/PS1_Skull/MagicRunes_Emission.png")
+        if runes_tex != null:
+                rm.albedo_texture = runes_tex
+        rm.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+        rm.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+        rm.emission_enabled = true
+        rm.emission = Color(0.3, 1.0, 0.7)
+        rm.emission_energy_multiplier = 2.2
+        rm.billboard_mode = BaseMaterial3D.BILLBOARD_DISABLED
+        runes.mesh = pm
+        runes.material_override = rm
+        runes.position = Vector3(0, 0.1, 0.27)
+        b.add_child(runes)
+        # Бирюзовое свечение вокруг камня
+        var rl := OmniLight3D.new()
+        rl.light_color = Color(0.35, 0.95, 0.7)
+        rl.light_energy = 1.6
+        rl.omni_range = 7.0
+        rl.position = Vector3(0, 1.6, 0)
+        rl.add_to_group("torch_light")
+        b.add_child(rl)
