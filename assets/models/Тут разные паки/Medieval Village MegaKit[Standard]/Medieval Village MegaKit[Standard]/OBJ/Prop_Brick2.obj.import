@@ -1,0 +1,25 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://cgrme2yg64ith"
+path="res://.godot/imported/Prop_Brick2.obj-6d955f2d8f2f8143d015cfaadb8f2357.mesh"
+
+[deps]
+
+files=["res://.godot/imported/Prop_Brick2.obj-6d955f2d8f2f8143d015cfaadb8f2357.mesh"]
+
+source_file="res://assets/models/Тут разные паки/Medieval Village MegaKit[Standard]/Medieval Village MegaKit[Standard]/OBJ/Prop_Brick2.obj"
+dest_files=["res://.godot/imported/Prop_Brick2.obj-6d955f2d8f2f8143d015cfaadb8f2357.mesh", "res://.godot/imported/Prop_Brick2.obj-6d955f2d8f2f8143d015cfaadb8f2357.mesh"]
+
+[params]
+
+generate_tangents=true
+generate_lods=true
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+force_disable_mesh_compression=false
