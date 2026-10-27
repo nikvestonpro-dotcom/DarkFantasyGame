@@ -1,0 +1,181 @@
+[gd_scene load_steps=20 format=3]
+
+[ext_resource type="Script" path="res://scripts/player_controller.gd" id="1_player"]
+[ext_resource type="Script" path="res://scripts/sky_dome.gd" id="2_dome"]
+[ext_resource type="Shader" path="res://shaders/night_sky.gdshader" id="3_sky"]
+[ext_resource type="PackedScene" path="res://assets/models/kay_Knight.glb" id="4_knight"]
+[ext_resource type="PackedScene" path="res://assets/models/packs/Castel Pack/Castel Pack/Castles_and_Forts.glb" id="5_castle"]
+[ext_resource type="PackedScene" path="res://assets/models/packs/PSX Dungeon Boxes and Barrels Pack/PSX Dungeon Boxes and Barrels Pack/Models/Crates_and_barrels_glb.glb" id="6_crates"]
+[ext_resource type="PackedScene" path="res://assets/models/props/torch.glb" id="7_torch"]
+
+[sub_resource type="ShaderMaterial" id="mat_sky"]
+shader = ExtResource("3_sky")
+
+[sub_resource type="SphereMesh" id="mesh_dome"]
+material = SubResource("mat_sky")
+radius = 800.0
+height = 1600.0
+radial_segments = 24
+rings = 12
+flip_faces = true
+
+[sub_resource type="Environment" id="env_night"]
+background_mode = 1
+background_color = Color(0.027, 0.02, 0.071, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.1, 0.1, 0.3, 1)
+ambient_light_energy = 0.35
+fog_enabled = true
+fog_light_color = Color(0.075, 0.055, 0.145, 1)
+fog_density = 0.018
+
+[sub_resource type="StandardMaterial3D" id="mat_ground"]
+albedo_color = Color(0.13, 0.15, 0.19, 1)
+roughness = 1.0
+
+[sub_resource type="PlaneMesh" id="mesh_ground"]
+material = SubResource("mat_ground")
+size = Vector2(300, 300)
+
+[sub_resource type="StandardMaterial3D" id="mat_path"]
+albedo_color = Color(0.23, 0.21, 0.31, 1)
+roughness = 1.0
+
+[sub_resource type="PlaneMesh" id="mesh_path"]
+material = SubResource("mat_path")
+size = Vector2(4.5, 60)
+
+[sub_resource type="StandardMaterial3D" id="mat_mesa"]
+albedo_color = Color(0.11, 0.115, 0.16, 1)
+roughness = 1.0
+
+[sub_resource type="CylinderMesh" id="mesh_mesa"]
+material = SubResource("mat_mesa")
+top_radius = 13.0
+bottom_radius = 17.0
+height = 10.0
+radial_segments = 10
+
+[sub_resource type="WorldBoundaryShape3D" id="shape_ground"]
+
+[sub_resource type="CylinderShape3D" id="shape_mesa"]
+radius = 17.0
+height = 10.0
+
+[sub_resource type="CapsuleShape3D" id="shape_capsule"]
+radius = 0.35
+height = 1.8
+
+[node name="Main" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture_filter = 1
+stretch = true
+stretch_shrink = 3
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
+size = Vector2i(426, 240)
+render_target_update_mode = 4
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="SubViewportContainer/SubViewport"]
+environment = SubResource("env_night")
+
+[node name="MoonLight" type="DirectionalLight3D" parent="SubViewportContainer/SubViewport"]
+transform = Transform3D(-0.9203, 0.1769, -0.3505, 0, 0.8934, 0.4506, 0.3926, 0.4147, -0.8211, 0, 0, 0)
+light_color = Color(0.69, 0.77, 0.87, 1)
+light_energy = 0.85
+shadow_enabled = true
+directional_shadow_max_distance = 150.0
+
+[node name="World" type="Node3D" parent="SubViewportContainer/SubViewport"]
+
+[node name="Ground" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/World"]
+mesh = SubResource("mesh_ground")
+
+[node name="GroundBody" type="StaticBody3D" parent="SubViewportContainer/SubViewport/World/Ground"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SubViewportContainer/SubViewport/World/Ground/GroundBody"]
+shape = SubResource("shape_ground")
+
+[node name="Path" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.02, -26)
+mesh = SubResource("mesh_path")
+
+[node name="Mesa" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, -60)
+mesh = SubResource("mesh_mesa")
+
+[node name="MesaBody" type="StaticBody3D" parent="SubViewportContainer/SubViewport/World/Mesa"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SubViewportContainer/SubViewport/World/Mesa/MesaBody"]
+shape = SubResource("shape_mesa")
+
+[node name="Castle" parent="SubViewportContainer/SubViewport/World" instance=ExtResource("5_castle")]
+transform = Transform3D(5.5, 0, 0, 0, 5.5, 0, 0, 0, 5.5, 0, 16.05, -60)
+
+[node name="CratesA" parent="SubViewportContainer/SubViewport/World" instance=ExtResource("6_crates")]
+transform = Transform3D(1.2558, 0, 0.3367, 0, 1.3, 0, -0.3367, 0, 1.2558, -3.5, 0, 2)
+
+[node name="CratesB" parent="SubViewportContainer/SubViewport/World" instance=ExtResource("6_crates")]
+transform = Transform3D(-0.2084, 0, 1.1818, 0, 1.2, 0, -1.1818, 0, -0.2083, 3.2, 0, -1.5)
+
+[node name="Torch1" parent="SubViewportContainer/SubViewport/World" instance=ExtResource("7_torch")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.2, 0.44, 3)
+
+[node name="Torch2" parent="SubViewportContainer/SubViewport/World" instance=ExtResource("7_torch")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 2.2, 0.44, -5)
+
+[node name="Torch3" parent="SubViewportContainer/SubViewport/World" instance=ExtResource("7_torch")]
+transform = Transform3D(0.906, 0, 0.4226, 0, 1, 0, -0.4226, 0, 0.906, -2.2, 0.44, -13)
+
+[node name="Torch4" parent="SubViewportContainer/SubViewport/World" instance=ExtResource("7_torch")]
+transform = Transform3D(-0.9397, 0, -0.342, 0, 1, 0, 0.342, 0, -0.9397, 2.2, 0.44, -21)
+
+[node name="SkyDome" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/World"]
+mesh = SubResource("mesh_dome")
+script = ExtResource("2_dome")
+
+[node name="Player" type="CharacterBody3D" parent="SubViewportContainer/SubViewport"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 10)
+script = ExtResource("1_player")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SubViewportContainer/SubViewport/Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+shape = SubResource("shape_capsule")
+
+[node name="KayKnight" parent="SubViewportContainer/SubViewport/Player" instance=ExtResource("4_knight")]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0.56, 0)
+
+[node name="CameraPivot" type="Node3D" parent="SubViewportContainer/SubViewport/Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+
+[node name="SpringArm3D" type="SpringArm3D" parent="SubViewportContainer/SubViewport/Player/CameraPivot"]
+transform = Transform3D(1, 0, 0, 0, 0.9801, 0.1987, 0, -0.1987, 0.9801, 0, 0, 0)
+spring_length = 3.2
+
+[node name="Camera3D" type="Camera3D" parent="SubViewportContainer/SubViewport/Player/CameraPivot/SpringArm3D"]
+far = 2500.0
+
+[node name="HUD" type="Label" parent="."]
+anchors_preset = 3
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 12
+offset_top = -40
+offset_right = 1200
+offset_bottom = -12
+theme_override_font_sizes/font_size = 15
+modulate = Color(0.78, 0.8, 0.92, 0.85)
+text = "WASD — движение · Мышь — камера · Shift — бег · Space — прыжок/вверх · C — вниз (полёт) · F — полёт · V — вид · ESC — курсор"
