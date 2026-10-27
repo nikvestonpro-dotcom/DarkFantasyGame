@@ -1,0 +1,35 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="PackedScene" path="res://addons/psx_medieval_village_kit/models/roof_thatch_model.glb" id="1"]
+
+[sub_resource type="BoxShape3D" id="box0"]
+size = Vector3(2.0000, 2.8700, 2.5000)
+
+[sub_resource type="BoxShape3D" id="box0_1"]
+size = Vector3(2.0000, 2.6950, 2.4500)
+
+[sub_resource type="BoxShape3D" id="box0_2"]
+size = Vector3(2.0000, 3.0450, 2.5000)
+
+[sub_resource type="BoxShape3D" id="box0_3"]
+size = Vector3(2.0000, 0.4800, 0.4160)
+
+[node name="roof_thatch" instance=ExtResource("1")]
+
+[node name="Collision" type="StaticBody3D" parent="roof_thatch"]
+
+[node name="Box" type="CollisionShape3D" parent="roof_thatch/Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0000, 1.1150, 0.2500)
+shape = SubResource("box0")
+
+[node name="Box2" type="CollisionShape3D" parent="roof_thatch/Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0000, 0.8525, 0.2250)
+shape = SubResource("box0_1")
+
+[node name="Box3" type="CollisionShape3D" parent="roof_thatch/Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0000, 1.0275, 0.2500)
+shape = SubResource("box0_2")
+
+[node name="Box4" type="CollisionShape3D" parent="roof_thatch/Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0000, 2.5000, -1.0000)
+shape = SubResource("box0_3")

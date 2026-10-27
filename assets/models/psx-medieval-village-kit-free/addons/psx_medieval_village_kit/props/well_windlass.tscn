@@ -1,0 +1,86 @@
+[gd_scene load_steps=13 format=3]
+
+[ext_resource type="PackedScene" path="res://addons/psx_medieval_village_kit/models/well_windlass_model.glb" id="1"]
+[ext_resource type="Script" path="res://addons/psx_medieval_village_kit/machine.gd" id="2"]
+
+[sub_resource type="BoxShape3D" id="box0"]
+size = Vector3(1.6000, 0.8000, 1.5220)
+
+[sub_resource type="BoxShape3D" id="box0_1"]
+size = Vector3(1.2000, 0.0100, 1.1420)
+
+[sub_resource type="BoxShape3D" id="box0_2"]
+size = Vector3(1.6000, 0.2000, 1.5220)
+
+[sub_resource type="BoxShape3D" id="box0_3"]
+size = Vector3(0.1400, 2.3000, 0.1400)
+
+[sub_resource type="BoxShape3D" id="box0_4"]
+size = Vector3(0.1400, 2.3000, 0.1400)
+
+[sub_resource type="BoxShape3D" id="box0_5"]
+size = Vector3(1.9000, 0.1400, 0.1400)
+
+[sub_resource type="BoxShape3D" id="box0_6"]
+size = Vector3(2.1000, 0.4480, 0.6680)
+
+[sub_resource type="BoxShape3D" id="box0_7"]
+size = Vector3(2.1000, 0.4480, 0.6680)
+
+[sub_resource type="BoxShape3D" id="box1"]
+size = Vector3(2.0000, 0.4356, 0.2400)
+
+[sub_resource type="BoxShape3D" id="box2"]
+size = Vector3(0.3000, 1.2500, 0.3000)
+
+[node name="well_windlass" instance=ExtResource("1")]
+script = ExtResource("2")
+kind = "turn"
+steps = 3
+clip = "wind"
+
+[node name="Collision" type="StaticBody3D" parent="well_windlass"]
+
+[node name="Box" type="CollisionShape3D" parent="well_windlass/Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0000, 0.4000, -0.0000)
+shape = SubResource("box0")
+
+[node name="Box2" type="CollisionShape3D" parent="well_windlass/Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0000, 0.2050, -0.0000)
+shape = SubResource("box0_1")
+
+[node name="Box3" type="CollisionShape3D" parent="well_windlass/Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0000, 0.8200, -0.0000)
+shape = SubResource("box0_2")
+
+[node name="Box4" type="CollisionShape3D" parent="well_windlass/Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8500, 1.1500, -0.0000)
+shape = SubResource("box0_3")
+
+[node name="Box5" type="CollisionShape3D" parent="well_windlass/Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.8500, 1.1500, -0.0000)
+shape = SubResource("box0_4")
+
+[node name="Box6" type="CollisionShape3D" parent="well_windlass/Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0000, 2.3000, -0.0000)
+shape = SubResource("box0_5")
+
+[node name="Box7" type="CollisionShape3D" parent="well_windlass/Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0000, 2.7550, 0.3860)
+shape = SubResource("box0_6")
+
+[node name="Box8" type="CollisionShape3D" parent="well_windlass/Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0000, 2.7550, -0.3860)
+shape = SubResource("box0_7")
+
+[node name="Collision" type="StaticBody3D" parent="well_windlass/well_windlass_drum"]
+
+[node name="Box" type="CollisionShape3D" parent="well_windlass/well_windlass_drum/Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.2000, -0.0978, -0.0000)
+shape = SubResource("box1")
+
+[node name="Collision" type="StaticBody3D" parent="well_windlass/well_windlass_bucket"]
+
+[node name="Box" type="CollisionShape3D" parent="well_windlass/well_windlass_bucket/Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0000, -0.6250, 0.0900)
+shape = SubResource("box2")

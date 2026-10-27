@@ -1,0 +1,12 @@
+config_version=5
+
+[application]
+
+config/name="PSX Medieval Village Kit Free"
+run/main_scene="res://addons/psx_medieval_village_kit/demo/gallery.tscn"
+config/features=PackedStringArray("4.3")
+
+[display]
+
+window/size/viewport_width=1280
+window/size/viewport_height=720
