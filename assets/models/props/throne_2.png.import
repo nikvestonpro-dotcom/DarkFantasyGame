@@ -2,14 +2,11 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://pbmmjur536s0"
+uid="uid://d08t275yc76r3"
 path.s3tc="res://.godot/imported/throne_2.png-f79d6bd9f0d74aa823c42522065987a9.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
-}
-generator_parameters={
-"md5": "cd27d553df8fdd486c67f67c08df3d8a"
 }
 
 [deps]

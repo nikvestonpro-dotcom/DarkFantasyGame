@@ -3,7 +3,7 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://c8rx0s7ykcopc"
+uid="uid://dlbt51lmihge6"
 path="res://.godot/imported/throne.glb-4a8d52fe8715ac5e5f65a3477e9a8fab.scn"
 
 [deps]
@@ -40,6 +40,6 @@ materials/extract=0
 materials/extract_format=0
 materials/extract_path=""
 _subresources={}
-gltf/naming_version=1
+gltf/naming_version=2
 gltf/embedded_image_handling=1
-gltf/texture_map_mode=0
+gltf/texture_map_mode=1

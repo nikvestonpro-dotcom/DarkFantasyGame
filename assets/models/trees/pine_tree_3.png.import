@@ -2,14 +2,11 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b7drj1itih1k3"
+uid="uid://cdi4ytjdixbki"
 path.s3tc="res://.godot/imported/pine_tree_3.png-2a95269af7a386bf6751e77e927aa75d.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
-}
-generator_parameters={
-"md5": "d7421f5fd2ee9a4de3066f4b84b98bef"
 }
 
 [deps]

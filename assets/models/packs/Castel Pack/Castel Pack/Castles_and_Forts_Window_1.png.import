@@ -3,9 +3,10 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cvugmaaiqhod5"
-path="res://.godot/imported/Castles_and_Forts_Window_1.png-bfee05e7b92a2989c4947b7a45452a76.ctex"
+path.s3tc="res://.godot/imported/Castles_and_Forts_Window_1.png-bfee05e7b92a2989c4947b7a45452a76.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "98523b8e5ac79bdfb8dece9d89f9a887"
@@ -14,11 +15,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/models/packs/Castel Pack/Castel Pack/Castles_and_Forts_Window_1.png"
-dest_files=["res://.godot/imported/Castles_and_Forts_Window_1.png-bfee05e7b92a2989c4947b7a45452a76.ctex"]
+dest_files=["res://.godot/imported/Castles_and_Forts_Window_1.png-bfee05e7b92a2989c4947b7a45452a76.s3tc.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -40,4 +41,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

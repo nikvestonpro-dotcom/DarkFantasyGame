@@ -3,7 +3,7 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://cyyhamgtri4nm"
+uid="uid://dx4vfbifjugui"
 path="res://.godot/imported/trees.glb-11be0e63c1466230a0fafb53bdaa59e6.scn"
 
 [deps]
@@ -40,6 +40,6 @@ materials/extract=0
 materials/extract_format=0
 materials/extract_path=""
 _subresources={}
-gltf/naming_version=1
+gltf/naming_version=2
 gltf/embedded_image_handling=1
-gltf/texture_map_mode=0
+gltf/texture_map_mode=1

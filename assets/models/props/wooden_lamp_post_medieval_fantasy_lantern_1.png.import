@@ -2,23 +2,21 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://t7fi664rcfyh"
-path="res://.godot/imported/wooden_lamp_post_medieval_fantasy_lantern_1.png-860d1a7ad3b7fd8ea52c3796194ed42f.ctex"
+uid="uid://brvs8hm2pqirm"
+path.s3tc="res://.godot/imported/wooden_lamp_post_medieval_fantasy_lantern_1.png-860d1a7ad3b7fd8ea52c3796194ed42f.s3tc.ctex"
 metadata={
-"vram_texture": false
-}
-generator_parameters={
-"md5": "77fce21cbcf97a3b21192a537c532372"
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/models/props/wooden_lamp_post_medieval_fantasy_lantern_1.png"
-dest_files=["res://.godot/imported/wooden_lamp_post_medieval_fantasy_lantern_1.png-860d1a7ad3b7fd8ea52c3796194ed42f.ctex"]
+dest_files=["res://.godot/imported/wooden_lamp_post_medieval_fantasy_lantern_1.png-860d1a7ad3b7fd8ea52c3796194ed42f.s3tc.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -40,4 +38,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

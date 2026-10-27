@@ -2,14 +2,11 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://p76pnnj2vb5r"
+uid="uid://btkmm6g5n8eew"
 path.s3tc="res://.godot/imported/medieval_tavern_2k_vertices_-_free_game_asset_2.png-35868effc9824cd63542b3ff78326d90.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
-}
-generator_parameters={
-"md5": "0e6bb89eae462f76d3c2a1edbc5e7c8a"
 }
 
 [deps]
@@ -40,5 +37,5 @@ process/premult_alpha=false
 process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
-process/size_limit=1024
+process/size_limit=0
 detect_3d/compress_to=0

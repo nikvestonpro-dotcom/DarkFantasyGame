@@ -2,13 +2,10 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://s5betdri0tvc"
+uid="uid://cwcev1rbtbo1u"
 path="res://.godot/imported/trees_4.png-f2dfec9c703af5a5616aa02547af12f2.ctex"
 metadata={
 "vram_texture": false
-}
-generator_parameters={
-"md5": "2f05abfb5d9026eed89e6b110efac292"
 }
 
 [deps]
@@ -26,7 +23,7 @@ compress/rdo_quality_loss=0.0
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0
-mipmaps/generate=true
+mipmaps/generate=false
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""

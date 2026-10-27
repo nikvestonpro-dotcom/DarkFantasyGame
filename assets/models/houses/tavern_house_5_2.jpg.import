@@ -2,14 +2,11 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dc0tmsb6hlmjf"
+uid="uid://cynts8kkkv7wo"
 path.s3tc="res://.godot/imported/tavern_house_5_2.jpg-9cecccffff39133cf28bff930eda4528.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
-}
-generator_parameters={
-"md5": "579d1d726471d8be8c2905ce0bfceaf6"
 }
 
 [deps]
@@ -40,5 +37,5 @@ process/premult_alpha=false
 process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
-process/size_limit=1024
+process/size_limit=0
 detect_3d/compress_to=0

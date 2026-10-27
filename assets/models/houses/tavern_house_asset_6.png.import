@@ -2,14 +2,11 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://d0dl4t7rccs07"
+uid="uid://bia0c7lorrt6l"
 path.s3tc="res://.godot/imported/tavern_house_asset_6.png-db6ed0053a5576085743c2b6c908af37.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
-}
-generator_parameters={
-"md5": "739c206345afc580109b6c588a2fd1db"
 }
 
 [deps]
