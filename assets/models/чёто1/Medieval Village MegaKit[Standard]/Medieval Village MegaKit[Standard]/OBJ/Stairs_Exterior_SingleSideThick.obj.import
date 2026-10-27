@@ -1,0 +1,25 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://b6efa5lxtnwk7"
+path="res://.godot/imported/Stairs_Exterior_SingleSideThick.obj-ce51a8d8196038c72a8b9e4e64269068.mesh"
+
+[deps]
+
+files=["res://.godot/imported/Stairs_Exterior_SingleSideThick.obj-ce51a8d8196038c72a8b9e4e64269068.mesh"]
+
+source_file="res://assets/models/╨в╤Г╤В ╤А╨░╨╖╨╜╤Л╨╡ ╨┐╨░╨║╨╕/Medieval Village MegaKit[Standard]/Medieval Village MegaKit[Standard]/OBJ/Stairs_Exterior_SingleSideThick.obj"
+dest_files=["res://.godot/imported/Stairs_Exterior_SingleSideThick.obj-ce51a8d8196038c72a8b9e4e64269068.mesh", "res://.godot/imported/Stairs_Exterior_SingleSideThick.obj-ce51a8d8196038c72a8b9e4e64269068.mesh"]
+
+[params]
+
+generate_tangents=true
+generate_lods=true
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+force_disable_mesh_compression=false

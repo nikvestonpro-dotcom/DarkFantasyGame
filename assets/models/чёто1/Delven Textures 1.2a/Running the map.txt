@@ -1,0 +1,8 @@
+I've included a small art map I made while developing the set. It's very small, don't expect much!
+
+To run the example map, place the .bsp and .lit files in the ID1/maps folder of your Quake install.
+
+I recommend the Ironwail source port: https://github.com/andrei-drexler/ironwail
+It has a built-in map menu.
+
+Otherwise open the console with tilde (~) and type "map delven_example" to play.
