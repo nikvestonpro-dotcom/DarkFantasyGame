@@ -4,16 +4,15 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://c12vabjyx36gb"
 path.s3tc="res://.godot/imported/stone.JPG-9d1a2aa4fedb51ddefbc5d152012e5ff.s3tc.ctex"
-path.etc2="res://.godot/imported/stone.JPG-9d1a2aa4fedb51ddefbc5d152012e5ff.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/models/packs/PS1 Dark Fantasy Horror Game Assets (by Stark Crafts)/PS1 Dark Fantasy Horror Game Assets (by Stark Crafts)/PS1_ForestAsset/stone.JPG"
-dest_files=["res://.godot/imported/stone.JPG-9d1a2aa4fedb51ddefbc5d152012e5ff.s3tc.ctex", "res://.godot/imported/stone.JPG-9d1a2aa4fedb51ddefbc5d152012e5ff.etc2.ctex"]
+dest_files=["res://.godot/imported/stone.JPG-9d1a2aa4fedb51ddefbc5d152012e5ff.s3tc.ctex"]
 
 [params]
 

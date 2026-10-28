@@ -4,9 +4,8 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://h13t5j7akof"
 path.s3tc="res://.godot/imported/medieval_house_13.png-b9aae5045b28628ec70334a8f426d6cc.s3tc.ctex"
-path.etc2="res://.godot/imported/medieval_house_13.png-b9aae5045b28628ec70334a8f426d6cc.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -16,7 +15,7 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/models/houses/medieval_house_13.png"
-dest_files=["res://.godot/imported/medieval_house_13.png-b9aae5045b28628ec70334a8f426d6cc.s3tc.ctex", "res://.godot/imported/medieval_house_13.png-b9aae5045b28628ec70334a8f426d6cc.etc2.ctex"]
+dest_files=["res://.godot/imported/medieval_house_13.png-b9aae5045b28628ec70334a8f426d6cc.s3tc.ctex"]
 
 [params]
 

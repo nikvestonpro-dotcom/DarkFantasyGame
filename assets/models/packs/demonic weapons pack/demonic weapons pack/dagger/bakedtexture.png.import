@@ -4,16 +4,15 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://cf7wnyahtq1mj"
 path.s3tc="res://.godot/imported/bakedtexture.png-0d858c19eb2b9f7223b0085b57bdbfdd.s3tc.ctex"
-path.etc2="res://.godot/imported/bakedtexture.png-0d858c19eb2b9f7223b0085b57bdbfdd.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/models/packs/demonic weapons pack/demonic weapons pack/dagger/bakedtexture.png"
-dest_files=["res://.godot/imported/bakedtexture.png-0d858c19eb2b9f7223b0085b57bdbfdd.s3tc.ctex", "res://.godot/imported/bakedtexture.png-0d858c19eb2b9f7223b0085b57bdbfdd.etc2.ctex"]
+dest_files=["res://.godot/imported/bakedtexture.png-0d858c19eb2b9f7223b0085b57bdbfdd.s3tc.ctex"]
 
 [params]
 

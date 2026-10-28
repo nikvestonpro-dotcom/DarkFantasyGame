@@ -4,9 +4,8 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://dpfsvq5ymj2c5"
 path.s3tc="res://.godot/imported/wild_rooibos_bush_wild_rooibos_bush_diff.jpg-521fa090892305796c7c0bbfec1c580a.s3tc.ctex"
-path.etc2="res://.godot/imported/wild_rooibos_bush_wild_rooibos_bush_diff.jpg-521fa090892305796c7c0bbfec1c580a.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -16,7 +15,7 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/models/wild_rooibos_bush_wild_rooibos_bush_diff.jpg"
-dest_files=["res://.godot/imported/wild_rooibos_bush_wild_rooibos_bush_diff.jpg-521fa090892305796c7c0bbfec1c580a.s3tc.ctex", "res://.godot/imported/wild_rooibos_bush_wild_rooibos_bush_diff.jpg-521fa090892305796c7c0bbfec1c580a.etc2.ctex"]
+dest_files=["res://.godot/imported/wild_rooibos_bush_wild_rooibos_bush_diff.jpg-521fa090892305796c7c0bbfec1c580a.s3tc.ctex"]
 
 [params]
 

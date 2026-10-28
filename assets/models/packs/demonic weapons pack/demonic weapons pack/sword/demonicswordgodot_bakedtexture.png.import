@@ -4,9 +4,8 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://d2mlvhgb3nn0a"
 path.s3tc="res://.godot/imported/demonicswordgodot_bakedtexture.png-7e21f854b64c34da5a41732ad585314a.s3tc.ctex"
-path.etc2="res://.godot/imported/demonicswordgodot_bakedtexture.png-7e21f854b64c34da5a41732ad585314a.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -16,7 +15,7 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/models/packs/demonic weapons pack/demonic weapons pack/sword/demonicswordgodot_bakedtexture.png"
-dest_files=["res://.godot/imported/demonicswordgodot_bakedtexture.png-7e21f854b64c34da5a41732ad585314a.s3tc.ctex", "res://.godot/imported/demonicswordgodot_bakedtexture.png-7e21f854b64c34da5a41732ad585314a.etc2.ctex"]
+dest_files=["res://.godot/imported/demonicswordgodot_bakedtexture.png-7e21f854b64c34da5a41732ad585314a.s3tc.ctex"]
 
 [params]
 

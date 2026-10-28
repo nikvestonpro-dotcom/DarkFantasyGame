@@ -4,16 +4,15 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://dvume82ru8dhn"
 path.s3tc="res://.godot/imported/Halberd.png-7071e27a8f3e4a9dfb29da02fd0d8cfb.s3tc.ctex"
-path.etc2="res://.godot/imported/Halberd.png-7071e27a8f3e4a9dfb29da02fd0d8cfb.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/models/MedievalMarket/Textures/Halberd.png"
-dest_files=["res://.godot/imported/Halberd.png-7071e27a8f3e4a9dfb29da02fd0d8cfb.s3tc.ctex", "res://.godot/imported/Halberd.png-7071e27a8f3e4a9dfb29da02fd0d8cfb.etc2.ctex"]
+dest_files=["res://.godot/imported/Halberd.png-7071e27a8f3e4a9dfb29da02fd0d8cfb.s3tc.ctex"]
 
 [params]
 

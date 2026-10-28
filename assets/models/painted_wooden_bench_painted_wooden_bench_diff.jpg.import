@@ -4,9 +4,8 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://b1kbywpsiwxin"
 path.s3tc="res://.godot/imported/painted_wooden_bench_painted_wooden_bench_diff.jpg-e312405dbcc49baa9e12350b36bcb1df.s3tc.ctex"
-path.etc2="res://.godot/imported/painted_wooden_bench_painted_wooden_bench_diff.jpg-e312405dbcc49baa9e12350b36bcb1df.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -16,7 +15,7 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/models/painted_wooden_bench_painted_wooden_bench_diff.jpg"
-dest_files=["res://.godot/imported/painted_wooden_bench_painted_wooden_bench_diff.jpg-e312405dbcc49baa9e12350b36bcb1df.s3tc.ctex", "res://.godot/imported/painted_wooden_bench_painted_wooden_bench_diff.jpg-e312405dbcc49baa9e12350b36bcb1df.etc2.ctex"]
+dest_files=["res://.godot/imported/painted_wooden_bench_painted_wooden_bench_diff.jpg-e312405dbcc49baa9e12350b36bcb1df.s3tc.ctex"]
 
 [params]
 

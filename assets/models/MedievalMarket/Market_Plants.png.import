@@ -4,9 +4,8 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://53olamtyxovo"
 path.s3tc="res://.godot/imported/Market_Plants.png-679c4a1eba280fb28de5988432fe32c6.s3tc.ctex"
-path.etc2="res://.godot/imported/Market_Plants.png-679c4a1eba280fb28de5988432fe32c6.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -16,7 +15,7 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/models/MedievalMarket/Market_Plants.png"
-dest_files=["res://.godot/imported/Market_Plants.png-679c4a1eba280fb28de5988432fe32c6.s3tc.ctex", "res://.godot/imported/Market_Plants.png-679c4a1eba280fb28de5988432fe32c6.etc2.ctex"]
+dest_files=["res://.godot/imported/Market_Plants.png-679c4a1eba280fb28de5988432fe32c6.s3tc.ctex"]
 
 [params]
 

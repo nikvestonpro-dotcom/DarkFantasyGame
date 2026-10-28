@@ -4,16 +4,15 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://bdanpap6wbctb"
 path.s3tc="res://.godot/imported/polera real.png-d8635a5eb3a676e15b61f5b5116689ea.s3tc.ctex"
-path.etc2="res://.godot/imported/polera real.png-d8635a5eb3a676e15b61f5b5116689ea.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://мобы/DEAD OATH HUNTER  PSX Bounty Hunter Character/Textures/polera real.png"
-dest_files=["res://.godot/imported/polera real.png-d8635a5eb3a676e15b61f5b5116689ea.s3tc.ctex", "res://.godot/imported/polera real.png-d8635a5eb3a676e15b61f5b5116689ea.etc2.ctex"]
+dest_files=["res://.godot/imported/polera real.png-d8635a5eb3a676e15b61f5b5116689ea.s3tc.ctex"]
 
 [params]
 

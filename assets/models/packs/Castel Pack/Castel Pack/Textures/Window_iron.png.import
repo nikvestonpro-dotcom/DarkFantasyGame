@@ -4,16 +4,15 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://0pwm7rp4uq5w"
 path.s3tc="res://.godot/imported/Window_iron.png-5148157a68bb9ed9a58234e687aefcec.s3tc.ctex"
-path.etc2="res://.godot/imported/Window_iron.png-5148157a68bb9ed9a58234e687aefcec.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/models/packs/Castel Pack/Castel Pack/Textures/Window_iron.png"
-dest_files=["res://.godot/imported/Window_iron.png-5148157a68bb9ed9a58234e687aefcec.s3tc.ctex", "res://.godot/imported/Window_iron.png-5148157a68bb9ed9a58234e687aefcec.etc2.ctex"]
+dest_files=["res://.godot/imported/Window_iron.png-5148157a68bb9ed9a58234e687aefcec.s3tc.ctex"]
 
 [params]
 

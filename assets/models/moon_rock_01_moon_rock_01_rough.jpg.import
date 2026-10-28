@@ -4,9 +4,8 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://bhxayayhrqlua"
 path.s3tc="res://.godot/imported/moon_rock_01_moon_rock_01_rough.jpg-d7f30275778d93a2146c20de150724fd.s3tc.ctex"
-path.etc2="res://.godot/imported/moon_rock_01_moon_rock_01_rough.jpg-d7f30275778d93a2146c20de150724fd.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -16,7 +15,7 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/models/moon_rock_01_moon_rock_01_rough.jpg"
-dest_files=["res://.godot/imported/moon_rock_01_moon_rock_01_rough.jpg-d7f30275778d93a2146c20de150724fd.s3tc.ctex", "res://.godot/imported/moon_rock_01_moon_rock_01_rough.jpg-d7f30275778d93a2146c20de150724fd.etc2.ctex"]
+dest_files=["res://.godot/imported/moon_rock_01_moon_rock_01_rough.jpg-d7f30275778d93a2146c20de150724fd.s3tc.ctex"]
 
 [params]
 

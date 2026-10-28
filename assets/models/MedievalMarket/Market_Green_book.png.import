@@ -4,9 +4,8 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://dj1kmlblvfweo"
 path.s3tc="res://.godot/imported/Market_Green_book.png-eec5c1162843e5dd944d0f37787f3808.s3tc.ctex"
-path.etc2="res://.godot/imported/Market_Green_book.png-eec5c1162843e5dd944d0f37787f3808.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -16,7 +15,7 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/models/MedievalMarket/Market_Green_book.png"
-dest_files=["res://.godot/imported/Market_Green_book.png-eec5c1162843e5dd944d0f37787f3808.s3tc.ctex", "res://.godot/imported/Market_Green_book.png-eec5c1162843e5dd944d0f37787f3808.etc2.ctex"]
+dest_files=["res://.godot/imported/Market_Green_book.png-eec5c1162843e5dd944d0f37787f3808.s3tc.ctex"]
 
 [params]
 

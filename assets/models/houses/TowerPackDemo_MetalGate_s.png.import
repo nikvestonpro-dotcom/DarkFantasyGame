@@ -4,9 +4,8 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://boma3da1pcgke"
 path.s3tc="res://.godot/imported/TowerPackDemo_MetalGate_s.png-576bb97b4548084f5d0e6a095975016b.s3tc.ctex"
-path.etc2="res://.godot/imported/TowerPackDemo_MetalGate_s.png-576bb97b4548084f5d0e6a095975016b.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -16,7 +15,7 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/models/houses/TowerPackDemo_MetalGate_s.png"
-dest_files=["res://.godot/imported/TowerPackDemo_MetalGate_s.png-576bb97b4548084f5d0e6a095975016b.s3tc.ctex", "res://.godot/imported/TowerPackDemo_MetalGate_s.png-576bb97b4548084f5d0e6a095975016b.etc2.ctex"]
+dest_files=["res://.godot/imported/TowerPackDemo_MetalGate_s.png-576bb97b4548084f5d0e6a095975016b.s3tc.ctex"]
 
 [params]
 

@@ -4,16 +4,15 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://b1rrm4fwc0gxb"
 path.s3tc="res://.godot/imported/Axe.png-55f76df63111ef5bba3404b3050a1bcb.s3tc.ctex"
-path.etc2="res://.godot/imported/Axe.png-55f76df63111ef5bba3404b3050a1bcb.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/models/MedievalMarket/Textures/Axe.png"
-dest_files=["res://.godot/imported/Axe.png-55f76df63111ef5bba3404b3050a1bcb.s3tc.ctex", "res://.godot/imported/Axe.png-55f76df63111ef5bba3404b3050a1bcb.etc2.ctex"]
+dest_files=["res://.godot/imported/Axe.png-55f76df63111ef5bba3404b3050a1bcb.s3tc.ctex"]
 
 [params]
 

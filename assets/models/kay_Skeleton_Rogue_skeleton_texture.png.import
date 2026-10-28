@@ -4,9 +4,8 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://cfeprs8tvw86p"
 path.s3tc="res://.godot/imported/kay_Skeleton_Rogue_skeleton_texture.png-508e3e77c3c6d0bebb7c4e9370eeebf8.s3tc.ctex"
-path.etc2="res://.godot/imported/kay_Skeleton_Rogue_skeleton_texture.png-508e3e77c3c6d0bebb7c4e9370eeebf8.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -16,7 +15,7 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/models/kay_Skeleton_Rogue_skeleton_texture.png"
-dest_files=["res://.godot/imported/kay_Skeleton_Rogue_skeleton_texture.png-508e3e77c3c6d0bebb7c4e9370eeebf8.s3tc.ctex", "res://.godot/imported/kay_Skeleton_Rogue_skeleton_texture.png-508e3e77c3c6d0bebb7c4e9370eeebf8.etc2.ctex"]
+dest_files=["res://.godot/imported/kay_Skeleton_Rogue_skeleton_texture.png-508e3e77c3c6d0bebb7c4e9370eeebf8.s3tc.ctex"]
 
 [params]
 

@@ -4,16 +4,15 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://dyobslbpbcveg"
 path.s3tc="res://.godot/imported/Window_1.png-9815b25fe225d39ebc985a0e1fd1dcde.s3tc.ctex"
-path.etc2="res://.godot/imported/Window_1.png-9815b25fe225d39ebc985a0e1fd1dcde.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/models/packs/Castel Pack/Castel Pack/Textures/Window_1.png"
-dest_files=["res://.godot/imported/Window_1.png-9815b25fe225d39ebc985a0e1fd1dcde.s3tc.ctex", "res://.godot/imported/Window_1.png-9815b25fe225d39ebc985a0e1fd1dcde.etc2.ctex"]
+dest_files=["res://.godot/imported/Window_1.png-9815b25fe225d39ebc985a0e1fd1dcde.s3tc.ctex"]
 
 [params]
 

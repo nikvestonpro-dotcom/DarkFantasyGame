@@ -3,17 +3,16 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cnx3jp5vx6u2"
-path.s3tc="res://.godot/imported/T_RoundTiles_Normal.png-4ebc7d3c1c4fc3a4b1e3d8aedc110e3d.s3tc.ctex"
-path.etc2="res://.godot/imported/T_RoundTiles_Normal.png-4ebc7d3c1c4fc3a4b1e3d8aedc110e3d.etc2.ctex"
+path.s3tc="res://.godot/imported/T_RoundTiles_Normal.png-23a3b2e46321511e237bea16b946ee74.s3tc.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 
 [deps]
 
-source_file="res://assets/models/packs/Medieval Village MegaKit[Standard]/Medieval Village MegaKit[Standard]/textures/T_RoundTiles_Normal.png"
-dest_files=["res://.godot/imported/T_RoundTiles_Normal.png-4ebc7d3c1c4fc3a4b1e3d8aedc110e3d.s3tc.ctex", "res://.godot/imported/T_RoundTiles_Normal.png-4ebc7d3c1c4fc3a4b1e3d8aedc110e3d.etc2.ctex"]
+source_file="res://assets/models/packs/Medieval Village MegaKit[Standard]/Medieval Village MegaKit[Standard]/Textures/T_RoundTiles_Normal.png"
+dest_files=["res://.godot/imported/T_RoundTiles_Normal.png-23a3b2e46321511e237bea16b946ee74.s3tc.ctex"]
 
 [params]
 

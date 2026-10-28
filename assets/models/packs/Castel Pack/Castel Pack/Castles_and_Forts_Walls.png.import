@@ -4,9 +4,8 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://25ow515na148"
 path.s3tc="res://.godot/imported/Castles_and_Forts_Walls.png-5177c18e43c708decd3792d847680df7.s3tc.ctex"
-path.etc2="res://.godot/imported/Castles_and_Forts_Walls.png-5177c18e43c708decd3792d847680df7.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -16,7 +15,7 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/models/packs/Castel Pack/Castel Pack/Castles_and_Forts_Walls.png"
-dest_files=["res://.godot/imported/Castles_and_Forts_Walls.png-5177c18e43c708decd3792d847680df7.s3tc.ctex", "res://.godot/imported/Castles_and_Forts_Walls.png-5177c18e43c708decd3792d847680df7.etc2.ctex"]
+dest_files=["res://.godot/imported/Castles_and_Forts_Walls.png-5177c18e43c708decd3792d847680df7.s3tc.ctex"]
 
 [params]
 

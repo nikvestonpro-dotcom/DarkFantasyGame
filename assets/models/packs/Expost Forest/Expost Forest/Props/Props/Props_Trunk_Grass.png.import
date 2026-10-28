@@ -4,9 +4,8 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://c0im0oq4j3xv"
 path.s3tc="res://.godot/imported/Props_Trunk_Grass.png-40991aeb3d0a269b9511cf6bb78cffca.s3tc.ctex"
-path.etc2="res://.godot/imported/Props_Trunk_Grass.png-40991aeb3d0a269b9511cf6bb78cffca.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -16,7 +15,7 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/models/packs/Expost Forest/Expost Forest/Props/Props/Props_Trunk_Grass.png"
-dest_files=["res://.godot/imported/Props_Trunk_Grass.png-40991aeb3d0a269b9511cf6bb78cffca.s3tc.ctex", "res://.godot/imported/Props_Trunk_Grass.png-40991aeb3d0a269b9511cf6bb78cffca.etc2.ctex"]
+dest_files=["res://.godot/imported/Props_Trunk_Grass.png-40991aeb3d0a269b9511cf6bb78cffca.s3tc.ctex"]
 
 [params]
 

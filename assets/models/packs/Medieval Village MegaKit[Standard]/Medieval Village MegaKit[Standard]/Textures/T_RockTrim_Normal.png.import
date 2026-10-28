@@ -3,17 +3,16 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://clqvuuiwa6t86"
-path.s3tc="res://.godot/imported/T_RockTrim_Normal.png-168ff50c85ed85edc1f7c7ab011969b5.s3tc.ctex"
-path.etc2="res://.godot/imported/T_RockTrim_Normal.png-168ff50c85ed85edc1f7c7ab011969b5.etc2.ctex"
+path.s3tc="res://.godot/imported/T_RockTrim_Normal.png-88e2d07a9f38f473536df15925964f01.s3tc.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 
 [deps]
 
-source_file="res://assets/models/packs/Medieval Village MegaKit[Standard]/Medieval Village MegaKit[Standard]/textures/T_RockTrim_Normal.png"
-dest_files=["res://.godot/imported/T_RockTrim_Normal.png-168ff50c85ed85edc1f7c7ab011969b5.s3tc.ctex", "res://.godot/imported/T_RockTrim_Normal.png-168ff50c85ed85edc1f7c7ab011969b5.etc2.ctex"]
+source_file="res://assets/models/packs/Medieval Village MegaKit[Standard]/Medieval Village MegaKit[Standard]/Textures/T_RockTrim_Normal.png"
+dest_files=["res://.godot/imported/T_RockTrim_Normal.png-88e2d07a9f38f473536df15925964f01.s3tc.ctex"]
 
 [params]
 

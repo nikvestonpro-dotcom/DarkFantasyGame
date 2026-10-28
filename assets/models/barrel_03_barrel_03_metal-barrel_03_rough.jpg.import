@@ -4,9 +4,8 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://ceyk4e84vuv7x"
 path.s3tc="res://.godot/imported/barrel_03_barrel_03_metal-barrel_03_rough.jpg-8f732f7b022bbe766ec2ae8f0c8891ea.s3tc.ctex"
-path.etc2="res://.godot/imported/barrel_03_barrel_03_metal-barrel_03_rough.jpg-8f732f7b022bbe766ec2ae8f0c8891ea.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -16,7 +15,7 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/models/barrel_03_barrel_03_metal-barrel_03_rough.jpg"
-dest_files=["res://.godot/imported/barrel_03_barrel_03_metal-barrel_03_rough.jpg-8f732f7b022bbe766ec2ae8f0c8891ea.s3tc.ctex", "res://.godot/imported/barrel_03_barrel_03_metal-barrel_03_rough.jpg-8f732f7b022bbe766ec2ae8f0c8891ea.etc2.ctex"]
+dest_files=["res://.godot/imported/barrel_03_barrel_03_metal-barrel_03_rough.jpg-8f732f7b022bbe766ec2ae8f0c8891ea.s3tc.ctex"]
 
 [params]
 

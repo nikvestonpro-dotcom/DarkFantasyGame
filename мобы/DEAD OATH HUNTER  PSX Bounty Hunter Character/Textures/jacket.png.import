@@ -4,16 +4,15 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://b1cahty8temdh"
 path.s3tc="res://.godot/imported/jacket.png-a562593fc66ad83f37c61a8333f8b31d.s3tc.ctex"
-path.etc2="res://.godot/imported/jacket.png-a562593fc66ad83f37c61a8333f8b31d.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://мобы/DEAD OATH HUNTER  PSX Bounty Hunter Character/Textures/jacket.png"
-dest_files=["res://.godot/imported/jacket.png-a562593fc66ad83f37c61a8333f8b31d.s3tc.ctex", "res://.godot/imported/jacket.png-a562593fc66ad83f37c61a8333f8b31d.etc2.ctex"]
+dest_files=["res://.godot/imported/jacket.png-a562593fc66ad83f37c61a8333f8b31d.s3tc.ctex"]
 
 [params]
 

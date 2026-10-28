@@ -4,9 +4,8 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://bmosy4epahk3m"
 path.s3tc="res://.godot/imported/tools_glb_Tools_Tex.png-ec97ac60bff8fe157da8993c19eca7a2.s3tc.ctex"
-path.etc2="res://.godot/imported/tools_glb_Tools_Tex.png-ec97ac60bff8fe157da8993c19eca7a2.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -16,7 +15,7 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/models/packs/Medevial Tools/Medevial Tools/tools_glb_Tools_Tex.png"
-dest_files=["res://.godot/imported/tools_glb_Tools_Tex.png-ec97ac60bff8fe157da8993c19eca7a2.s3tc.ctex", "res://.godot/imported/tools_glb_Tools_Tex.png-ec97ac60bff8fe157da8993c19eca7a2.etc2.ctex"]
+dest_files=["res://.godot/imported/tools_glb_Tools_Tex.png-ec97ac60bff8fe157da8993c19eca7a2.s3tc.ctex"]
 
 [params]
 

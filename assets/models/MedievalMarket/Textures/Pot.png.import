@@ -4,16 +4,15 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://brpp88csgtkiv"
 path.s3tc="res://.godot/imported/Pot.png-9151f599aa5649fb9b561edc77e3500e.s3tc.ctex"
-path.etc2="res://.godot/imported/Pot.png-9151f599aa5649fb9b561edc77e3500e.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/models/MedievalMarket/Textures/Pot.png"
-dest_files=["res://.godot/imported/Pot.png-9151f599aa5649fb9b561edc77e3500e.s3tc.ctex", "res://.godot/imported/Pot.png-9151f599aa5649fb9b561edc77e3500e.etc2.ctex"]
+dest_files=["res://.godot/imported/Pot.png-9151f599aa5649fb9b561edc77e3500e.s3tc.ctex"]
 
 [params]
 

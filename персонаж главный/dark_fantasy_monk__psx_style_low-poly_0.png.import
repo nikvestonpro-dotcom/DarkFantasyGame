@@ -4,9 +4,8 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://qgx4h1ne7575"
 path.s3tc="res://.godot/imported/dark_fantasy_monk__psx_style_low-poly_0.png-e7a61a8c5575a5a40c8c7117410f49a4.s3tc.ctex"
-path.etc2="res://.godot/imported/dark_fantasy_monk__psx_style_low-poly_0.png-e7a61a8c5575a5a40c8c7117410f49a4.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -16,7 +15,7 @@ generator_parameters={
 [deps]
 
 source_file="res://персонаж главный/dark_fantasy_monk__psx_style_low-poly_0.png"
-dest_files=["res://.godot/imported/dark_fantasy_monk__psx_style_low-poly_0.png-e7a61a8c5575a5a40c8c7117410f49a4.s3tc.ctex", "res://.godot/imported/dark_fantasy_monk__psx_style_low-poly_0.png-e7a61a8c5575a5a40c8c7117410f49a4.etc2.ctex"]
+dest_files=["res://.godot/imported/dark_fantasy_monk__psx_style_low-poly_0.png-e7a61a8c5575a5a40c8c7117410f49a4.s3tc.ctex"]
 
 [params]
 

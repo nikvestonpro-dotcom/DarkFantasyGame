@@ -4,16 +4,15 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://tp411ae33f74"
 path.s3tc="res://.godot/imported/wooden_lamp_post_medieval_fantasy_lantern_8.png-df081510b204259108cd94dfa4c975be.s3tc.ctex"
-path.etc2="res://.godot/imported/wooden_lamp_post_medieval_fantasy_lantern_8.png-df081510b204259108cd94dfa4c975be.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/models/props/wooden_lamp_post_medieval_fantasy_lantern_8.png"
-dest_files=["res://.godot/imported/wooden_lamp_post_medieval_fantasy_lantern_8.png-df081510b204259108cd94dfa4c975be.s3tc.ctex", "res://.godot/imported/wooden_lamp_post_medieval_fantasy_lantern_8.png-df081510b204259108cd94dfa4c975be.etc2.ctex"]
+dest_files=["res://.godot/imported/wooden_lamp_post_medieval_fantasy_lantern_8.png-df081510b204259108cd94dfa4c975be.s3tc.ctex"]
 
 [params]
 

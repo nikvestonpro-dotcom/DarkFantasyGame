@@ -4,9 +4,8 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://bnx07cdwpbtxl"
 path.s3tc="res://.godot/imported/periwinkle_plant_periwinkle_plant_nor_gl.jpg-e5d29544b452e4e9c982a0434683472b.s3tc.ctex"
-path.etc2="res://.godot/imported/periwinkle_plant_periwinkle_plant_nor_gl.jpg-e5d29544b452e4e9c982a0434683472b.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -16,7 +15,7 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/models/periwinkle_plant_periwinkle_plant_nor_gl.jpg"
-dest_files=["res://.godot/imported/periwinkle_plant_periwinkle_plant_nor_gl.jpg-e5d29544b452e4e9c982a0434683472b.s3tc.ctex", "res://.godot/imported/periwinkle_plant_periwinkle_plant_nor_gl.jpg-e5d29544b452e4e9c982a0434683472b.etc2.ctex"]
+dest_files=["res://.godot/imported/periwinkle_plant_periwinkle_plant_nor_gl.jpg-e5d29544b452e4e9c982a0434683472b.s3tc.ctex"]
 
 [params]
 

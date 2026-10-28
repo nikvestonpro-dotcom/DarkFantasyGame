@@ -4,16 +4,15 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://ddpjg436ig5tj"
 path.s3tc="res://.godot/imported/SackOfCorn.png-fbb2271d52bf5bb38e70aa76cb7c84a0.s3tc.ctex"
-path.etc2="res://.godot/imported/SackOfCorn.png-fbb2271d52bf5bb38e70aa76cb7c84a0.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/models/MedievalMarket/Textures/SackOfCorn.png"
-dest_files=["res://.godot/imported/SackOfCorn.png-fbb2271d52bf5bb38e70aa76cb7c84a0.s3tc.ctex", "res://.godot/imported/SackOfCorn.png-fbb2271d52bf5bb38e70aa76cb7c84a0.etc2.ctex"]
+dest_files=["res://.godot/imported/SackOfCorn.png-fbb2271d52bf5bb38e70aa76cb7c84a0.s3tc.ctex"]
 
 [params]
 

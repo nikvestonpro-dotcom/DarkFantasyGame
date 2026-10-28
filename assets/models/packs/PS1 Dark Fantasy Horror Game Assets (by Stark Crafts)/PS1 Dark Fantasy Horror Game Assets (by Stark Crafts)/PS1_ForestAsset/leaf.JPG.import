@@ -4,16 +4,15 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://d0ka6iw7uwu8f"
 path.s3tc="res://.godot/imported/leaf.JPG-758d3f7140cbbdc9c9be811d07b67b1f.s3tc.ctex"
-path.etc2="res://.godot/imported/leaf.JPG-758d3f7140cbbdc9c9be811d07b67b1f.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/models/packs/PS1 Dark Fantasy Horror Game Assets (by Stark Crafts)/PS1 Dark Fantasy Horror Game Assets (by Stark Crafts)/PS1_ForestAsset/leaf.JPG"
-dest_files=["res://.godot/imported/leaf.JPG-758d3f7140cbbdc9c9be811d07b67b1f.s3tc.ctex", "res://.godot/imported/leaf.JPG-758d3f7140cbbdc9c9be811d07b67b1f.etc2.ctex"]
+dest_files=["res://.godot/imported/leaf.JPG-758d3f7140cbbdc9c9be811d07b67b1f.s3tc.ctex"]
 
 [params]
 

@@ -4,16 +4,15 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://chj8b141mkny5"
 path.s3tc="res://.godot/imported/torch_stick_0.png-ceed68f7fbfa25e4ddaec883fb909dc3.s3tc.ctex"
-path.etc2="res://.godot/imported/torch_stick_0.png-ceed68f7fbfa25e4ddaec883fb909dc3.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/models/props/torch_stick_0.png"
-dest_files=["res://.godot/imported/torch_stick_0.png-ceed68f7fbfa25e4ddaec883fb909dc3.s3tc.ctex", "res://.godot/imported/torch_stick_0.png-ceed68f7fbfa25e4ddaec883fb909dc3.etc2.ctex"]
+dest_files=["res://.godot/imported/torch_stick_0.png-ceed68f7fbfa25e4ddaec883fb909dc3.s3tc.ctex"]
 
 [params]
 

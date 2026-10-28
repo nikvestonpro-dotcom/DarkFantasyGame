@@ -4,9 +4,8 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://rqem6hk8vahx"
 path.s3tc="res://.godot/imported/nettle_plant_nettle_plant_nor_gl.jpg-6547979fc6fc868bc6fd3af27c1f9873.s3tc.ctex"
-path.etc2="res://.godot/imported/nettle_plant_nettle_plant_nor_gl.jpg-6547979fc6fc868bc6fd3af27c1f9873.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -16,7 +15,7 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/models/nettle_plant_nettle_plant_nor_gl.jpg"
-dest_files=["res://.godot/imported/nettle_plant_nettle_plant_nor_gl.jpg-6547979fc6fc868bc6fd3af27c1f9873.s3tc.ctex", "res://.godot/imported/nettle_plant_nettle_plant_nor_gl.jpg-6547979fc6fc868bc6fd3af27c1f9873.etc2.ctex"]
+dest_files=["res://.godot/imported/nettle_plant_nettle_plant_nor_gl.jpg-6547979fc6fc868bc6fd3af27c1f9873.s3tc.ctex"]
 
 [params]
 

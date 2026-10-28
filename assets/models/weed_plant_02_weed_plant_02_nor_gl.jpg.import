@@ -4,9 +4,8 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://bh5i7xi3dad3h"
 path.s3tc="res://.godot/imported/weed_plant_02_weed_plant_02_nor_gl.jpg-c694234b30444ea3595ae7865aa1b10b.s3tc.ctex"
-path.etc2="res://.godot/imported/weed_plant_02_weed_plant_02_nor_gl.jpg-c694234b30444ea3595ae7865aa1b10b.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -16,7 +15,7 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/models/weed_plant_02_weed_plant_02_nor_gl.jpg"
-dest_files=["res://.godot/imported/weed_plant_02_weed_plant_02_nor_gl.jpg-c694234b30444ea3595ae7865aa1b10b.s3tc.ctex", "res://.godot/imported/weed_plant_02_weed_plant_02_nor_gl.jpg-c694234b30444ea3595ae7865aa1b10b.etc2.ctex"]
+dest_files=["res://.godot/imported/weed_plant_02_weed_plant_02_nor_gl.jpg-c694234b30444ea3595ae7865aa1b10b.s3tc.ctex"]
 
 [params]
 

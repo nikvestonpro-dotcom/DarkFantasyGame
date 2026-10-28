@@ -4,9 +4,8 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://2sbfryqedepj"
 path.s3tc="res://.godot/imported/psx_houses_9.jpg-a5e59fb87de97b9d19203c15a73f13e7.s3tc.ctex"
-path.etc2="res://.godot/imported/psx_houses_9.jpg-a5e59fb87de97b9d19203c15a73f13e7.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -16,7 +15,7 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/models/houses/psx_houses_9.jpg"
-dest_files=["res://.godot/imported/psx_houses_9.jpg-a5e59fb87de97b9d19203c15a73f13e7.s3tc.ctex", "res://.godot/imported/psx_houses_9.jpg-a5e59fb87de97b9d19203c15a73f13e7.etc2.ctex"]
+dest_files=["res://.godot/imported/psx_houses_9.jpg-a5e59fb87de97b9d19203c15a73f13e7.s3tc.ctex"]
 
 [params]
 

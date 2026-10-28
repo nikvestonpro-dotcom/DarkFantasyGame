@@ -4,9 +4,8 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://im1mb0mveh31"
 path.s3tc="res://.godot/imported/Market_Sword.png-5a54969a4427c9f59747ed0b5478da73.s3tc.ctex"
-path.etc2="res://.godot/imported/Market_Sword.png-5a54969a4427c9f59747ed0b5478da73.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -16,7 +15,7 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/models/MedievalMarket/Market_Sword.png"
-dest_files=["res://.godot/imported/Market_Sword.png-5a54969a4427c9f59747ed0b5478da73.s3tc.ctex", "res://.godot/imported/Market_Sword.png-5a54969a4427c9f59747ed0b5478da73.etc2.ctex"]
+dest_files=["res://.godot/imported/Market_Sword.png-5a54969a4427c9f59747ed0b5478da73.s3tc.ctex"]
 
 [params]
 

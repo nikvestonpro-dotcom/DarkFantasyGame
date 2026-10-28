@@ -4,9 +4,8 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://c46w02fya6eee"
 path.s3tc="res://.godot/imported/kay_Skeleton_Mage_skeleton_texture.png-72aeaea4b6fb06c107ba426e8ca77d75.s3tc.ctex"
-path.etc2="res://.godot/imported/kay_Skeleton_Mage_skeleton_texture.png-72aeaea4b6fb06c107ba426e8ca77d75.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -16,7 +15,7 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/models/kay_Skeleton_Mage_skeleton_texture.png"
-dest_files=["res://.godot/imported/kay_Skeleton_Mage_skeleton_texture.png-72aeaea4b6fb06c107ba426e8ca77d75.s3tc.ctex", "res://.godot/imported/kay_Skeleton_Mage_skeleton_texture.png-72aeaea4b6fb06c107ba426e8ca77d75.etc2.ctex"]
+dest_files=["res://.godot/imported/kay_Skeleton_Mage_skeleton_texture.png-72aeaea4b6fb06c107ba426e8ca77d75.s3tc.ctex"]
 
 [params]
 

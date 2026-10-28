@@ -4,9 +4,8 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://bf62ck357xr4n"
 path.s3tc="res://.godot/imported/Market_Barrel.png-df4bfab659ae9da8f3a9de99060f9988.s3tc.ctex"
-path.etc2="res://.godot/imported/Market_Barrel.png-df4bfab659ae9da8f3a9de99060f9988.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -16,7 +15,7 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/models/MedievalMarket/Market_Barrel.png"
-dest_files=["res://.godot/imported/Market_Barrel.png-df4bfab659ae9da8f3a9de99060f9988.s3tc.ctex", "res://.godot/imported/Market_Barrel.png-df4bfab659ae9da8f3a9de99060f9988.etc2.ctex"]
+dest_files=["res://.godot/imported/Market_Barrel.png-df4bfab659ae9da8f3a9de99060f9988.s3tc.ctex"]
 
 [params]
 

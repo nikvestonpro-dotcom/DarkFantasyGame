@@ -4,9 +4,8 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://biuavvim5nvfx"
 path.s3tc="res://.godot/imported/tools_glb_Hay_Tex.png-0ad7bad0e0b55b55938d3994d069bff3.s3tc.ctex"
-path.etc2="res://.godot/imported/tools_glb_Hay_Tex.png-0ad7bad0e0b55b55938d3994d069bff3.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -16,7 +15,7 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/models/packs/Medevial Tools/Medevial Tools/tools_glb_Hay_Tex.png"
-dest_files=["res://.godot/imported/tools_glb_Hay_Tex.png-0ad7bad0e0b55b55938d3994d069bff3.s3tc.ctex", "res://.godot/imported/tools_glb_Hay_Tex.png-0ad7bad0e0b55b55938d3994d069bff3.etc2.ctex"]
+dest_files=["res://.godot/imported/tools_glb_Hay_Tex.png-0ad7bad0e0b55b55938d3994d069bff3.s3tc.ctex"]
 
 [params]
 

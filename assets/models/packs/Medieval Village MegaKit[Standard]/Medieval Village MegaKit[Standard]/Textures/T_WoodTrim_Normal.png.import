@@ -3,17 +3,16 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cvinyr8ucunc6"
-path.s3tc="res://.godot/imported/T_WoodTrim_Normal.png-7bbf3ca80ef8fcda09cf9ec6b07e7fb9.s3tc.ctex"
-path.etc2="res://.godot/imported/T_WoodTrim_Normal.png-7bbf3ca80ef8fcda09cf9ec6b07e7fb9.etc2.ctex"
+path.s3tc="res://.godot/imported/T_WoodTrim_Normal.png-12e7177ab6260266172eee354fe7a019.s3tc.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 
 [deps]
 
-source_file="res://assets/models/packs/Medieval Village MegaKit[Standard]/Medieval Village MegaKit[Standard]/textures/T_WoodTrim_Normal.png"
-dest_files=["res://.godot/imported/T_WoodTrim_Normal.png-7bbf3ca80ef8fcda09cf9ec6b07e7fb9.s3tc.ctex", "res://.godot/imported/T_WoodTrim_Normal.png-7bbf3ca80ef8fcda09cf9ec6b07e7fb9.etc2.ctex"]
+source_file="res://assets/models/packs/Medieval Village MegaKit[Standard]/Medieval Village MegaKit[Standard]/Textures/T_WoodTrim_Normal.png"
+dest_files=["res://.godot/imported/T_WoodTrim_Normal.png-12e7177ab6260266172eee354fe7a019.s3tc.ctex"]
 
 [params]
 

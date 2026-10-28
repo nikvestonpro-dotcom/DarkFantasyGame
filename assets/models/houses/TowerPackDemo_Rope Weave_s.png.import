@@ -4,9 +4,8 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://fhfddvgo5erk"
 path.s3tc="res://.godot/imported/TowerPackDemo_Rope Weave_s.png-729a416eb1f253ebdf77e51d9c265065.s3tc.ctex"
-path.etc2="res://.godot/imported/TowerPackDemo_Rope Weave_s.png-729a416eb1f253ebdf77e51d9c265065.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -16,7 +15,7 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/models/houses/TowerPackDemo_Rope Weave_s.png"
-dest_files=["res://.godot/imported/TowerPackDemo_Rope Weave_s.png-729a416eb1f253ebdf77e51d9c265065.s3tc.ctex", "res://.godot/imported/TowerPackDemo_Rope Weave_s.png-729a416eb1f253ebdf77e51d9c265065.etc2.ctex"]
+dest_files=["res://.godot/imported/TowerPackDemo_Rope Weave_s.png-729a416eb1f253ebdf77e51d9c265065.s3tc.ctex"]
 
 [params]
 
