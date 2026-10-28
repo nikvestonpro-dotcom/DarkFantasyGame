@@ -3,16 +3,17 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dmtanpfk62g47"
-path.s3tc="res://.godot/imported/armadura guard.png-b63f766358e6ec4cc7f4db8cb49e7975.s3tc.ctex"
+path.s3tc="res://.godot/imported/armadura guard.png-0f45a21b0e672794b9900d5bbe34b4c6.s3tc.ctex"
+path.etc2="res://.godot/imported/armadura guard.png-0f45a21b0e672794b9900d5bbe34b4c6.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
-source_file="res://мобы/DEAD OATH HUNTER  PSX Bounty Hunter Character/textures/armadura guard.png"
-dest_files=["res://.godot/imported/armadura guard.png-b63f766358e6ec4cc7f4db8cb49e7975.s3tc.ctex"]
+source_file="res://мобы/DEAD OATH HUNTER  PSX Bounty Hunter Character/Textures/armadura guard.png"
+dest_files=["res://.godot/imported/armadura guard.png-0f45a21b0e672794b9900d5bbe34b4c6.s3tc.ctex", "res://.godot/imported/armadura guard.png-0f45a21b0e672794b9900d5bbe34b4c6.etc2.ctex"]
 
 [params]
 

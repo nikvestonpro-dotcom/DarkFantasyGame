@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://bgknl34a3ey4a"
 path.s3tc="res://.godot/imported/Sword.png-98f1dace90754d80a2460f38d0384d3b.s3tc.ctex"
+path.etc2="res://.godot/imported/Sword.png-98f1dace90754d80a2460f38d0384d3b.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/models/MedievalMarket/Textures/Sword.png"
-dest_files=["res://.godot/imported/Sword.png-98f1dace90754d80a2460f38d0384d3b.s3tc.ctex"]
+dest_files=["res://.godot/imported/Sword.png-98f1dace90754d80a2460f38d0384d3b.s3tc.ctex", "res://.godot/imported/Sword.png-98f1dace90754d80a2460f38d0384d3b.etc2.ctex"]
 
 [params]
 

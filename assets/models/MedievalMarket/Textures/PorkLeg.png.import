@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://ckv8brp0yh7gt"
 path.s3tc="res://.godot/imported/PorkLeg.png-10d5f60e1f051e6eafc150158f334a15.s3tc.ctex"
+path.etc2="res://.godot/imported/PorkLeg.png-10d5f60e1f051e6eafc150158f334a15.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/models/MedievalMarket/Textures/PorkLeg.png"
-dest_files=["res://.godot/imported/PorkLeg.png-10d5f60e1f051e6eafc150158f334a15.s3tc.ctex"]
+dest_files=["res://.godot/imported/PorkLeg.png-10d5f60e1f051e6eafc150158f334a15.s3tc.ctex", "res://.godot/imported/PorkLeg.png-10d5f60e1f051e6eafc150158f334a15.etc2.ctex"]
 
 [params]
 

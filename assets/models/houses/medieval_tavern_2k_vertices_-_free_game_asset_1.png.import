@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://cbc5jloybu05w"
 path.s3tc="res://.godot/imported/medieval_tavern_2k_vertices_-_free_game_asset_1.png-14febe7d114a7249b7896e74f64bea2d.s3tc.ctex"
+path.etc2="res://.godot/imported/medieval_tavern_2k_vertices_-_free_game_asset_1.png-14febe7d114a7249b7896e74f64bea2d.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/models/houses/medieval_tavern_2k_vertices_-_free_game_asset_1.png"
-dest_files=["res://.godot/imported/medieval_tavern_2k_vertices_-_free_game_asset_1.png-14febe7d114a7249b7896e74f64bea2d.s3tc.ctex"]
+dest_files=["res://.godot/imported/medieval_tavern_2k_vertices_-_free_game_asset_1.png-14febe7d114a7249b7896e74f64bea2d.s3tc.ctex", "res://.godot/imported/medieval_tavern_2k_vertices_-_free_game_asset_1.png-14febe7d114a7249b7896e74f64bea2d.etc2.ctex"]
 
 [params]
 

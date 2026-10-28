@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://53ddxwcqmdgn"
 path.s3tc="res://.godot/imported/Bacon.png-fddc7c82c3f3fb2d02f41105ee8c0003.s3tc.ctex"
+path.etc2="res://.godot/imported/Bacon.png-fddc7c82c3f3fb2d02f41105ee8c0003.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/models/MedievalMarket/Textures/Bacon.png"
-dest_files=["res://.godot/imported/Bacon.png-fddc7c82c3f3fb2d02f41105ee8c0003.s3tc.ctex"]
+dest_files=["res://.godot/imported/Bacon.png-fddc7c82c3f3fb2d02f41105ee8c0003.s3tc.ctex", "res://.godot/imported/Bacon.png-fddc7c82c3f3fb2d02f41105ee8c0003.etc2.ctex"]
 
 [params]
 

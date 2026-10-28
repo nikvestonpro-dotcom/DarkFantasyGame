@@ -3,9 +3,11 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://gjp2eu433xev"
-path="res://.godot/imported/stone_fire_pit_stone_fire_pit_diff.jpg-03ee3d27d62814686563fc86347c5bc4.ctex"
+path.s3tc="res://.godot/imported/stone_fire_pit_stone_fire_pit_diff.jpg-03ee3d27d62814686563fc86347c5bc4.s3tc.ctex"
+path.etc2="res://.godot/imported/stone_fire_pit_stone_fire_pit_diff.jpg-03ee3d27d62814686563fc86347c5bc4.etc2.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "470cb3f02b60fe4f3106fa13b2d0c2fd"
@@ -14,11 +16,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/models/stone_fire_pit_stone_fire_pit_diff.jpg"
-dest_files=["res://.godot/imported/stone_fire_pit_stone_fire_pit_diff.jpg-03ee3d27d62814686563fc86347c5bc4.ctex"]
+dest_files=["res://.godot/imported/stone_fire_pit_stone_fire_pit_diff.jpg-03ee3d27d62814686563fc86347c5bc4.s3tc.ctex", "res://.godot/imported/stone_fire_pit_stone_fire_pit_diff.jpg-03ee3d27d62814686563fc86347c5bc4.etc2.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -40,4 +42,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

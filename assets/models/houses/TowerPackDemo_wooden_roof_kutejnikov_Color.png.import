@@ -4,8 +4,9 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://d0sjwbubwn0xh"
 path.s3tc="res://.godot/imported/TowerPackDemo_wooden_roof_kutejnikov_Color.png-a3ca901494fa52dc3537c966dc35eaba.s3tc.ctex"
+path.etc2="res://.godot/imported/TowerPackDemo_wooden_roof_kutejnikov_Color.png-a3ca901494fa52dc3537c966dc35eaba.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -15,7 +16,7 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/models/houses/TowerPackDemo_wooden_roof_kutejnikov_Color.png"
-dest_files=["res://.godot/imported/TowerPackDemo_wooden_roof_kutejnikov_Color.png-a3ca901494fa52dc3537c966dc35eaba.s3tc.ctex"]
+dest_files=["res://.godot/imported/TowerPackDemo_wooden_roof_kutejnikov_Color.png-a3ca901494fa52dc3537c966dc35eaba.s3tc.ctex", "res://.godot/imported/TowerPackDemo_wooden_roof_kutejnikov_Color.png-a3ca901494fa52dc3537c966dc35eaba.etc2.ctex"]
 
 [params]
 

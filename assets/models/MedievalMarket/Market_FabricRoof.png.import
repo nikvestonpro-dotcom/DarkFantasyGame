@@ -4,8 +4,9 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://jvidxiq2c4ss"
 path.s3tc="res://.godot/imported/Market_FabricRoof.png-9a7e4ca6d3dda2965287dc55de9cf435.s3tc.ctex"
+path.etc2="res://.godot/imported/Market_FabricRoof.png-9a7e4ca6d3dda2965287dc55de9cf435.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -15,7 +16,7 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/models/MedievalMarket/Market_FabricRoof.png"
-dest_files=["res://.godot/imported/Market_FabricRoof.png-9a7e4ca6d3dda2965287dc55de9cf435.s3tc.ctex"]
+dest_files=["res://.godot/imported/Market_FabricRoof.png-9a7e4ca6d3dda2965287dc55de9cf435.s3tc.ctex", "res://.godot/imported/Market_FabricRoof.png-9a7e4ca6d3dda2965287dc55de9cf435.etc2.ctex"]
 
 [params]
 

@@ -4,8 +4,9 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://dabpeudbyrxd3"
 path.s3tc="res://.godot/imported/TowerPackDemo_OldBrick_d.png-9adaadc9920a9cc747b347e0f6f3b13d.s3tc.ctex"
+path.etc2="res://.godot/imported/TowerPackDemo_OldBrick_d.png-9adaadc9920a9cc747b347e0f6f3b13d.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -15,7 +16,7 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/models/houses/TowerPackDemo_OldBrick_d.png"
-dest_files=["res://.godot/imported/TowerPackDemo_OldBrick_d.png-9adaadc9920a9cc747b347e0f6f3b13d.s3tc.ctex"]
+dest_files=["res://.godot/imported/TowerPackDemo_OldBrick_d.png-9adaadc9920a9cc747b347e0f6f3b13d.s3tc.ctex", "res://.godot/imported/TowerPackDemo_OldBrick_d.png-9adaadc9920a9cc747b347e0f6f3b13d.etc2.ctex"]
 
 [params]
 

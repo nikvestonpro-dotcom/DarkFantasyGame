@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://br13lfxc7060"
 path.s3tc="res://.godot/imported/SackOfWheat.png-29563de72abcaa52b830bddf431be850.s3tc.ctex"
+path.etc2="res://.godot/imported/SackOfWheat.png-29563de72abcaa52b830bddf431be850.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/models/MedievalMarket/Textures/SackOfWheat.png"
-dest_files=["res://.godot/imported/SackOfWheat.png-29563de72abcaa52b830bddf431be850.s3tc.ctex"]
+dest_files=["res://.godot/imported/SackOfWheat.png-29563de72abcaa52b830bddf431be850.s3tc.ctex", "res://.godot/imported/SackOfWheat.png-29563de72abcaa52b830bddf431be850.etc2.ctex"]
 
 [params]
 

@@ -4,8 +4,9 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://b3tygag7gs6of"
 path.s3tc="res://.godot/imported/Paladin WProp J Nordstrom_2.png-63ca97b28a9d3f01e6adf115a1d804eb.s3tc.ctex"
+path.etc2="res://.godot/imported/Paladin WProp J Nordstrom_2.png-63ca97b28a9d3f01e6adf115a1d804eb.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -15,7 +16,7 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/Анимация и персонажи/Great Sword Pack/Paladin WProp J Nordstrom_2.png"
-dest_files=["res://.godot/imported/Paladin WProp J Nordstrom_2.png-63ca97b28a9d3f01e6adf115a1d804eb.s3tc.ctex"]
+dest_files=["res://.godot/imported/Paladin WProp J Nordstrom_2.png-63ca97b28a9d3f01e6adf115a1d804eb.s3tc.ctex", "res://.godot/imported/Paladin WProp J Nordstrom_2.png-63ca97b28a9d3f01e6adf115a1d804eb.etc2.ctex"]
 
 [params]
 

@@ -4,8 +4,9 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://ccdd47k4l0cav"
 path.s3tc="res://.godot/imported/banners_2.png-57198adaa07377b86e632cc1468db171.s3tc.ctex"
+path.etc2="res://.godot/imported/banners_2.png-57198adaa07377b86e632cc1468db171.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -15,7 +16,7 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/models/props/banners_2.png"
-dest_files=["res://.godot/imported/banners_2.png-57198adaa07377b86e632cc1468db171.s3tc.ctex"]
+dest_files=["res://.godot/imported/banners_2.png-57198adaa07377b86e632cc1468db171.s3tc.ctex", "res://.godot/imported/banners_2.png-57198adaa07377b86e632cc1468db171.etc2.ctex"]
 
 [params]
 

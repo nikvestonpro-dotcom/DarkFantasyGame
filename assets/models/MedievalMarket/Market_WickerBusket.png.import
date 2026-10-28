@@ -4,8 +4,9 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://c654gy6c7hmkf"
 path.s3tc="res://.godot/imported/Market_WickerBusket.png-3c8ba0c8884b767defbaa1f82a340dc2.s3tc.ctex"
+path.etc2="res://.godot/imported/Market_WickerBusket.png-3c8ba0c8884b767defbaa1f82a340dc2.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -15,7 +16,7 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/models/MedievalMarket/Market_WickerBusket.png"
-dest_files=["res://.godot/imported/Market_WickerBusket.png-3c8ba0c8884b767defbaa1f82a340dc2.s3tc.ctex"]
+dest_files=["res://.godot/imported/Market_WickerBusket.png-3c8ba0c8884b767defbaa1f82a340dc2.s3tc.ctex", "res://.godot/imported/Market_WickerBusket.png-3c8ba0c8884b767defbaa1f82a340dc2.etc2.ctex"]
 
 [params]
 

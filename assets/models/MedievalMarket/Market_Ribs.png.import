@@ -4,8 +4,9 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://cwsi5a7ubf14p"
 path.s3tc="res://.godot/imported/Market_Ribs.png-99d15c58318bcef2d0dc6e098036b26e.s3tc.ctex"
+path.etc2="res://.godot/imported/Market_Ribs.png-99d15c58318bcef2d0dc6e098036b26e.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -15,7 +16,7 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/models/MedievalMarket/Market_Ribs.png"
-dest_files=["res://.godot/imported/Market_Ribs.png-99d15c58318bcef2d0dc6e098036b26e.s3tc.ctex"]
+dest_files=["res://.godot/imported/Market_Ribs.png-99d15c58318bcef2d0dc6e098036b26e.s3tc.ctex", "res://.godot/imported/Market_Ribs.png-99d15c58318bcef2d0dc6e098036b26e.etc2.ctex"]
 
 [params]
 

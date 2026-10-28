@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://dsbbvj8t0mb1t"
 path.s3tc="res://.godot/imported/tavern_house_asset_1.png-de90c3a7c7ea9e991815a1de8f506b92.s3tc.ctex"
+path.etc2="res://.godot/imported/tavern_house_asset_1.png-de90c3a7c7ea9e991815a1de8f506b92.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/models/houses/tavern_house_asset_1.png"
-dest_files=["res://.godot/imported/tavern_house_asset_1.png-de90c3a7c7ea9e991815a1de8f506b92.s3tc.ctex"]
+dest_files=["res://.godot/imported/tavern_house_asset_1.png-de90c3a7c7ea9e991815a1de8f506b92.s3tc.ctex", "res://.godot/imported/tavern_house_asset_1.png-de90c3a7c7ea9e991815a1de8f506b92.etc2.ctex"]
 
 [params]
 

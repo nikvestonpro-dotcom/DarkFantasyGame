@@ -3,16 +3,17 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bjrykjn06komp"
-path.s3tc="res://.godot/imported/mango sword real.png-a7accd3a2804763c4f94c36dcaf9b6c6.s3tc.ctex"
+path.s3tc="res://.godot/imported/mango sword real.png-17cf0650ea48e16b33047dc8fb07ba99.s3tc.ctex"
+path.etc2="res://.godot/imported/mango sword real.png-17cf0650ea48e16b33047dc8fb07ba99.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
-source_file="res://мобы/DEAD OATH HUNTER  PSX Bounty Hunter Character/textures/mango sword real.png"
-dest_files=["res://.godot/imported/mango sword real.png-a7accd3a2804763c4f94c36dcaf9b6c6.s3tc.ctex"]
+source_file="res://мобы/DEAD OATH HUNTER  PSX Bounty Hunter Character/Textures/mango sword real.png"
+dest_files=["res://.godot/imported/mango sword real.png-17cf0650ea48e16b33047dc8fb07ba99.s3tc.ctex", "res://.godot/imported/mango sword real.png-17cf0650ea48e16b33047dc8fb07ba99.etc2.ctex"]
 
 [params]
 

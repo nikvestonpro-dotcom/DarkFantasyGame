@@ -3,9 +3,11 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://biuavvim5nvfx"
-path="res://.godot/imported/tools_glb_Hay_Tex.png-0ad7bad0e0b55b55938d3994d069bff3.ctex"
+path.s3tc="res://.godot/imported/tools_glb_Hay_Tex.png-0ad7bad0e0b55b55938d3994d069bff3.s3tc.ctex"
+path.etc2="res://.godot/imported/tools_glb_Hay_Tex.png-0ad7bad0e0b55b55938d3994d069bff3.etc2.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "d3c2f7763ad80000d1b5c2a1303907f8"
@@ -14,11 +16,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/models/packs/Medevial Tools/Medevial Tools/tools_glb_Hay_Tex.png"
-dest_files=["res://.godot/imported/tools_glb_Hay_Tex.png-0ad7bad0e0b55b55938d3994d069bff3.ctex"]
+dest_files=["res://.godot/imported/tools_glb_Hay_Tex.png-0ad7bad0e0b55b55938d3994d069bff3.s3tc.ctex", "res://.godot/imported/tools_glb_Hay_Tex.png-0ad7bad0e0b55b55938d3994d069bff3.etc2.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -40,4 +42,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

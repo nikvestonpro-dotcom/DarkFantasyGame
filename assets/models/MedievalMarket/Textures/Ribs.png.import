@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://b344y3thxofpq"
 path.s3tc="res://.godot/imported/Ribs.png-bb0fce69b3eaaf14d210f7e5cef69ca8.s3tc.ctex"
+path.etc2="res://.godot/imported/Ribs.png-bb0fce69b3eaaf14d210f7e5cef69ca8.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/models/MedievalMarket/Textures/Ribs.png"
-dest_files=["res://.godot/imported/Ribs.png-bb0fce69b3eaaf14d210f7e5cef69ca8.s3tc.ctex"]
+dest_files=["res://.godot/imported/Ribs.png-bb0fce69b3eaaf14d210f7e5cef69ca8.s3tc.ctex", "res://.godot/imported/Ribs.png-bb0fce69b3eaaf14d210f7e5cef69ca8.etc2.ctex"]
 
 [params]
 

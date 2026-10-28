@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://ds6w74orrbgp1"
 path.s3tc="res://.godot/imported/Mannequin.png-ea531745f8cf4e6b6b8b4401aff71611.s3tc.ctex"
+path.etc2="res://.godot/imported/Mannequin.png-ea531745f8cf4e6b6b8b4401aff71611.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/models/MedievalMarket/Textures/Mannequin.png"
-dest_files=["res://.godot/imported/Mannequin.png-ea531745f8cf4e6b6b8b4401aff71611.s3tc.ctex"]
+dest_files=["res://.godot/imported/Mannequin.png-ea531745f8cf4e6b6b8b4401aff71611.s3tc.ctex", "res://.godot/imported/Mannequin.png-ea531745f8cf4e6b6b8b4401aff71611.etc2.ctex"]
 
 [params]
 

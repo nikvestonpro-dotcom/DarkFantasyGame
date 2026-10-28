@@ -4,8 +4,9 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://dlmpkm84wnr0m"
 path.s3tc="res://.godot/imported/TowerPackDemo_ColouredGlass1_n.jpg-3198a353901d587b9f2f81e7fefa3ecc.s3tc.ctex"
+path.etc2="res://.godot/imported/TowerPackDemo_ColouredGlass1_n.jpg-3198a353901d587b9f2f81e7fefa3ecc.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -15,7 +16,7 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/models/houses/TowerPackDemo_ColouredGlass1_n.jpg"
-dest_files=["res://.godot/imported/TowerPackDemo_ColouredGlass1_n.jpg-3198a353901d587b9f2f81e7fefa3ecc.s3tc.ctex"]
+dest_files=["res://.godot/imported/TowerPackDemo_ColouredGlass1_n.jpg-3198a353901d587b9f2f81e7fefa3ecc.s3tc.ctex", "res://.godot/imported/TowerPackDemo_ColouredGlass1_n.jpg-3198a353901d587b9f2f81e7fefa3ecc.etc2.ctex"]
 
 [params]
 

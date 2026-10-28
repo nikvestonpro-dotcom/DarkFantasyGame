@@ -4,8 +4,9 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://bbkr7ib3g8kk2"
 path.s3tc="res://.godot/imported/Market_Wood.png-338a8ebe5fd17789a7246f26ee80f638.s3tc.ctex"
+path.etc2="res://.godot/imported/Market_Wood.png-338a8ebe5fd17789a7246f26ee80f638.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -15,7 +16,7 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/models/MedievalMarket/Market_Wood.png"
-dest_files=["res://.godot/imported/Market_Wood.png-338a8ebe5fd17789a7246f26ee80f638.s3tc.ctex"]
+dest_files=["res://.godot/imported/Market_Wood.png-338a8ebe5fd17789a7246f26ee80f638.s3tc.ctex", "res://.godot/imported/Market_Wood.png-338a8ebe5fd17789a7246f26ee80f638.etc2.ctex"]
 
 [params]
 

@@ -3,16 +3,17 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://b43lf71sjuk0t"
-path.s3tc="res://.godot/imported/face guard.png-bbb7a894c7b7f1adfb685ebf50055f3e.s3tc.ctex"
+path.s3tc="res://.godot/imported/face guard.png-e8b52c6c91709e8456df58f2312f443e.s3tc.ctex"
+path.etc2="res://.godot/imported/face guard.png-e8b52c6c91709e8456df58f2312f443e.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
-source_file="res://мобы/DEAD OATH HUNTER  PSX Bounty Hunter Character/textures/face guard.png"
-dest_files=["res://.godot/imported/face guard.png-bbb7a894c7b7f1adfb685ebf50055f3e.s3tc.ctex"]
+source_file="res://мобы/DEAD OATH HUNTER  PSX Bounty Hunter Character/Textures/face guard.png"
+dest_files=["res://.godot/imported/face guard.png-e8b52c6c91709e8456df58f2312f443e.s3tc.ctex", "res://.godot/imported/face guard.png-e8b52c6c91709e8456df58f2312f443e.etc2.ctex"]
 
 [params]
 

@@ -4,8 +4,9 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://cpgjit0kkib4j"
 path.s3tc="res://.godot/imported/TowerPackDemo_WoodFenceCylinder.png-81891f2188213ec72d73de8410183aae.s3tc.ctex"
+path.etc2="res://.godot/imported/TowerPackDemo_WoodFenceCylinder.png-81891f2188213ec72d73de8410183aae.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -15,7 +16,7 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/models/houses/TowerPackDemo_WoodFenceCylinder.png"
-dest_files=["res://.godot/imported/TowerPackDemo_WoodFenceCylinder.png-81891f2188213ec72d73de8410183aae.s3tc.ctex"]
+dest_files=["res://.godot/imported/TowerPackDemo_WoodFenceCylinder.png-81891f2188213ec72d73de8410183aae.s3tc.ctex", "res://.godot/imported/TowerPackDemo_WoodFenceCylinder.png-81891f2188213ec72d73de8410183aae.etc2.ctex"]
 
 [params]
 

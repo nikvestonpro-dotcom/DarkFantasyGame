@@ -4,8 +4,9 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://cst0hj6gmrgr0"
 path.s3tc="res://.godot/imported/Market_Stump_2.png-b548f996da2ede0e065a023932b2c922.s3tc.ctex"
+path.etc2="res://.godot/imported/Market_Stump_2.png-b548f996da2ede0e065a023932b2c922.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -15,7 +16,7 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/models/MedievalMarket/Market_Stump_2.png"
-dest_files=["res://.godot/imported/Market_Stump_2.png-b548f996da2ede0e065a023932b2c922.s3tc.ctex"]
+dest_files=["res://.godot/imported/Market_Stump_2.png-b548f996da2ede0e065a023932b2c922.s3tc.ctex", "res://.godot/imported/Market_Stump_2.png-b548f996da2ede0e065a023932b2c922.etc2.ctex"]
 
 [params]
 

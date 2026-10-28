@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://cnmty622nw5su"
 path.s3tc="res://.godot/imported/Fabric.png-969b65ea1d7fe945e336d9337d049e35.s3tc.ctex"
+path.etc2="res://.godot/imported/Fabric.png-969b65ea1d7fe945e336d9337d049e35.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/models/MedievalMarket/Textures/Fabric.png"
-dest_files=["res://.godot/imported/Fabric.png-969b65ea1d7fe945e336d9337d049e35.s3tc.ctex"]
+dest_files=["res://.godot/imported/Fabric.png-969b65ea1d7fe945e336d9337d049e35.s3tc.ctex", "res://.godot/imported/Fabric.png-969b65ea1d7fe945e336d9337d049e35.etc2.ctex"]
 
 [params]
 

@@ -4,8 +4,9 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://nojb6oajb21i"
 path.s3tc="res://.godot/imported/Props_Trunk.png-27c1b896a9b449cf5de474f67481c85a.s3tc.ctex"
+path.etc2="res://.godot/imported/Props_Trunk.png-27c1b896a9b449cf5de474f67481c85a.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -15,7 +16,7 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/models/packs/Expost Forest/Expost Forest/Props/Props/Props_Trunk.png"
-dest_files=["res://.godot/imported/Props_Trunk.png-27c1b896a9b449cf5de474f67481c85a.s3tc.ctex"]
+dest_files=["res://.godot/imported/Props_Trunk.png-27c1b896a9b449cf5de474f67481c85a.s3tc.ctex", "res://.godot/imported/Props_Trunk.png-27c1b896a9b449cf5de474f67481c85a.etc2.ctex"]
 
 [params]
 
