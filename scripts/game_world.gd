@@ -28,6 +28,20 @@ const CASTLE_CENTER := Vector2(-152.0, 158.0)
 const CASTLE_RADIUS := 38.0
 const CASTLE_HEIGHT := 12.0
 
+## v10.0: Готическая башня на западной дороге (холм-курган)
+const TOWER_CENTER := Vector2(-62.0, 52.0)
+const TOWER_RADIUS := 16.0
+const TOWER_HEIGHT := 6.5
+
+## v10.0: деревня № 2 «Каменный Форд» у подножия замкового плато
+const HAMLET_CENTER := Vector2(-108.0, 122.0)
+const HAMLET_RADIUS := 26.0
+const HAMLET_HEIGHT := 8.0
+
+## v10.0: ритуальный круг культистов в северо-восточном лесу
+const RITUAL_CENTER := Vector2(72.0, 62.0)
+const RITUAL_RADIUS := 15.0
+
 const PLAYER_SPAWN := Vector3(0.0, 3.6, 22.0)
 
 ## Направление на луну (v9.1: луна — на куполе неба, направление
@@ -95,6 +109,19 @@ static func terrain_height(x: float, z: float) -> float:
         var dv := Vector2(x, z).distance_to(VILLAGE_CENTER)
         var v_mask := 1.0 - smoothstep(VILLAGE_RADIUS * 0.55, VILLAGE_RADIUS * 1.6, dv)
         h = lerpf(h, VILLAGE_HEIGHT, v_mask)
+        # v10.0: курган готической башни (пологий)
+        var dt_ := Vector2(x, z).distance_to(TOWER_CENTER)
+        h += TOWER_HEIGHT * (1.0 - smoothstep(0.0, TOWER_RADIUS, dt_))
+        # v10.0: плато деревни № 2 «Каменный Форд» (плоско почти до края —
+        # дома не должны парить на склоне)
+        var dhm := Vector2(x, z).distance_to(HAMLET_CENTER)
+        var hm_mask := 1.0 - smoothstep(HAMLET_RADIUS * 0.85, HAMLET_RADIUS * 1.7, dhm)
+        h = lerpf(h, HAMLET_HEIGHT, hm_mask)
+        # v10.0: прогалина ритуального круга — чуть ниже леса
+        var dr := Vector2(x, z).distance_to(RITUAL_CENTER)
+        var r_mask := 1.0 - smoothstep(RITUAL_RADIUS * 0.5, RITUAL_RADIUS * 1.3, dr)
+        if r_mask > 0.001:
+                h = lerpf(h, h - 0.35, r_mask * 0.8)
         # Плато замка (v5.0): плоская площадка, по краям — пологий подъём
         var dc := Vector2(x, z).distance_to(CASTLE_CENTER)
         var c_mask := 1.0 - smoothstep(CASTLE_RADIUS * 0.62, CASTLE_RADIUS * 1.35, dc)
@@ -130,6 +157,20 @@ const VILLAGE_STREETS := [
         Vector2(9.0, 18.0), Vector2(24.0, 19.0),        # проход к кузнице и юго-вост. дворам
 ]
 
+## v10.0: КАМЕННЫЕ ДОРОГИ (полилинии):
+## Западная дорога: деревня → готическая башня → Каменный Форд → замок.
+## Тропа культистов: деревня (восток) → ритуальный круг.
+const WEST_ROAD := [
+        Vector2(0.0, 30.0), Vector2(-18.0, 34.0), Vector2(-38.0, 41.0),
+        Vector2(-56.0, 49.0), Vector2(-62.0, 58.0), Vector2(-76.0, 74.0),
+        Vector2(-92.0, 92.0), Vector2(-104.0, 110.0), Vector2(-108.0, 122.0),
+        Vector2(-118.0, 136.0), Vector2(-132.0, 148.0), Vector2(-142.0, 154.0),
+]
+const RITUAL_TRAIL := [
+        Vector2(14.0, 24.0), Vector2(32.0, 34.0), Vector2(48.0, 44.0),
+        Vector2(60.0, 54.0), Vector2(70.0, 60.0),
+]
+
 static func dist_to_segment(p: Vector2, a: Vector2, b: Vector2) -> float:
         var ab := b - a
         if ab.length_squared() < 0.0001:
@@ -154,4 +195,9 @@ static func path_distance(p: Vector2) -> float:
         for i in range(0, VILLAGE_STREETS.size(), 2):
                 var ds := dist_to_segment(p, VILLAGE_STREETS[i], VILLAGE_STREETS[i + 1])
                 best = minf(best, ds)
+        # v10.0: каменные дороги и тропа к ритуальному кругу
+        for i in range(WEST_ROAD.size() - 1):
+                best = minf(best, dist_to_segment(p, WEST_ROAD[i], WEST_ROAD[i + 1]))
+        for i in range(RITUAL_TRAIL.size() - 1):
+                best = minf(best, dist_to_segment(p, RITUAL_TRAIL[i], RITUAL_TRAIL[i + 1]))
         return best

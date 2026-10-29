@@ -1,7 +1,8 @@
 extends CharacterBody3D
-## Игрок от третьего лица: рыцарь из набора KayKit Adventurers (CC0,
-## анимации Idle/Run/Attack/Death/Jump встроены в модель), камера на
-## пружине, здоровье, смерть и возрождение.
+## Игрок v10.0 «Монах»: тёмный монах-крестоносец из пака (PSX low-poly,
+## статичная модель — анимации ПРОЦЕДУРНЫЕ: покачивание, шаг, замах,
+## падение). Меч — отдельная модель в правой руке. Камера на пружине,
+## здоровье, смерть и возрождение.
 ##
 ## Движение читается ФИЗИЧЕСКИМИ клавишами (is_physical_key_pressed),
 ## поэтому WASD работает при любой раскладке, включая русскую.
@@ -13,21 +14,18 @@ const SPRINT_SPEED := 8.2
 const JUMP_VELOCITY := 7.5
 const GRAVITY := 20.0
 const MAX_HP := 10.0
-const ATTACK_TIME := 0.85  # длительность удара в игре (анимация ускорения)
+const ATTACK_TIME := 0.85
 
 # v5.0: полёт — F включает/выключает, пробел вверх, C вниз
 const FLY_SPEED := 13.0
 const FLY_VERT := 7.5
 const FLY_CEILING := 110.0
 
-const KNIGHT := preload("res://assets/models/kay_Knight.glb")
+const MONK := preload("res://assets/models/chars/monk_player.glb")
+const SWORD := preload("res://assets/models/chars/monk_sword.glb")
 
-# Рост рыцаря в метрах (модель KayKit подгоняется к нему).
-# v4.0: уменьшен с 1.85 до 1.50 — рыцарь не должен быть больше жителей
-# и смотреться великаном на фоне домов.
-const MODEL_HEIGHT := 1.50
-# Модель KayKit смотрит вдоль +Z, а «вперёд» в Godot — это -Z
-const FACING_FIX := PI
+# Модель монаха уже экспортирована ростом 1.80 м, ноги на y=0
+const MODEL_HEIGHT := 1.80
 
 var hp := MAX_HP
 var kills := 0
@@ -42,8 +40,10 @@ var _hit_window := false
 var _iframes := 0.0
 var _no_damage_t := 10.0
 var _pitch := 0.14
-var _cur_anim := ""
 var _hurt_t := 0.0
+var _walk_phase := 0.0
+var _t := 0.0
+var _death_rot := 0.0
 var flying := false
 var _fly_key_cd := 0.0
 var _fly_air_t := 0.0
@@ -53,7 +53,8 @@ var spring_arm: SpringArm3D
 var camera: Camera3D
 var hitbox: Area3D
 var visual_root: Node3D
-var anim: AnimationPlayer
+var body_pivot: Node3D
+var hand: Node3D
 var _mats: Array = []
 
 
@@ -62,9 +63,9 @@ func _ready() -> void:
         var col := CollisionShape3D.new()
         var cap := CapsuleShape3D.new()
         cap.radius = 0.32
-        cap.height = 1.30
+        cap.height = 1.55
         col.shape = cap
-        col.position.y = 0.68
+        col.position.y = 0.80
         add_child(col)
         _build_body()
         _build_camera()
@@ -72,60 +73,26 @@ func _ready() -> void:
         Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 
-# ---------- ТЕЛО (рыцарь KayKit) ----------
+# ---------- ТЕЛО (монах, процедурная анимация) ----------
 
 func _build_body() -> void:
         visual_root = Node3D.new()
         visual_root.name = "VisualRoot"
         add_child(visual_root)
 
-        var knight := KNIGHT.instantiate()
-        # Скрываем варианты оружия/щитов: рыцарь берёт одноручный меч
-        for wname in ["1H_Sword_Offhand", "2H_Sword", "Badge_Shield",
-                        "Rectangle_Shield", "Round_Shield", "Spike_Shield"]:
-                for node in knight.find_children("*", "Node", true, false):
-                        if node.name == wname and node is Node3D:
-                                node.visible = false
-        # Анимации: смерть не должна зацикливаться
-        anim = knight.get_node_or_null(^"AnimationPlayer") as AnimationPlayer
-        if anim != null:
-                anim.playback_default_blend_time = 0.15
-                for a in ["Death_A", "Death_B", "Hit_A", "Hit_B",
-                                "1H_Melee_Attack_Chop", "1H_Melee_Attack_Slice_Diagonal",
-                                "Jump_Full_Short", "Jump_Idle", "PickUp", "Use_Item"]:
-                        if anim.has_animation(a):
-                                anim.get_animation(a).loop_mode = Animation.LOOP_NONE
+        # body_pivot — узел для наклонов/падения (на высоте пояса)
+        body_pivot = Node3D.new()
+        body_pivot.name = "BodyPivot"
+        body_pivot.position.y = 0.95
+        visual_root.add_child(body_pivot)
 
-        # Подгоняем рост и ставим на землю. У скелетных мешей AABB пуст,
-        # поэтому меряем по костям (bind-поза = стойка с руками в стороны).
-        add_child(knight)
-        knight.rotation.y = FACING_FIX
-        var skel := knight.find_child("Skeleton3D", true, false) as Skeleton3D
-        var s := 1.0
-        var feet := 0.0
-        if skel != null and skel.get_bone_count() > 4:
-                var miny := 1e9
-                var maxy := -1e9
-                var inv: Transform3D = knight.global_transform.affine_inverse()
-                for i in skel.get_bone_count():
-                        var gp: Vector3 = (inv * skel.global_transform
-                                * skel.get_bone_global_pose(i)).origin
-                        if "IK" in skel.get_bone_name(i) or "control" in skel.get_bone_name(i):
-                                continue
-                        miny = minf(miny, gp.y)
-                        maxy = maxf(maxy, gp.y)
-                var height := maxf(maxy - miny, 0.05)
-                s = MODEL_HEIGHT / height
-                feet = miny
-        else:
-                var box := _subtree_aabb(knight)
-                s = MODEL_HEIGHT / maxf(box.size.y, 0.001)
-                feet = box.position.y
-        knight.scale = Vector3(s, s, s)
-        knight.position = Vector3(0.0, -feet * s, 0.0)
+        var monk := MONK.instantiate()
+        # модель стоит ногами на 0 — смещаем внутрь pivot (пояс на 0.95)
+        monk.position.y = -0.95
+        body_pivot.add_child(monk)
 
-        # Собираем материалы для вспышки урона (копии — модель только наша)
-        for mi in knight.find_children("*", "MeshInstance3D", true, false):
+        # материалы: копии для вспышки урона
+        for mi in monk.find_children("*", "MeshInstance3D", true, false):
                 var mesh: Mesh = (mi as MeshInstance3D).mesh
                 if mesh is ArrayMesh:
                         for i in mesh.get_surface_count():
@@ -138,28 +105,28 @@ func _build_body() -> void:
                                         mesh.surface_set_material(i, dup)
                                         _mats.append(dup)
 
-        if anim != null and anim.has_animation("Idle"):
-                anim.play("Idle")
-
-
-static func _subtree_aabb(root: Node3D) -> AABB:
-        var box := AABB(Vector3.ZERO, Vector3.ZERO)
-        var started := false
-        for vi in root.find_children("*", "VisualInstance3D", true, false):
-                var vis := vi as VisualInstance3D
-                if vis == null or vis.get_aabb().size == Vector3.ZERO:
-                        continue
-                var b := vis.get_aabb()
-                b = vis.global_transform * b
-                b = root.global_transform.affine_inverse() * b
-                if not started:
-                        box = b
-                        started = true
-                else:
-                        box = box.merge(b)
-        if not started:
-                box = AABB(Vector3(-0.4, 0, -0.4), Vector3(0.8, 1.8, 0.8))
-        return box
+        # меч в правой руке (руки опущены, кисть ~ (0.44, 0.80, 0.05))
+        hand = Node3D.new()
+        hand.name = "Hand"
+        hand.position = Vector3(0.40, -0.16, 0.10)
+        body_pivot.add_child(hand)
+        var sword := SWORD.instantiate()
+        # меч вертикально, остриём вверх, чуть наклонён наружу
+        sword.rotation.z = -0.18
+        sword.position.y = -0.12
+        hand.add_child(sword)
+        for mi in sword.find_children("*", "MeshInstance3D", true, false):
+                var mesh: Mesh = (mi as MeshInstance3D).mesh
+                if mesh is ArrayMesh:
+                        for i in mesh.get_surface_count():
+                                var m := mesh.surface_get_material(i)
+                                if m is StandardMaterial3D:
+                                        var dup := m.duplicate() as StandardMaterial3D
+                                        dup.emission_enabled = true
+                                        dup.emission = Color(1.0, 0.1, 0.05)
+                                        dup.emission_energy_multiplier = 0.0
+                                        mesh.surface_set_material(i, dup)
+                                        _mats.append(dup)
 
 
 # ---------- КАМЕРА ----------
@@ -167,7 +134,7 @@ static func _subtree_aabb(root: Node3D) -> AABB:
 func _build_camera() -> void:
         pitch_node = Node3D.new()
         pitch_node.name = "Pitch"
-        pitch_node.position.y = 1.22
+        pitch_node.position.y = 1.34
         pitch_node.rotation.x = _pitch
         add_child(pitch_node)
         spring_arm = SpringArm3D.new()
@@ -181,7 +148,6 @@ func _build_camera() -> void:
         camera = Camera3D.new()
         camera.fov = 72.0
         # v9.0: 4000 — небесный купол на 2500 м должен попадать в кадр
-        # (при far=700 небо обрезалось и игрок не видел луну со звёздами)
         camera.far = 4000.0
         camera.position = Vector3.ZERO
         spring_arm.add_child(camera)
@@ -198,10 +164,10 @@ func _build_hitbox() -> void:
         hitbox.monitoring = false
         var col := CollisionShape3D.new()
         var sh := SphereShape3D.new()
-        sh.radius = 1.2
+        sh.radius = 1.35
         col.shape = sh
         hitbox.add_child(col)
-        hitbox.position = Vector3(0, 0.85, -0.85)
+        hitbox.position = Vector3(0, 0.9, -0.85)
         add_child(hitbox)
 
 
@@ -263,6 +229,7 @@ func _physics_process(dt: float) -> void:
                 velocity.x = move_toward(velocity.x, 0.0, 10.0 * dt)
                 velocity.z = move_toward(velocity.z, 0.0, 10.0 * dt)
                 move_and_slide()
+                _proc_anim(dt, false)
                 return
 
         # ФИЗИЧЕСКИЕ клавиши: работают при любой раскладке (русская тоже)
@@ -293,7 +260,7 @@ func _physics_process(dt: float) -> void:
                 jumped = true
         move_and_slide()
 
-        _update_anim(dt, jumped)
+        _proc_anim(dt, jumped)
 
         if _hit_window and hitbox.monitoring:
                 for body in hitbox.get_overlapping_bodies():
@@ -308,24 +275,34 @@ func _physics_process(dt: float) -> void:
                 _die()
 
 
-# ---------- АНИМАЦИИ ----------
+# ---------- ПРОЦЕДУРНЫЕ АНИМАЦИИ ----------
 
-func _set_anim(name: String, blend := 0.2) -> void:
-        if anim == null or not anim.has_animation(name):
-                return
-        if _cur_anim == name and anim.is_playing():
-                return
-        _cur_anim = name
-        anim.play(name, blend)
+func _proc_anim(dt: float, _jumped: bool) -> void:
+        _t += dt
+        var hspeed := Vector2(velocity.x, velocity.z).length()
 
-
-func _update_anim(_dt: float, _jumped: bool) -> void:
-        if anim == null:
-                return
         if dead:
+                # Падение набок: быстрый крен с лёгким отскоком
+                _death_rot = minf(_death_rot + dt * 3.4, 1.0)
+                var fall := ease(_death_rot, -2.4)
+                body_pivot.rotation.z = fall * 1.45
+                body_pivot.rotation.x = fall * 0.10
+                body_pivot.position.y = 0.95 - fall * 0.62
+                hand.rotation.x = 0.0
                 return
+
+        # фаза шага от скорости
+        _walk_phase += dt * clampf(hspeed * 1.55, 0.0, 13.0)
+
+        var target_pitch := 0.0
+        var target_roll := 0.0
+        var target_yaw := 0.0
+        var bob := 0.0
+        var hand_x := 0.0
+        var hand_y := 0.0
+
         if _attacking:
-                _attack_t += _dt
+                _attack_t += dt
                 if not _hit_started and _attack_t > _attack_len * 0.30:
                         _hit_started = true
                         _hit_window = true
@@ -333,32 +310,58 @@ func _update_anim(_dt: float, _jumped: bool) -> void:
                 elif _hit_started and _attack_t > _attack_len * 0.62:
                         _hit_window = false
                         hitbox.monitoring = false
+                var p := clampf(_attack_t / _attack_len, 0.0, 1.0)
+                if p < 0.30:
+                        # замах: корпус вправо-назад, меч поднят
+                        var k := ease(p / 0.30, 1.6)
+                        target_yaw = -0.55 * k
+                        target_pitch = -0.06 * k
+                        hand_x = -2.0 * k
+                elif p < 0.58:
+                        # удар: быстрый свайп вперёд-вниз
+                        var k := ease((p - 0.30) / 0.28, 2.6)
+                        target_yaw = -0.55 + 1.15 * k
+                        target_pitch = 0.16 * k
+                        hand_x = -2.0 + 3.1 * k
+                        hand_y = 0.35 * sin(k * PI)
+                else:
+                        # возврат
+                        var k := ease((p - 0.58) / 0.42, 1.8)
+                        target_yaw = 0.60 * (1.0 - k)
+                        target_pitch = 0.16 * (1.0 - k)
+                        hand_x = 1.1 * (1.0 - k)
                 if _attack_t >= _attack_len * 0.95:
                         _attacking = false
-                        _cur_anim = ""
-                return
-        if _hurt_t > 0.0:
-                return
-        if flying:
-                if Vector2(velocity.x, velocity.z).length() > 0.6:
-                        _set_anim("Running_A", 0.2)
-                else:
-                        _set_anim("Jump_Idle", 0.2)
-                anim.speed_scale = 0.8
-                return
-        if _jumped:
-                _set_anim("Jump_Full_Short", 0.12)
-                return
-        if not is_on_floor():
-                _set_anim("Jump_Idle", 0.18)
-                return
-        var hspeed := Vector2(velocity.x, velocity.z).length()
-        if hspeed > 0.4:
-                _set_anim("Running_A", 0.22)
-                anim.speed_scale = clampf(hspeed / 5.6, 0.72, 1.4)
+        elif _hurt_t > 0.0:
+                # вздрогнул от урона
+                var k := _hurt_t / 0.4
+                target_pitch = -0.22 * k
+                bob = -0.03 * k
+        elif not is_on_floor() and not flying:
+                # в воздухе: лёгкий наклон вперёд
+                target_pitch = 0.08
+        elif hspeed > 0.4:
+                # шаг/бег: покачивание, наклон вперёд, крен
+                var run_k := clampf(hspeed / SPRINT_SPEED, 0.0, 1.0)
+                bob = absf(sin(_walk_phase)) * (0.035 + 0.045 * run_k)
+                target_pitch = 0.07 + 0.10 * run_k
+                target_roll = sin(_walk_phase) * (0.030 + 0.025 * run_k)
+                target_yaw = sin(_walk_phase * 0.5) * 0.025
         else:
-                anim.speed_scale = 1.0
-                _set_anim("Idle", 0.25)
+                # idle: дыхание и лёгкое покачивание
+                bob = sin(_t * 2.1) * 0.011
+                target_roll = sin(_t * 1.05) * 0.008
+                hand_x = sin(_t * 2.1) * 0.06
+
+        if not _attacking:
+                hand_x += -0.12  # меч чуть отведён назад в покое
+        # полёт: руки чуть в стороны не делаем — меч при себе
+        body_pivot.rotation.x = lerpf(body_pivot.rotation.x, target_pitch, 10.0 * dt)
+        body_pivot.rotation.z = lerpf(body_pivot.rotation.z, target_roll, 10.0 * dt)
+        body_pivot.rotation.y = lerpf(body_pivot.rotation.y, target_yaw, 14.0 * dt)
+        body_pivot.position.y = 0.95 + bob
+        hand.rotation.x = lerpf(hand.rotation.x, hand_x, 16.0 * dt)
+        hand.rotation.y = lerpf(hand.rotation.y, hand_y, 16.0 * dt)
 
 
 # ---------- АТАКА ----------
@@ -366,19 +369,12 @@ func _update_anim(_dt: float, _jumped: bool) -> void:
 func _try_attack() -> void:
         if _attacking or _attack_cd > 0.0 or dead:
                 return
-        if anim == null or not anim.has_animation("1H_Melee_Attack_Chop"):
-                return
         _attacking = true
         _attack_cd = 0.72
         _attack_t = 0.0
+        _attack_len = ATTACK_TIME
         _hit_started = false
         _hit_window = false
-        var raw_len: float = anim.get_animation("1H_Melee_Attack_Chop").length
-        # Длинные демо-анимации KayKit сжимаем до игровых 0.85 с
-        anim.speed_scale = clampf(raw_len / ATTACK_TIME, 1.0, 6.0)
-        _attack_len = ATTACK_TIME
-        _cur_anim = ""
-        _set_anim("1H_Melee_Attack_Chop", 0.06)
 
 
 # ---------- УРОН И СМЕРТЬ ----------
@@ -392,8 +388,6 @@ func take_damage(amount: int, from_pos: Vector3) -> void:
         for m in _mats:
                 m.emission_energy_multiplier = 1.2
         _hurt_t = 0.4
-        _cur_anim = ""
-        _set_anim("Hit_A", 0.1)
         var kb := global_position - from_pos
         kb.y = 0.0
         if kb.length() > 0.01:
@@ -411,8 +405,7 @@ func _die() -> void:
         _attacking = false
         _hit_window = false
         hitbox.monitoring = false
-        _cur_anim = ""
-        _set_anim("Death_A", 0.15)
+        _death_rot = 0.0
 
 
 func add_kill() -> void:
@@ -434,5 +427,6 @@ func respawn() -> void:
         _iframes = 2.0
         velocity = Vector3.ZERO
         global_position = GameWorld.PLAYER_SPAWN
-        _cur_anim = ""
-        _set_anim("Idle", 0.1)
+        _death_rot = 0.0
+        body_pivot.rotation = Vector3.ZERO
+        body_pivot.position.y = 0.95

@@ -1,12 +1,8 @@
 extends Node3D
-## Атмосфера v9.0: небесный купол (полное разрешение экрана, БЕЛАЯ луна
-## по текстуре, круглые звёзды, Млечный Путь), лунный свет без пересвета,
-## подсветка теневых сторон MoonFill, объёмный туман, светлячки.
-##
-## История: панорама HDR давала мыльную луну (кубмапа radiance 256px) и
-## сверхъяркий пик 18 EV, который glow раздувал в «огромное коричневое
-## пятно с чёрной аркой». Купол рисуется фрагмент-в-фрагмент — луна
-## чистая белая, гало без зазора.
+## Атмосфера v10.0 «Фиолетовая ночь»: небо с пурпурно-синими туманностями
+## (референс — фото пользователя), повышенная общая освещённость (было
+## «слишком тёмное»), лунный свет холоднее и ярче, туман с пурпурным
+## отливом, светлячки у деревни и озера.
 
 const SkyDomeShader := preload("res://shaders/sky_dome.gdshader")
 
@@ -34,20 +30,22 @@ func _build_environment() -> void:
 
         # Фон — тёмная подстраховка за куполом (купол закрывает всё небо)
         env.background_mode = Environment.BG_COLOR
-        env.background_color = Color(0.004, 0.005, 0.009)
+        env.background_color = Color(0.006, 0.005, 0.013)
 
-        # Рассеянный свет ночного неба: сдержанный, чтобы ночь оставалась
-        # ночью и лунный свет не «побелял» объекты (v5 давал ambient 1.7 —
-        # пересвет; теперь 0.85)
+        # Рассеянный свет ночного неба: v10 — чуть ярче и с пурпурным
+        # оттенком (прошлая версия 0.85 была «слишком тёмной» по отзыву;
+        # пересвета не даёт, сцена остаётся ночной)
         env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
-        env.ambient_light_color = Color(0.30, 0.36, 0.52)
-        env.ambient_light_energy = 0.85
+        env.ambient_light_color = Color(0.36, 0.33, 0.56)
+        env.ambient_light_energy = 1.08
 
         env.tonemap_mode = Environment.TONE_MAPPER_FILMIC
-        env.tonemap_exposure = 0.72
+        # v10: 0.72 -> 0.85 — пользователь просил светлее (было «всё
+        # слишком тёмное»); FILMIC держит луну в белом без клипа
+        env.tonemap_exposure = 0.85
         env.glow_enabled = true
-        env.glow_intensity = 0.45
-        env.glow_bloom = 0.07
+        env.glow_intensity = 0.5
+        env.glow_bloom = 0.08
         # Порог 1.8: луна (яркость до ~2.4) НЕ накрывается bloom-вуалью —
         # моря и кратеры остаются читаемыми; костёр и окна цветут мягко
         env.glow_hdr_threshold = 1.8
@@ -58,19 +56,19 @@ func _build_environment() -> void:
         env.ssao_intensity = 1.3
         env.ssao_radius = 1.5
 
-        # Объёмный туман: лёгкая лунная дымка (не «подводный мир»)
+        # Объёмный туман: лунная дымка с пурпурным отливом
         env.volumetric_fog_enabled = true
-        env.volumetric_fog_density = 0.0058
-        env.volumetric_fog_albedo = Color(0.50, 0.56, 0.72)
+        env.volumetric_fog_density = 0.0062
+        env.volumetric_fog_albedo = Color(0.52, 0.50, 0.74)
         env.volumetric_fog_anisotropy = 0.6
         env.volumetric_fog_length = 160.0
-        env.volumetric_fog_ambient_inject = 0.55
+        env.volumetric_fog_ambient_inject = 0.62
         env.volumetric_fog_gi_inject = 0.0
 
-        # Дымка для дали
+        # Дымка для дали (фиолетовая ночь)
         env.fog_enabled = true
-        env.fog_light_color = Color(0.30, 0.36, 0.50)
-        env.fog_density = 0.0016
+        env.fog_light_color = Color(0.34, 0.30, 0.52)
+        env.fog_density = 0.0017
         env.fog_sky_affect = 0.0
 
         we.environment = env
@@ -101,24 +99,23 @@ func _build_moonlight() -> void:
         light.name = "Moonlight"
         # Светим ровно оттуда, где на куполе нарисована луна
         light.basis = Basis.looking_at(-GameWorld.MOON_DIR, Vector3.UP)
-        # v9: 2.4 -> 1.15: прошлые значения «белили» деревья и крыши
-        light.light_color = Color(0.72, 0.78, 0.95)
-        light.light_energy = 1.15
+        # v10: 1.15 -> 1.38, цвет холоднее с пурпурным отливом — сцена
+        # читаемее в темноте, но не «побелённая» (пересвет ловили на v5)
+        light.light_color = Color(0.74, 0.74, 0.98)
+        light.light_energy = 1.38
         light.light_angular_distance = 1.2
         light.shadow_enabled = true
         light.shadow_blur = 1.3
         light.directional_shadow_mode = DirectionalLight3D.SHADOW_PARALLEL_4_SPLITS
         add_child(light)
 
-        # Мягкая подсветка теневых сторон (иначе ночная сцена выглядит
-        # «чёрные прямоугольники на светлых») — без теней, слабая.
-        # Источник — противоположный луне азимут, низко над горизонтом.
+        # Мягкая подсветка теневых сторон — без теней, слабая, фиолетовая
         var fill := DirectionalLight3D.new()
         fill.name = "MoonFill"
         var fill_dir := Vector3(0.72, 0.18, -0.66).normalized()
         fill.basis = Basis.looking_at(-fill_dir, Vector3.UP)
-        fill.light_color = Color(0.45, 0.52, 0.70)
-        fill.light_energy = 0.38
+        fill.light_color = Color(0.46, 0.42, 0.68)
+        fill.light_energy = 0.45
         fill.shadow_enabled = false
         add_child(fill)
 

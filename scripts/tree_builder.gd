@@ -303,6 +303,13 @@ func _scatter_forest() -> void:
                                 continue
                         if p.distance_to(GameWorld.CASTLE_CENTER) < 48.0:
                                 continue
+                        # v10.0: башня, деревня № 2, ритуальная прогалина
+                        if p.distance_to(GameWorld.TOWER_CENTER) < 20.0:
+                                continue
+                        if p.distance_to(GameWorld.HAMLET_CENTER) < GameWorld.HAMLET_RADIUS * 1.7:
+                                continue
+                        if p.distance_to(GameWorld.RITUAL_CENTER) < GameWorld.RITUAL_RADIUS * 1.9:
+                                continue
                         # Просека у мельницы
                         if p.distance_to(Vector2(44.0, 30.0)) < 9.0:
                                 continue

@@ -1,6 +1,7 @@
 extends Node3D
-## Главный сценарий: собирает мир из построителей, заспавнивает игрока,
-## жителей и врагов, управляет мерцанием костра и возрождением.
+## Главный сценарий v10.0: собирает мир из построителей (деревня, дороги,
+## ритуальный круг, Каменный Форд с башней), заспавнивает игрока-монаха,
+## жителей и врагов (слизни + звери GRAVVOK), управляет мерцанием огней.
 
 const TerrainBuilderScript := preload("res://scripts/terrain_builder.gd")
 const TreeBuilderScript := preload("res://scripts/tree_builder.gd")
@@ -12,6 +13,9 @@ const PlayerScript := preload("res://scripts/player.gd")
 const NpcScript := preload("res://scripts/npc.gd")
 const EnemyScript := preload("res://scripts/enemy.gd")
 const UiScript := preload("res://scripts/ui.gd")
+const RoadsBuilderScript := preload("res://scripts/roads_builder.gd")
+const RitualBuilderScript := preload("res://scripts/ritual_builder.gd")
+const HamletBuilderScript := preload("res://scripts/hamlet_builder.gd")
 
 var player
 var ui
@@ -26,6 +30,9 @@ func _ready() -> void:
         add_child(VillageBuilderScript.new())
         add_child(CaveBuilderScript.new())
         add_child(CastleBuilderScript.new())
+        add_child(RoadsBuilderScript.new())
+        add_child(HamletBuilderScript.new())
+        add_child(RitualBuilderScript.new())
         add_child(AtmosphereScript.new())
 
         player = PlayerScript.new()
@@ -76,6 +83,14 @@ func _spawn_npcs() -> void:
                         "Ущипнул бы этого дракона за хвост!",
                         "Заходи как-нибудь на чай, путник."],
                         M_MAGE, HIDE_MAGE, Color(0.85, 0.95, 1.12)],
+                ["Настоятель Адриан", ["Башня на западе... от её света не укрыться даже во тьме.",
+                        "Мы молимся, чтобы форд не постигла участь прежней деревни.",
+                        "Если идёшь к замку — возьми факел. И веру."],
+                        M_HOOD, HIDE_ROGUE, Color(1, 1, 1)],
+                ["Торговка Милда", ["Свежий мёд, последний в этом году!",
+                        "Странник, слышал? В лесу кружки света по ночам. Я их видела!",
+                        "Погост наш тихий... разве что ветер воет не по-звериному."],
+                        M_ROGUE, HIDE_ROGUE, Color(1, 1, 1)],
         ]
         var spots := [
                 # v9.0: по новой планировке — каждый житель у своего места
@@ -85,6 +100,9 @@ func _spawn_npcs() -> void:
                 Vector2(4.2, 2.6),   # Андрей — у колодца
                 Vector2(-1.5, 24.0), # Гриша-сторож — у ворот
                 Vector2(-13.0, -12.5), # Егерь Кузьмич — северный проулок
+                # v10.0: жители Каменного Форда
+                Vector2(-104.5, 122.5), # Настоятель Адриан — у рынка
+                Vector2(-110.5, 125.5), # Торговка Милда — у колодца
         ]
         for i in roster.size():
                 var npc = NpcScript.new()
@@ -112,6 +130,19 @@ func _spawn_enemies() -> void:
         dummy.setup("dummy", 1)
         dummy.position = Vector3(7.0, GameWorld.VILLAGE_HEIGHT, 3.5)
         add_child(dummy)
+        # v10.0: звери GRAVVOK — стражи ритуального круга и дороги на Форд
+        var gravvok_spots := [
+                Vector2(64.0, 52.0),   # у тропы к ритуальному кругу
+                Vector2(80.0, 70.0),   # за ритуальным кругом
+                Vector2(-80.0, 78.0),  # западная дорога, за башней
+                Vector2(-118.0, 108.0),# подъезды к Каменному Форду
+        ]
+        for i in gravvok_spots.size():
+                var g = EnemyScript.new()
+                g.setup("gravvok", 777 + i * 31)
+                var gs: Vector2 = gravvok_spots[i]
+                g.position = Vector3(gs.x, GameWorld.terrain_height(gs.x, gs.y) + 0.4, gs.y)
+                add_child(g)
 
 
 func _on_player_died() -> void:
@@ -121,7 +152,7 @@ func _on_player_died() -> void:
 
 func _process(dt: float) -> void:
         _t += dt
-        # Мерцание костра
+        # Мерцание костров
         for l in get_tree().get_nodes_in_group("campfire_light"):
                 l.light_energy = 3.3 + 0.5 * sin(_t * 13.7) + 0.25 * sin(_t * 29.3)
         var fi := 0
@@ -129,6 +160,9 @@ func _process(dt: float) -> void:
                 fi += 1
                 f.scale.y = 1.0 + 0.18 * sin(_t * 9.0 + fi * 2.1)
                 f.rotation.y += dt * 1.5
+        # v10.0: пульс фиолетового маяка башни
+        for b in get_tree().get_nodes_in_group("tower_beacon"):
+                b.light_energy = 2.6 + 0.9 * sin(_t * 0.7) + 0.3 * sin(_t * 2.3)
         # Возрождение
         if _respawn_t > 0.0:
                 _respawn_t -= dt
