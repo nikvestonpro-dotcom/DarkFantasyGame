@@ -47,14 +47,13 @@ func _ready() -> void:
         add_child(ui)
 
 
-const M_ROGUE := preload("res://assets/models/kay_Rogue.glb")
-const M_MAGE := preload("res://assets/models/kay_Mage.glb")
-const M_BARB := preload("res://assets/models/kay_Barbarian.glb")
-const M_HOOD := preload("res://assets/models/kay_Rogue_Hooded.glb")
+## v10.1: жители — реалистичная PSX-модель (DEAD OATH HUNTER) без меча,
+## с тонирующими вариациями (кожаная куртка в разных оттенках) —
+## вместо мультяшных KayKit.
+const M_VILLAGER := preload("res://мобы/DEAD OATH HUNTER  PSX Bounty Hunter Character/DEAD OATH HUNTER.fbx")
 
-const HIDE_ROGUE := ["1H_Crossbow", "2H_Crossbow", "Throwable", "Knife_Offhand"]
-const HIDE_MAGE := ["Spellbook", "Spellbook_open", "1H_Wand"]
-const HIDE_BARB := ["1H_Axe_Offhand", "Barbarian_Round_Shield", "2H_Axe", "Mug"]
+## прячет меч (меш Cube_002) у жителей
+const HIDE_SWORD := ["Cube_002"]
 
 
 func _spawn_npcs() -> void:
@@ -62,35 +61,35 @@ func _spawn_npcs() -> void:
                 ["Марк-трактирщик", ["Вечер добрый, путник! Загляни в «Пьяный грифон» — сегодня глинтвейн и свежий хлеб.",
                         "Слышала, в лесу развелись слизни. Тебе пригодится крепкий меч.",
                         "Ночью над озером странный свет. Один туда не ходи."],
-                        M_ROGUE, HIDE_ROGUE, Color(1, 1, 1)],
+                        M_VILLAGER, HIDE_SWORD, Color(1.0, 0.92, 0.80)],
                 ["Борис-кузнец", ["Мой меч тебя не подведёт. Бей первым — вот и вся наука.",
                         "Куй железо, пока тепло, путник.",
                         "Слизни боятся хорошего удара. И огня."],
-                        M_BARB, HIDE_BARB, Color(1, 1, 1)],
+                        M_VILLAGER, HIDE_SWORD, Color(1.05, 0.85, 0.72)],
                 ["Старец Фёдор", ["В холме шепчут древние руины... Не буди то, что спит.",
                         "Луна сегодня яркая. Дурной знак, ага.",
                         "Мы тут сто лет живём. И драконов переживали."],
-                        M_MAGE, HIDE_MAGE, Color(1, 1, 1)],
+                        M_VILLAGER, HIDE_SWORD, Color(0.85, 0.88, 1.05)],
                 ["Андрей", ["Ловлю светлячков для таверны! Красиво же...",
                         "Ты новенький? Озеро вон там, за деревьями.",
                         "Не буди слизней — они с утра злые."],
-                        M_HOOD, HIDE_ROGUE, Color(1, 1, 1)],
+                        M_VILLAGER, HIDE_SWORD, Color(1.0, 1.0, 1.0)],
                 ["Гриша-сторож", ["Обхожу деревню каждый вечер. Пока тихо...",
                         "Собираешься к руинам? Скажи Марку, куда пошёл.",
                         "Меч держи крепче, путник. Ночь длинная."],
-                        M_ROGUE, HIDE_ROGUE, Color(1.06, 0.9, 0.8)],
+                        M_VILLAGER, HIDE_SWORD, Color(0.95, 0.90, 0.98)],
                 ["Егерь Кузьмич", ["Борис опять весь день в кузне просидел...",
                         "Ущипнул бы этого дракона за хвост!",
                         "Заходи как-нибудь на чай, путник."],
-                        M_MAGE, HIDE_MAGE, Color(0.85, 0.95, 1.12)],
+                        M_VILLAGER, HIDE_SWORD, Color(0.80, 1.0, 0.85)],
                 ["Настоятель Адриан", ["Башня на западе... от её света не укрыться даже во тьме.",
                         "Мы молимся, чтобы форд не постигла участь прежней деревни.",
                         "Если идёшь к замку — возьми факел. И веру."],
-                        M_HOOD, HIDE_ROGUE, Color(1, 1, 1)],
+                        M_VILLAGER, HIDE_SWORD, Color(0.92, 0.88, 1.0)],
                 ["Торговка Милда", ["Свежий мёд, последний в этом году!",
                         "Странник, слышал? В лесу кружки света по ночам. Я их видела!",
                         "Погост наш тихий... разве что ветер воет не по-звериному."],
-                        M_ROGUE, HIDE_ROGUE, Color(1, 1, 1)],
+                        M_VILLAGER, HIDE_SWORD, Color(1.0, 0.95, 0.85)],
         ]
         var spots := [
                 # v9.0: по новой планировке — каждый житель у своего места

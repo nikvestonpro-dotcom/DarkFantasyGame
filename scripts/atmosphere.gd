@@ -37,7 +37,9 @@ func _build_environment() -> void:
         # пересвета не даёт, сцена остаётся ночной)
         env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
         env.ambient_light_color = Color(0.36, 0.33, 0.56)
-        env.ambient_light_energy = 1.08
+        # v10.1: 1.08 -> 1.15 — деревня затемнена, чуть поднимаем подсветку,
+        # чтобы силуэты домов читались и не было «грязно-чёрных» пятен
+        env.ambient_light_energy = 1.15
 
         env.tonemap_mode = Environment.TONE_MAPPER_FILMIC
         # v10: 0.72 -> 0.85 — пользователь просил светлее (было «всё

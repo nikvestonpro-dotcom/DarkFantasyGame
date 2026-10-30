@@ -74,28 +74,31 @@ func _cmap(col: Color, rough := 0.95) -> StandardMaterial3D:
 
 
 func _make_materials() -> void:
-        m_plaster = _cmap(Color(0.60, 0.57, 0.50))
-        m_plaster_warm = _cmap(Color(0.54, 0.48, 0.40))
-        m_beam = _pmat("dark_planks", Color(0.55, 0.50, 0.42), 0.55, 0.95, 1.1)
-        m_wall = _pmat("wood_plank_wall", Color(0.82, 0.76, 0.68), 0.5, 0.95)
-        m_wall_light = _pmat("wood_plank_wall", Color(1.05, 1.0, 0.9), 0.5, 0.95)
-        m_roof_wood = _pmat("roof_planks", Color(0.85, 0.80, 0.72), 0.55, 0.95)
-        m_roof_straw = _pmat("roof_planks", Color(1.05, 0.88, 0.55), 0.75, 1.0, 0.8)
-        m_roof_tile = _pmat("clay_roof_tiles_02", Color(0.95, 0.85, 0.8), 0.6, 0.9)
-        m_stone = _pmat("stone_wall", Color(0.85, 0.86, 0.9), 0.5, 0.95)
-        m_ruin = _pmat("castle_wall_varriation", Color(0.8, 0.82, 0.88), 0.45, 0.95)
-        m_window = _cmap(Color(0.08, 0.06, 0.04))
+        # v10.1 «дарк-фентези»: вся палитра деревни затемнена и состарена —
+        # копоть на штукатурке, выгоревшее дерево, гнилая солома, холодный
+        # камень. Тёплыми остаются только тусклые свечи в окнах.
+        m_plaster = _cmap(Color(0.30, 0.27, 0.25))
+        m_plaster_warm = _cmap(Color(0.25, 0.21, 0.18))
+        m_beam = _pmat("dark_planks", Color(0.26, 0.21, 0.17), 0.55, 0.95, 1.1)
+        m_wall = _pmat("wood_plank_wall", Color(0.40, 0.34, 0.28), 0.5, 0.95)
+        m_wall_light = _pmat("wood_plank_wall", Color(0.46, 0.39, 0.31), 0.5, 0.95)
+        m_roof_wood = _pmat("roof_planks", Color(0.28, 0.24, 0.22), 0.55, 0.95)
+        m_roof_straw = _pmat("roof_planks", Color(0.34, 0.27, 0.15), 0.75, 1.0, 0.8)
+        m_roof_tile = _pmat("clay_roof_tiles_02", Color(0.27, 0.25, 0.27), 0.6, 0.9)
+        m_stone = _pmat("stone_wall", Color(0.38, 0.38, 0.44), 0.5, 0.95)
+        m_ruin = _pmat("castle_wall_varriation", Color(0.34, 0.35, 0.40), 0.45, 0.95)
+        m_window = _cmap(Color(0.05, 0.03, 0.02))
         m_window.emission_enabled = true
-        m_window.emission = Color(1.0, 0.62, 0.25)
-        # v9.1: 1.7 — тёплое стекло без «неонового» пересвета
-        m_window.emission_energy_multiplier = 1.7
+        m_window.emission = Color(1.0, 0.45, 0.14)
+        # v10.1: тусклый больной огонь — тёплые окна остались, но злее
+        m_window.emission_energy_multiplier = 1.15
         # Стекло уличных фонарей — тусклее окон: фонарь близко к игроку
         # и не должен «выжигать» кадр белым квадратом
         m_lantern_glass = _cmap(Color(0.07, 0.05, 0.03))
         m_lantern_glass.emission_enabled = true
-        m_lantern_glass.emission = Color(1.0, 0.66, 0.32)
-        m_lantern_glass.emission_energy_multiplier = 1.4
-        m_door = _pmat("dark_planks", Color(0.42, 0.30, 0.20), 0.7, 0.95)
+        m_lantern_glass.emission = Color(1.0, 0.55, 0.25)
+        m_lantern_glass.emission_energy_multiplier = 1.2
+        m_door = _pmat("dark_planks", Color(0.22, 0.14, 0.09), 0.7, 0.95)
 
 
 # ---------- ПОМОЩНИКИ ----------
@@ -169,17 +172,28 @@ func _window(parent: Node3D, pos: Vector3, rot_y := 0.0, w := 0.72, h := 0.95,
         # Переплёт — v5.0
         _box(parent, Vector3(0.05, h, 0.17), pos + dir * 0.07, m_beam, Vector3(0, rot_y, 0))
         _box(parent, Vector3(w, 0.05, 0.17), pos + dir * 0.07, m_beam, Vector3(0, rot_y, 0))
-        # Ставни
+        # Ставни / v10.1: часть окон заколочена крест-накрест тёмными досками
         if shutters:
                 var side := Vector3(dir.z, 0.0, -dir.x)
-                for s in [-1.0, 1.0]:
-                        var sf: float = s
-                        var open := rng.randf() < 0.5
-                        var sx: float = sf * (w * 0.5 + 0.16)
-                        var shutter := _box(parent, Vector3(0.09, h + 0.1, w * 0.42),
-                                pos + dir * 0.1 + side * sx, m_wall_light)
-                        shutter.rotation.y = rot_y + (sf * (0.95 if open else 0.0))
-                        shutter.position += side * (sf * 0.14 if open else 0.0)
+                if rng.randf() < 0.38:
+                        # заколоченное окно: две крестовые доски поверх стёкол
+                        for sgn in [1.0, -1.0]:
+                                var bnp := _box(parent, Vector3(w + 0.34, 0.16, 0.1),
+                                                pos + dir * 0.09, m_door)
+                                bnp.rotation = Vector3(0, rot_y, sgn * 0.62)
+                        # тусклая щель света между досками
+                        _box(parent, Vector3(w * 0.9, 0.05, 0.02),
+                                        pos + dir * 0.12 - Vector3(0, h * 0.28, 0), m_window,
+                                        Vector3(0, rot_y, 0))
+                else:
+                        for s in [-1.0, 1.0]:
+                                var sf: float = s
+                                var open := rng.randf() < 0.5
+                                var sx: float = sf * (w * 0.5 + 0.16)
+                                var shutter := _box(parent, Vector3(0.09, h + 0.1, w * 0.42),
+                                                pos + dir * 0.1 + side * sx, m_wall_light)
+                                shutter.rotation.y = rot_y + (sf * (0.95 if open else 0.0))
+                                shutter.position += side * (sf * 0.14 if open else 0.0)
 
 
 const PUFF_TEX := preload("res://assets/textures/particles/puff_diff.png")
@@ -339,12 +353,14 @@ func _build_house(pos: Vector2, w: float, dep: float, wall_h: float,
         var up_h: float = wall_h * 0.85       # высота второго этажа
         var up_y: float = 0.7 + wall_h        # низ второго этажа (над цоколем)
         var top_y: float = up_y + up_h        # верх стен (линия низа крыши)
-        var eave := 0.95                      # свес крыши по скатам
-        var over := 0.8                       # свес крыши по фронтонам
-        var roof_h: float = maxf(1.9, w * 0.4)
-        var leaf_m := _cmap(Color(0.18, 0.34, 0.15))
-        var iron_m := _cmap(Color(0.14, 0.13, 0.12), 0.45)
-        var log_m := _pmat("dark_planks", Color(0.55, 0.46, 0.36), 0.35)
+        var eave := 1.15                      # v10.1: нависающие тёмные свесы
+        var over := 0.9                       # свес крыши по фронтонам
+        # v10.1: крутая готическая крыша — раньше было w*0.4 (полого, уютно)
+        var roof_h: float = maxf(2.7, w * 0.62)
+        # v10.1: мёртвая трава в ящиках вместо зелёных цветников
+        var leaf_m := _cmap(Color(0.16, 0.13, 0.08))
+        var iron_m := _cmap(Color(0.12, 0.11, 0.10), 0.45)
+        var log_m := _pmat("dark_planks", Color(0.34, 0.27, 0.20), 0.35)
 
         # --- Каменный цоколь с угловыми квадрами и ступенькой ---
         _box(b, Vector3(w + 0.7, 0.85, dep + 0.7), Vector3(0, 0.28, 0), m_stone)
@@ -415,6 +431,21 @@ func _build_house(pos: Vector2, w: float, dep: float, wall_h: float,
         # Фонарь у входа
         _box(b, Vector3(0.08, 0.08, 0.6), Vector3(w * 0.12 + 1.1, 2.6, dz + 0.2), m_beam)
         _box(b, Vector3(0.24, 0.3, 0.24), Vector3(w * 0.12 + 1.1, 2.38, dz + 0.44), m_window)
+        # v10.1: рогатый череп над дверью (оберег от нечисти) — мелкая
+        # тёмная пластина с двумя рогами-шипами
+        var skull_z := dz + 0.14
+        _box(b, Vector3(0.30, 0.22, 0.07), Vector3(w * 0.12, 2.78, skull_z), m_wall_light)
+        for hs in [-1.0, 1.0]:
+                var hf: float = hs
+                var horn := MeshInstance3D.new()
+                var hm := PrismMesh.new()
+                hm.size = Vector3(0.07, 0.42, 0.07)
+                hm.left_to_right = 0.5
+                horn.mesh = hm
+                horn.material_override = m_beam
+                horn.position = Vector3(w * 0.12 + hf * 0.16, 2.95, skull_z)
+                horn.rotation.z = hf * 0.5
+                b.add_child(horn)
 
         # --- Окна: нижний этаж с цветниками, верхний — со ставнями ---
         _window(b, Vector3(-w * 0.26, 0.7 + wall_h * 0.55, dep * 0.5 + 0.03))
@@ -424,12 +455,18 @@ func _build_house(pos: Vector2, w: float, dep: float, wall_h: float,
         _window(b, Vector3(-w * 0.3, up_y + up_h * 0.55, dep * 0.5 + 0.44), 0.0, 0.66, 0.9, false)
         _window(b, Vector3(w * 0.3, up_y + up_h * 0.55, dep * 0.5 + 0.44), 0.0, 0.66, 0.9, false)
         _window(b, Vector3(-w * 0.24, up_y + up_h * 0.55, -dep * 0.5 - 0.44), 180.0, 0.66, 0.9, false)
-        # Цветники под двумя нижними окнами
+        # v10.1: ящики с высохшей травой под нижними окнами
         for wx in [-w * 0.26, w * 0.38]:
                 _box(b, Vector3(1.0, 0.24, 0.28), Vector3(wx, 0.7 + wall_h * 0.55 - 0.72,
                                 dep * 0.5 + 0.14), m_beam)
                 _box(b, Vector3(0.92, 0.12, 0.22), Vector3(wx, 0.7 + wall_h * 0.55 - 0.55,
                                 dep * 0.5 + 0.14), leaf_m)
+                # пучки сухой травы, свисающие из ящика
+                for tg in [-0.3, 0.05, 0.35]:
+                        var tuft := _box(b, Vector3(0.07, 0.3, 0.05),
+                                        Vector3(wx + tg, 0.7 + wall_h * 0.55 - 0.62,
+                                                        dep * 0.5 + 0.24), leaf_m)
+                        tuft.rotation.z = tg * 0.4
 
         # --- Крыша: два ската с свесами, ветровые доски, конёк, фронтоны ---
         var span := w * 0.5 + eave
@@ -466,6 +503,28 @@ func _build_house(pos: Vector2, w: float, dep: float, wall_h: float,
         var ridge := _cyl(b, 0.1, 0.1, dep + 2.0 * over - 0.3,
                         Vector3(0, top_y + roof_h + 0.03, 0), m_beam, 8)
         ridge.rotation_degrees.x = 90
+        # v10.1: готические шпили на коньке — злой силуэт крыши
+        for sgn in [1.0, -1.0]:
+                var sf: float = sgn
+                var spike := MeshInstance3D.new()
+                var pm2 := PrismMesh.new()
+                pm2.size = Vector3(0.34, 1.15, 0.34)
+                pm2.left_to_right = 0.5
+                spike.mesh = pm2
+                spike.material_override = m_beam
+                spike.position = Vector3(0, top_y + roof_h + 0.62,
+                                sf * (dep * 0.5 + over - 0.45))
+                b.add_child(spike)
+                # кованое кольцо под шпилем
+                var ring2 := MeshInstance3D.new()
+                var rm2 := TorusMesh.new()
+                rm2.inner_radius = 0.06
+                rm2.outer_radius = 0.11
+                ring2.mesh = rm2
+                ring2.material_override = iron_m
+                ring2.position = Vector3(0, top_y + roof_h + 0.16,
+                                sf * (dep * 0.5 + over - 0.45))
+                b.add_child(ring2)
         # Чердачное окно и подъёмная балка на переднем фронтоне
         _window(b, Vector3(0, top_y + roof_h * 0.42, dep * 0.5 + 0.16), 0.0, 0.5, 0.6, false)
         _box(b, Vector3(0.09, 0.09, 1.2), Vector3(0.9, top_y + roof_h - 0.18,
