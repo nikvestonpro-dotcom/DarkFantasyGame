@@ -1,7 +1,8 @@
 extends Node3D
-## Главный сценарий v10.0: собирает мир из построителей (деревня, дороги,
-## ритуальный круг, Каменный Форд с башней), заспавнивает игрока-монаха,
-## жителей и врагов (слизни + звери GRAVVOK), управляет мерцанием огней.
+## Главный сценарий v11: собирает мир из построителей (деревня, дороги,
+## ритуальный круг, Каменный Форд с башней, СТАРЫЙ ПОГОСТ), заспавнивает
+## игрока-РЫЦАРЯ, РАЗНЫХ жителей (охотник/паладин/акай/арисса) и призрак
+## Белой Дамы, врагов (слизни + звери GRAVVOK), управляет мерцанием огней.
 
 const TerrainBuilderScript := preload("res://scripts/terrain_builder.gd")
 const TreeBuilderScript := preload("res://scripts/tree_builder.gd")
@@ -16,6 +17,8 @@ const UiScript := preload("res://scripts/ui.gd")
 const RoadsBuilderScript := preload("res://scripts/roads_builder.gd")
 const RitualBuilderScript := preload("res://scripts/ritual_builder.gd")
 const HamletBuilderScript := preload("res://scripts/hamlet_builder.gd")
+const GraveyardBuilderScript := preload("res://scripts/graveyard_builder.gd")
+const GhostScript := preload("res://scripts/ghost.gd")
 
 var player
 var ui
@@ -33,6 +36,7 @@ func _ready() -> void:
         add_child(RoadsBuilderScript.new())
         add_child(HamletBuilderScript.new())
         add_child(RitualBuilderScript.new())
+        add_child(GraveyardBuilderScript.new())
         add_child(AtmosphereScript.new())
 
         player = PlayerScript.new()
@@ -41,18 +45,26 @@ func _ready() -> void:
         player.died.connect(_on_player_died)
 
         _spawn_npcs()
+        _spawn_ghost()
         _spawn_enemies()
 
         ui = UiScript.new()
         add_child(ui)
 
 
-## v10.1: жители — реалистичная PSX-модель (DEAD OATH HUNTER) без меча,
-## с тонирующими вариациями (кожаная куртка в разных оттенках) —
-## вместо мультяшных KayKit.
-const M_VILLAGER := preload("res://мобы/DEAD OATH HUNTER  PSX Bounty Hunter Character/DEAD OATH HUNTER.fbx")
+## v11: жители — РАЗНЫЕ модели (рыцарь-герой не шаблон!):
+## охотник-трактирщик, паладин-сторож, старец-акай, арисса-торговка.
+## Фонари в руках — тёплые живые огни бродят по ночный деревне.
+const M_HUNTER := preload("res://мобы/DEAD OATH HUNTER  PSX Bounty Hunter Character/DEAD OATH HUNTER.fbx")
+const M_PALADIN := preload("res://assets/Анимация и персонажи/Paladin WProp J Nordstrom.fbx")
+const M_AKAI := preload("res://assets/Анимация и персонажи/akai_e_espiritu.fbx")
+const ARISSA := preload("res://assets/Анимация и персонажи/Arissa.fbx")
+const A_HUNTER := preload("res://assets/anims/v11_hunter_anims.tres")
+const A_PALADIN := preload("res://assets/anims/v11_paladin_anims.tres")
+const A_AKAI := preload("res://assets/anims/v11_akai_anims.tres")
+const A_ARISSA := preload("res://assets/anims/v11_arissa_anims.tres")
 
-## прячет меч (меш Cube_002) у жителей
+## прячет меч (меш Cube_002) у мирных жителей-охотников
 const HIDE_SWORD := ["Cube_002"]
 
 
@@ -61,45 +73,48 @@ func _spawn_npcs() -> void:
                 ["Марк-трактирщик", ["Вечер добрый, путник! Загляни в «Пьяный грифон» — сегодня глинтвейн и свежий хлеб.",
                         "Слышала, в лесу развелись слизни. Тебе пригодится крепкий меч.",
                         "Ночью над озером странный свет. Один туда не ходи."],
-                        M_VILLAGER, HIDE_SWORD, Color(1.0, 0.92, 0.80)],
+                        M_HUNTER, A_HUNTER, {"tint": Color(1.0, 0.9, 0.78), "lantern": true, "hide": HIDE_SWORD}],
                 ["Борис-кузнец", ["Мой меч тебя не подведёт. Бей первым — вот и вся наука.",
                         "Куй железо, пока тепло, путник.",
                         "Слизни боятся хорошего удара. И огня."],
-                        M_VILLAGER, HIDE_SWORD, Color(1.05, 0.85, 0.72)],
+                        M_PALADIN, A_PALADIN, {"tint": Color(0.85, 0.78, 0.72), "height": 1.04}],
                 ["Старец Фёдор", ["В холме шепчут древние руины... Не буди то, что спит.",
                         "Луна сегодня яркая. Дурной знак, ага.",
                         "Мы тут сто лет живём. И драконов переживали."],
-                        M_VILLAGER, HIDE_SWORD, Color(0.85, 0.88, 1.05)],
+                        M_AKAI, A_AKAI, {"tint": Color(0.85, 0.9, 1.05), "height": 1.06}],
                 ["Андрей", ["Ловлю светлячков для таверны! Красиво же...",
                         "Ты новенький? Озеро вон там, за деревьями.",
                         "Не буди слизней — они с утра злые."],
-                        M_VILLAGER, HIDE_SWORD, Color(1.0, 1.0, 1.0)],
+                        M_HUNTER, A_HUNTER, {"tint": Color(1.0, 1.0, 1.0), "height": 0.95, "hide": HIDE_SWORD}],
                 ["Гриша-сторож", ["Обхожу деревню каждый вечер. Пока тихо...",
                         "Собираешься к руинам? Скажи Марку, куда пошёл.",
                         "Меч держи крепче, путник. Ночь длинная."],
-                        M_VILLAGER, HIDE_SWORD, Color(0.95, 0.90, 0.98)],
+                        M_PALADIN, A_PALADIN, {"tint": Color(0.92, 0.94, 1.0), "height": 1.05, "lantern": true,
+                        "hide": ["Paladin_J_Nordstrom_Sword"]}],
                 ["Егерь Кузьмич", ["Борис опять весь день в кузне просидел...",
                         "Ущипнул бы этого дракона за хвост!",
                         "Заходи как-нибудь на чай, путник."],
-                        M_VILLAGER, HIDE_SWORD, Color(0.80, 1.0, 0.85)],
+                        M_HUNTER, A_HUNTER, {"tint": Color(0.78, 0.95, 0.82), "lantern": true, "hide": HIDE_SWORD}],
                 ["Настоятель Адриан", ["Башня на западе... от её света не укрыться даже во тьме.",
                         "Мы молимся, чтобы форд не постигла участь прежней деревни.",
                         "Если идёшь к замку — возьми факел. И веру."],
-                        M_VILLAGER, HIDE_SWORD, Color(0.92, 0.88, 1.0)],
+                        M_AKAI, A_AKAI, {"tint": Color(0.9, 0.86, 1.0), "height": 1.07,
+                        "home": GameWorld.HAMLET_CENTER, "radius": 10.0}],
                 ["Торговка Милда", ["Свежий мёд, последний в этом году!",
                         "Странник, слышал? В лесу кружки света по ночам. Я их видела!",
-                        "Погост наш тихий... разве что ветер воет не по-звериному."],
-                        M_VILLAGER, HIDE_SWORD, Color(1.0, 0.95, 0.85)],
+                        "Погост наш тихий... разве что ветер воет не по-звериному. Слышала я там женщину..."],
+                        ARISSA, A_ARISSA, {"tint": Color(1.0, 0.95, 0.9), "height": 0.97,
+                        "home": GameWorld.HAMLET_CENTER, "radius": 9.0}],
         ]
         var spots := [
-                # v9.0: по новой планировке — каждый житель у своего места
+                # по планировке v9.0 — каждый житель у своего места
                 Vector2(0, -9.6),    # Марк-трактирщик — у крыльца таверны
                 Vector2(16.0, 12.2),  # Борис-кузнец — у горна
                 Vector2(-6.2, 0.6),  # Старец Фёдор — у костра на скамье
                 Vector2(4.2, 2.6),   # Андрей — у колодца
                 Vector2(-1.5, 24.0), # Гриша-сторож — у ворот
                 Vector2(-13.0, -12.5), # Егерь Кузьмич — северный проулок
-                # v10.0: жители Каменного Форда
+                # жители Каменного Форда
                 Vector2(-104.5, 122.5), # Настоятель Адриан — у рынка
                 Vector2(-110.5, 125.5), # Торговка Милда — у колодца
         ]
@@ -111,6 +126,14 @@ func _spawn_npcs() -> void:
                 npc.position = Vector3(s.x, GameWorld.terrain_height(s.x, s.y), s.y)
                 add_child(npc)
                 npcs.append(npc)
+
+
+## v11: Белая Дама — призрак на старом погосте (восточный край деревни)
+func _spawn_ghost() -> void:
+        var ghost = GhostScript.new()
+        ghost.position = Vector3(28.0, GameWorld.terrain_height(28.0, 26.0) + 0.42, 26.0)
+        add_child(ghost)
+        npcs.append(ghost)
 
 
 func _spawn_enemies() -> void:

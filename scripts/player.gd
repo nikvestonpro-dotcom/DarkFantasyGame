@@ -1,10 +1,14 @@
 extends CharacterBody3D
-## Игрок v10.1 «Охотник»: PSX-модель DEAD OATH HUNTER (скелет Mixamo,
-## меч в правой руке — часть модели, держится ПРАВИЛЬНО). Анимации —
-## полноценные: срезы демо-таймлайна «Todo» (стойка, бег, прыжок, удар,
-## смерть) + ходьба, перетаргетченная со скелета KayKit.
-## Игровая логика сохранена: камера на пружине, здоровье, полёт (F),
-## удар с окном хитбокса, возрождение.
+## Игрок v11 «Рыцарь»: модель Knight D Pelegrini (полный доспех, капюшон,
+## рост ~2 м — НЕ путать с жителями). Меч — демонический двуручник из
+## пака «demonic weapons», прикреплён к кисти (кулак смотрит правильно).
+## Анимации — родные клипы Mixamo из пака «Great Sword Pack», запечённые
+## под скелет рыцаря (tools/bake_mixamo_anims.gd): стойка, ходьба, бег,
+## прыжок, три удара (рубящий, тяжёлый, вихрь), блок, урон, смерть.
+## НОВОЕ v11: блок на ПКМ — урон снижен, скорость ниже.
+## Логика сохранена: камера на пружине, здоровье, полёт (F), комбо ударов,
+## окно хитбокса, возрождение. Рост калибруется по КОСТЯМ (не по AABB
+## мешей — в v10.1 из-за меча в AABB герой висел над землёй).
 ##
 ## Движение читается ФИЗИЧЕСКИМИ клавишами (is_physical_key_pressed),
 ## поэтому WASD работает при любой раскладке, включая русскую.
@@ -17,41 +21,45 @@ const JUMP_VELOCITY := 7.5
 const GRAVITY := 20.0
 const MAX_HP := 10.0
 
-# v5.0: полёт — F включает/выключает, пробел вверх, C вниз
+# полёт — F включает/выключает, пробел вверх, C вниз
 const FLY_SPEED := 13.0
 const FLY_VERT := 7.5
 const FLY_CEILING := 110.0
 
-const HUNTER := preload("res://мобы/DEAD OATH HUNTER  PSX Bounty Hunter Character/DEAD OATH HUNTER.fbx")
-const SLICES := preload("res://assets/anims/hunter_slices.tres")
-const RETARG := preload("res://assets/anims/hunter_retarg.tres")
+const KNIGHT := preload("res://assets/Анимация и персонажи/Knight D Pelegrini.fbx")
+const ANIMS := preload("res://assets/anims/v11_knight_anims.tres")
+const SWORD := preload("res://assets/models/packs/demonic weapons pack/demonic weapons pack/greatsword/demonicgreatswordgodot.glb")
 
-# Анимации (библиотеки s/ и r/ регистрируются в _ready)
-const A_IDLE := "s/idle"
-const A_WALK := "r/walk"
-const A_RUN := "s/run"
-const A_ATTACK := "s/attack"
-const A_ATTACK2 := "s/attack2"
-const A_JUMP := "s/jump"
-const A_HIT := "s/hit"
-const A_DEATH := "s/death"
+# анимации (библиотека v/ добавляется в _ready)
+const A_IDLE := "v/idle"
+const A_WALK := "v/walk"
+const A_RUN := "v/run"
+const A_JUMP := "v/jump"
+const A_ATTACK1 := "v/attack1"
+const A_ATTACK2 := "v/attack2"
+const A_ATTACK3 := "v/attack3"
+const A_HIT := "v/hit"
+const A_DEATH := "v/death"
+const A_BLOCK := "v/block"
 
-const ATTACK_SPEED := 2.6     # клип 4.0 с -> ~1.54 с на замах
-const ATTACK_HIT_START := 0.48  # доля клипа: меч проносится (Todo 13.0-13.5)
-const ATTACK_HIT_END := 0.64
-const DEATH_SPEED := 1.4
+const ATTACK_SPEED := 1.55    # клипы 1.27/1.20/1.87 с -> 0.82/0.77/1.21 с
+const ATTACK_HIT_START := 0.34  # доля клипа: клинок проносится
+const ATTACK_HIT_END := 0.62
+const DEATH_SPEED := 1.1
+const BLOCK_DAMAGE_MULT := 0.25   # при блоке урон режется на 75%
+const BLOCK_SPEED_MULT := 0.42    # при блоке движение почти стопорится
 
-# рост меша ~1.49 м, хотим ~1.85 м
-const MODEL_SCALE := 1.85 / 1.49
-# модель в скелет-пространстве смотрит в -X; поворачиваем лицом в -Z
-const MODEL_YAW := -PI / 2.0
+## рост героя: рыцарь крупный, заметно выше жителей (~1.65-1.75)
+const HERO_HEIGHT := 2.02
+## модели Mixamo смотрят в +Z; игрок движется вперёд в -Z -> разворот
+const MODEL_YAW := PI
 
 var hp := MAX_HP
 var kills := 0
 var dead := false
 
 var _attacking := false
-var _attack_combo := false
+var _attack_stage := 0        # 0,1,2: обычный, тяжёлый, вихрь (по клику)
 var _attack_cd := 0.0
 var _attack_t := 0.0
 var _attack_len := 1.0
@@ -62,9 +70,11 @@ var _no_damage_t := 10.0
 var _pitch := 0.14
 var _hurt_t := 0.0
 var _cur_anim := ""
+var _blocking := false
 var flying := false
 var _fly_key_cd := 0.0
 var _fly_air_t := 0.0
+var _sword_mats: Array = []
 
 var pitch_node: Node3D
 var spring_arm: SpringArm3D
@@ -72,17 +82,16 @@ var camera: Camera3D
 var hitbox: Area3D
 var visual_root: Node3D
 var anim: AnimationPlayer
-var _mats: Array = []
 
 
 func _ready() -> void:
 	add_to_group("player")
 	var col := CollisionShape3D.new()
 	var cap := CapsuleShape3D.new()
-	cap.radius = 0.32
-	cap.height = 1.55
+	cap.radius = 0.34
+	cap.height = 1.7
 	col.shape = cap
-	col.position.y = 0.80
+	col.position.y = 0.87
 	add_child(col)
 	_build_body()
 	_build_camera()
@@ -90,44 +99,46 @@ func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 
-# ---------- ТЕЛО (охотник со скелетом и анимациями) ----------
+# ---------- ТЕЛО: рыцарь + демонический двуручник ----------
 
 func _build_body() -> void:
 	visual_root = Node3D.new()
 	visual_root.name = "VisualRoot"
 	add_child(visual_root)
 
-	var hunter := HUNTER.instantiate()
-	hunter.scale = Vector3(MODEL_SCALE, MODEL_SCALE, MODEL_SCALE)
-	hunter.rotation.y = MODEL_YAW
-	# AABB меша: y от -1.56 до -0.07 (в локальных единицах ~1.49 роста);
-	# поднимаем так, чтобы ступни встали на 0
-	hunter.position.y = 1.560223 * MODEL_SCALE + 0.06
-	visual_root.add_child(hunter)
+	var knight := KNIGHT.instantiate()
+	visual_root.add_child(knight)
+	# калибровка по костям: ступни ровно на земле, рост 2.02 м
+	CharRig.calibrate(knight, HERO_HEIGHT, MODEL_YAW)
 
-	# материалы: копии для вспышки урона
-	for mi in hunter.find_children("*", "MeshInstance3D", true, false):
-		var mesh: Mesh = (mi as MeshInstance3D).mesh
-		if mesh is ArrayMesh:
-			for i in mesh.get_surface_count():
-				var m := mesh.surface_get_material(i)
+	# демонический двуручник в правую кисть
+	var sword: Node3D = SWORD.instantiate()
+	sword.rotation_degrees = Vector3(0.0, 0.0, 90.0)
+	CharRig.attach_to_bone(knight, "mixamorig_RightHand", sword)
+	# материалы меча: копии для вспышки урона
+	for mi_n in sword.find_children("*", "MeshInstance3D", true, false):
+		var mi := mi_n as MeshInstance3D
+		if mi.mesh is ArrayMesh:
+			var am := mi.mesh as ArrayMesh
+			for i in am.get_surface_count():
+				var m := am.surface_get_material(i)
 				if m is StandardMaterial3D:
-					var dup := m.duplicate() as StandardMaterial3D
-					dup.emission_enabled = true
-					dup.emission = Color(1.0, 0.1, 0.05)
-					dup.emission_energy_multiplier = 0.0
-					mesh.surface_set_material(i, dup)
-					_mats.append(dup)
+					var dup := (m as StandardMaterial3D).duplicate()
+					mi.set_surface_override_material(i, dup)
+					_sword_mats.append(dup)
+	# красноватое свечение клинка в темноте
+	for m in _sword_mats:
+		var sm := m as StandardMaterial3D
+		sm.emission_enabled = true
+		sm.emission = Color(0.55, 0.08, 0.06)
+		sm.emission_energy_multiplier = 0.35
 
-	# анимации: срезы + ретаргет
-	anim = hunter.find_child("AnimationPlayer", true, false) as AnimationPlayer
+	# анимации: запечённая библиотека Mixamo
+	anim = CharRig.find_ap(knight)
 	anim.playback_default_blend_time = 0.18
-	anim.add_animation_library("s", SLICES)
-	anim.add_animation_library("r", RETARG)
-	anim.get_animation(A_DEATH).loop_mode = Animation.LOOP_NONE
-	anim.get_animation(A_ATTACK).loop_mode = Animation.LOOP_NONE
-	anim.get_animation(A_JUMP).loop_mode = Animation.LOOP_NONE
-	anim.get_animation(A_HIT).loop_mode = Animation.LOOP_NONE
+	anim.add_animation_library("v", ANIMS)
+	for a in [A_DEATH, A_ATTACK1, A_ATTACK2, A_ATTACK3, A_JUMP, A_HIT]:
+		anim.get_animation(a).loop_mode = Animation.LOOP_NONE
 	anim.play(A_IDLE)
 
 
@@ -136,7 +147,7 @@ func _build_body() -> void:
 func _build_camera() -> void:
 	pitch_node = Node3D.new()
 	pitch_node.name = "Pitch"
-	pitch_node.position.y = 1.34
+	pitch_node.position.y = 1.46
 	pitch_node.rotation.x = _pitch
 	add_child(pitch_node)
 	spring_arm = SpringArm3D.new()
@@ -149,7 +160,7 @@ func _build_camera() -> void:
 	pitch_node.add_child(spring_arm)
 	camera = Camera3D.new()
 	camera.fov = 72.0
-	# v9.0: 4000 — небесный купол на 2500 м должен попадать в кадр
+	# небесный купол на 2500 м должен попадать в кадр
 	camera.far = 4000.0
 	camera.position = Vector3.ZERO
 	spring_arm.add_child(camera)
@@ -166,10 +177,10 @@ func _build_hitbox() -> void:
 	hitbox.monitoring = false
 	var col := CollisionShape3D.new()
 	var sh := SphereShape3D.new()
-	sh.radius = 1.35
+	sh.radius = 1.45
 	col.shape = sh
 	hitbox.add_child(col)
-	hitbox.position = Vector3(0, 0.9, -0.85)
+	hitbox.position = Vector3(0, 1.0, -0.95)
 	add_child(hitbox)
 
 
@@ -185,10 +196,10 @@ func _unhandled_input(event: InputEvent) -> void:
 		rotate_y(-event.relative.x * 0.0028)
 		_pitch = clampf(_pitch - event.relative.y * 0.0022, -1.05, 0.5)
 		pitch_node.rotation.x = _pitch
-	elif event is InputEventMouseButton and event.pressed:
+	elif event is InputEventMouseButton:
 		if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
 			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-		elif event.button_index == MOUSE_BUTTON_LEFT:
+		elif event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 			_try_attack()
 
 
@@ -208,6 +219,11 @@ func _physics_process(dt: float) -> void:
 	_no_damage_t += dt
 	if _no_damage_t > 5.0 and hp < MAX_HP and not dead:
 		hp = minf(hp + 0.3 * dt, MAX_HP)
+	# v11: блок — удержание ПКМ
+	var want_block := Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT) \
+			and not flying and not dead and not _attacking
+	if want_block != _blocking:
+		_blocking = want_block
 	if flying:
 		var fy := 0.0
 		if Input.is_physical_key_pressed(KEY_SPACE):
@@ -215,10 +231,8 @@ func _physics_process(dt: float) -> void:
 		if Input.is_physical_key_pressed(KEY_C):
 			fy -= 1.0
 		velocity.y = move_toward(velocity.y, fy * FLY_VERT, 26.0 * dt)
-		# Мягкий потолок под невидимыми стенами карты
 		if global_position.y > FLY_CEILING:
 			velocity.y = minf(velocity.y, -2.0)
-		# Автопосадка: мягко коснулись земли после полёта
 		if not is_on_floor():
 			_fly_air_t += dt
 		elif fy <= 0.0 and velocity.y <= 0.1 and _fly_air_t > 0.4:
@@ -245,6 +259,8 @@ func _physics_process(dt: float) -> void:
 		ix += 1.0
 	var sprint := Input.is_physical_key_pressed(KEY_SHIFT)
 	var speed := SPRINT_SPEED if sprint else WALK_SPEED
+	if _blocking:
+		speed *= BLOCK_SPEED_MULT
 	if flying:
 		speed = FLY_SPEED if sprint else FLY_SPEED * 0.72
 	var dir := Vector3(ix, 0, iz)
@@ -255,7 +271,8 @@ func _physics_process(dt: float) -> void:
 	velocity.x = dir.x
 	velocity.z = dir.z
 	var jumped := false
-	if not flying and Input.is_physical_key_pressed(KEY_SPACE) and is_on_floor():
+	if not flying and Input.is_physical_key_pressed(KEY_SPACE) and is_on_floor() \
+			and not _blocking:
 		velocity.y = JUMP_VELOCITY
 		jumped = true
 	move_and_slide()
@@ -266,10 +283,10 @@ func _physics_process(dt: float) -> void:
 		for body in hitbox.get_overlapping_bodies():
 			if body.is_in_group("enemy"):
 				body.take_damage(1, global_position)
-	for m in _mats:
-		if m.emission_energy_multiplier > 0.01:
-			m.emission_energy_multiplier = maxf(0.0,
-					m.emission_energy_multiplier - 2.5 * dt)
+	# пульс демонического клинка
+	for m in _sword_mats:
+		(m as StandardMaterial3D).emission_energy_multiplier = \
+				0.3 + 0.12 * sin(Time.get_ticks_msec() * 0.0021)
 	if global_position.y < -30.0:
 		hp = 0.0
 		_die()
@@ -314,6 +331,8 @@ func _update_anim(dt: float, _jumped: bool) -> void:
 		_play(A_HIT, 1.6)
 	elif not is_on_floor() and not flying:
 		_play(A_JUMP, 1.0)
+	elif _blocking:
+		_play(A_BLOCK, 1.0)
 	elif flying:
 		if hspeed > 4.0:
 			_play(A_RUN, 0.9)
@@ -321,9 +340,9 @@ func _update_anim(dt: float, _jumped: bool) -> void:
 			_play(A_IDLE, 1.0)
 	elif hspeed > WALK_SPEED + 0.8:
 		# бег: темп анимации по фактической скорости
-		_play(A_RUN, clampf(hspeed / SPRINT_SPEED, 0.8, 1.35))
+		_play(A_RUN, clampf(hspeed / SPRINT_SPEED, 0.85, 1.4))
 	elif hspeed > 0.3:
-		_play(A_WALK, clampf(hspeed / WALK_SPEED, 0.8, 1.3))
+		_play(A_WALK, clampf(hspeed / WALK_SPEED, 0.85, 1.35))
 	else:
 		_play(A_IDLE, 1.0)
 
@@ -331,14 +350,18 @@ func _update_anim(dt: float, _jumped: bool) -> void:
 # ---------- АТАКА ----------
 
 func _try_attack() -> void:
-	if _attacking or _attack_cd > 0.0 or dead or flying:
+	if _attacking or _attack_cd > 0.0 or dead or flying or _blocking:
 		return
 	_attacking = true
-	_attack_cd = 1.15
+	_attack_cd = 0.95
 	_attack_t = 0.0
-	# комбо: обычный удар -> тяжёлый замах (каждый второй клик)
-	var clip := A_ATTACK2 if _attack_combo else A_ATTACK
-	_attack_combo = not _attack_combo
+	# серия: рубящий -> тяжёлый замах -> вихрь (каждый третий)
+	var clip := A_ATTACK1
+	if _attack_stage == 1:
+		clip = A_ATTACK2
+	elif _attack_stage == 2:
+		clip = A_ATTACK3
+	_attack_stage = (_attack_stage + 1) % 3
 	_attack_len = anim.get_animation(clip).length / ATTACK_SPEED
 	_hit_started = false
 	_hit_window = false
@@ -356,14 +379,15 @@ func take_damage(amount: int, from_pos: Vector3) -> void:
 		return
 	_iframes = 0.7
 	_no_damage_t = 0.0
+	# v11: блок режет урон на 75%
+	if _blocking:
+		amount = maxi(1, int(round(amount * BLOCK_DAMAGE_MULT)))
 	hp -= amount
-	for m in _mats:
-		m.emission_energy_multiplier = 1.2
 	_hurt_t = 0.45
 	var kb := global_position - from_pos
 	kb.y = 0.0
 	if kb.length() > 0.01:
-		kb = kb.normalized() * 4.0
+		kb = kb.normalized() * (1.2 if _blocking else 4.0)
 		velocity += Vector3(kb.x, 2.0, kb.z)
 	if hp <= 0.0:
 		_die()
@@ -375,6 +399,7 @@ func _die() -> void:
 	dead = true
 	died.emit()
 	_attacking = false
+	_blocking = false
 	_hit_window = false
 	hitbox.monitoring = false
 	_cur_anim = A_DEATH
@@ -387,7 +412,7 @@ func add_kill() -> void:
 	kills += 1
 
 
-## v5.0: включение/выключение полёта (клавиша F и тесты).
+## полёт: включение/выключение (клавиша F и тесты)
 func toggle_flight() -> void:
 	_fly_key_cd = 0.3
 	flying = not flying

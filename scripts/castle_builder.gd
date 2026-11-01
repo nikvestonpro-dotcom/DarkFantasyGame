@@ -673,7 +673,9 @@ func _spawn_ghost() -> void:
                 "В крипте под часовней бродит нечто крупное и зелёное. Меч вам пригодится.",
                 "Нажмите F — и вы взлетите. Так лестниц в замке можно не искать.",
                 "Сокровища донжона прокляты. Впрочем, мёртвым это не грозит... как и мне.",
-        ], 4242, M_GHOST, ["Spellbook", "Spellbook_open", "1H_Wand"], Color(0.72, 0.82, 1.35))
+        ], 4242, M_GHOST, null, {"tint": Color(0.72, 0.82, 1.35), "height": 1.13,
+                "hide": ["Spellbook", "Spellbook_open", "1H_Wand"],
+                "lib": "", "idle": "Idle", "walk": "Walking_A"})
         npc.home_center = GameWorld.CASTLE_CENTER + Vector2(0.0, 2.0)
         npc.home_radius = 10.0
         npc.position = Vector3(0, 0.1, -3.0)

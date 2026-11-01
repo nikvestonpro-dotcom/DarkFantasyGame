@@ -1,26 +1,23 @@
 extends CharacterBody3D
-## Житель деревни v10.1: реалистичная PSX-модель (DEAD OATH HUNTER)
-## со скрытым мечом и тонирующими вариациями — вместо мультяшных
-## KayKit. Анимации — ретаргет с KayKit (спокойный Idle + ходьба).
-## Бродит по площади, при приближении игрока останавливается,
-## поворачивается к нему и здоровается. Реплики — в интерфейсе.
+## Житель v11: РАЗНЫЕ модели (рыцарь-герой больше не шаблон жителя!):
+## охотник, паладин со щитом, маг-отшельник Akai, охотница Arissa —
+## рост и оттенок варьируются по сиду, у некоторых фонарь в руке.
+## Анимации — родные клипы Mixamo (idle_calm / walk), запечённые под
+## скелет каждой модели. Рост калибруется по КОСТЯМ: в v10.1 AABB
+## включал меч, и жители были карликами ~0.9 м, парящими над землёй.
+## Бродит по своей зоне, при приближении игрока останавливается,
+## поворачивается и здоровается. Реплики — в интерфейсе.
 
-# рост жителя (базовый; каждая копия варьируется по сиду)
-const NPC_HEIGHT := 1.52
-# модель охотника в скелет-пространстве смотрит в -X;
-# в системе тела житель должен смотреть в +Z => поворот +PI/2
-const FACING_FIX := PI / 2.0
-
-const RETARG := preload("res://assets/anims/hunter_retarg.tres")
-const A_IDLE := "n/idle_calm"
-const A_WALK := "n/walk"
+const FACING_FIX := 0.0   # модели Mixamo смотрят в +Z, как и ждёт логика
 
 var npc_name := "Житель"
 var phrases := ["Вечер добрый, путник."]
 
+## базовый рост жителя; варьируется по сиду
+const NPC_HEIGHT := 1.72
+
 var _waypoint := Vector3.ZERO
 var _idle := 0.0
-## v5.0: зона блуждания (у призрака замка — двор замка)
 var home_center: Vector2 = GameWorld.VILLAGE_CENTER
 var home_radius := 17.0
 var _speed := 1.15
@@ -28,26 +25,44 @@ var _moving := false
 var _rng := RandomNumberGenerator.new()
 var _cur_anim := ""
 var _height := NPC_HEIGHT
+var _t := 0.0
+var _light: OmniLight3D
+var _light_phase := 0.0
 
 var visual: Node3D
 var anim: AnimationPlayer
 
+var _model: PackedScene
+var _anims: AnimationLibrary
+var _tint := Color(1, 1, 1)
+var _lantern := false
+var _hide_list: Array = []
+var _anim_lib_name := "n"
+var _idle_anim := "n/idle_calm"
+var _walk_anim := "n/walk"
+var _facing := 0.0
+
 
 func setup(p_name: String, p_phrases: Array, seed_v: int,
-                model: PackedScene, hide_list: Array, tint := Color(1, 1, 1)) -> void:
+                model: PackedScene, anims: AnimationLibrary, opts := {}) -> void:
         npc_name = p_name
         phrases = p_phrases
         _rng.seed = seed_v
         # вариация роста: каждая копия чуть выше/ниже базовой
-        _height = NPC_HEIGHT * _rng.randf_range(0.94, 1.06)
+        var h_mult: float = opts.get("height", 1.0)
+        _height = NPC_HEIGHT * _rng.randf_range(0.96, 1.04) * h_mult
         _model = model
-        _hide_list = hide_list
-        _tint = tint
-
-
-var _model: PackedScene
-var _hide_list: Array = []
-var _tint := Color(1, 1, 1)
+        _anims = anims
+        _tint = opts.get("tint", Color(1, 1, 1))
+        _lantern = opts.get("lantern", false)
+        _hide_list = opts.get("hide", [])
+        home_center = opts.get("home", GameWorld.VILLAGE_CENTER)
+        home_radius = opts.get("radius", 17.0)
+        # своя библиотека/клипы (например, родные клипы KayKit у призрака замка)
+        _anim_lib_name = opts.get("lib", "n")
+        _idle_anim = opts.get("idle", "n/idle_calm")
+        _walk_anim = opts.get("walk", "n/walk")
+        _facing = opts.get("yaw", 0.0)
 
 
 func _ready() -> void:
@@ -55,9 +70,9 @@ func _ready() -> void:
         var col := CollisionShape3D.new()
         var cap := CapsuleShape3D.new()
         cap.radius = 0.32
-        cap.height = 1.5
+        cap.height = 1.6
         col.shape = cap
-        col.position.y = 0.75
+        col.position.y = 0.8
         add_child(col)
         _build_body()
 
@@ -67,42 +82,34 @@ func _build_body() -> void:
         visual.name = "Visual"
         add_child(visual)
 
-        var inst := _model.instantiate()
+        var inst: Node3D = _model.instantiate()
+        visual.add_child(inst)
+        # прячем ненужные меши (меч охотника у мирных жителей)
         for wname in _hide_list:
                 for node in inst.find_children("*", "Node", true, false):
                         if node.name == wname and node is Node3D:
                                 node.visible = false
-        add_child(inst)
-        inst.rotation.y = FACING_FIX
-        # v10.1: подгон роста по AABB мешей. Костяной замер для этого FBX
-        # врёт (скелет в «см», меши в метрах — жители тонули на 0.8 м).
-        # AABB-подгонка проверена на игроке-охотнике.
-        var box := _subtree_aabb(inst)
-        var s: float = _height / maxf(box.size.y, 0.001)
-        inst.scale = Vector3(s, s, s)
-        inst.position = Vector3(0.0, -box.position.y * s, 0.0)
-        # Оттеночная вариация для повторяющихся моделей
+        # калибровка по костям: ступни на земле, рост ~1.72 м
+        CharRig.calibrate(inst, _height, _facing)
+        # оттеночная вариация (разная «одежда»)
         if _tint != Color(1, 1, 1):
-                for mi in inst.find_children("*", "MeshInstance3D", true, false):
-                        var mesh: Mesh = (mi as MeshInstance3D).mesh
-                        if mesh is ArrayMesh:
-                                for i in mesh.get_surface_count():
-                                        var m := mesh.surface_get_material(i)
-                                        if m is StandardMaterial3D:
-                                                var dup := m.duplicate() as StandardMaterial3D
-                                                dup.albedo_color = Color(
-                                                        dup.albedo_color.r * _tint.r,
-                                                        dup.albedo_color.g * _tint.g,
-                                                        dup.albedo_color.b * _tint.b)
-                                                mesh.surface_set_material(i, dup)
-        # Анимации: ретаргет-клипы (спокойный idle + ходьба)
-        anim = inst.find_child("AnimationPlayer", true, false) as AnimationPlayer
+                CharRig.tint(inst, _tint)
+        # фонарь в кисть (тёплый свет бродит по деревне)
+        if _lantern:
+                var lantern: Node3D = CharRig.build_lantern()
+                CharRig.attach_to_bone(inst, "mixamorig_RightHand", lantern)
+                _light = lantern.get_node_or_null("LanternLight")
+                _light_phase = _rng.randf() * TAU
+        # анимации: запечённая под эту модель библиотека или родные клипы модели
+        anim = CharRig.find_ap(inst)
         if anim != null:
                 anim.playback_default_blend_time = 0.25
-                anim.add_animation_library("n", RETARG)
-                anim.play(A_IDLE)
+                if _anims != null:
+                        anim.add_animation_library(_anim_lib_name, _anims)
+                if anim.has_animation(_idle_anim):
+                        anim.play(_idle_anim)
 
-        # Имя над головой
+        # имя над головой
         var lbl := Label3D.new()
         lbl.text = npc_name
         lbl.font_size = 40
@@ -110,31 +117,16 @@ func _build_body() -> void:
         lbl.billboard = BaseMaterial3D.BILLBOARD_ENABLED
         lbl.modulate = Color(1.0, 0.85, 0.55)
         lbl.outline_size = 8
-        lbl.position.y = 2.12
+        lbl.position.y = _height + 0.32
         add_child(lbl)
 
 
-static func _subtree_aabb(root: Node3D) -> AABB:
-        var box := AABB(Vector3.ZERO, Vector3.ZERO)
-        var started := false
-        for vi in root.find_children("*", "VisualInstance3D", true, false):
-                var vis := vi as VisualInstance3D
-                if vis == null or vis.get_aabb().size == Vector3.ZERO:
-                        continue
-                var b := vis.get_aabb()
-                b = vis.global_transform * b
-                b = root.global_transform.affine_inverse() * b
-                if not started:
-                        box = b
-                        started = true
-                else:
-                        box = box.merge(b)
-        if not started:
-                box = AABB(Vector3(-0.35, 0, -0.35), Vector3(0.7, 1.75, 0.7))
-        return box
-
-
 func _physics_process(dt: float) -> void:
+        _t += dt
+        # мерцание фонаря
+        if _light != null:
+                _light.light_energy = 1.6 + 0.35 * sin(_t * 11.0 + _light_phase) \
+                                + 0.15 * sin(_t * 27.0 + _light_phase * 2.0)
         var player := get_tree().get_first_node_in_group("player") as Node3D
         if player != null:
                 var d := global_position.distance_to(player.global_position)
@@ -168,9 +160,9 @@ func _physics_process(dt: float) -> void:
 func _update_anim() -> void:
         if anim == null:
                 return
-        var target := A_IDLE
+        var target := _idle_anim
         if _moving:
-                target = A_WALK
+                target = _walk_anim
                 _speed = 1.15
         if _cur_anim == target and anim.is_playing():
                 return
